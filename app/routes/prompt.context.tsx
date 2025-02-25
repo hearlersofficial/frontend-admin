@@ -24,7 +24,7 @@ export default function Context() {
             <tr key={item.id} className="border-y-2">
               <td className="p-2 font-semibold">{item.title}</td>
               <td className="w-2/3 whitespace-pre-line p-2">{item.content}</td>
-              <td className="flex h-full items-center justify-center gap-2">
+              <td className="flex h-full items-center justify-end gap-2">
                 <Button text="Edit" handleClick={() => {}} color="bg-green-500" />
                 <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
               </td>
