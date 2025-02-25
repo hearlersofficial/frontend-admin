@@ -1,6 +1,10 @@
 import Button from '~/components/prompt/Button';
+import Pagination from '~/components/prompt/Pagination';
+import { usePagination } from '~/hooks/usePagination';
 
 export default function Tone() {
+  const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(TONE_ITEMS, 5);
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
@@ -16,7 +20,7 @@ export default function Tone() {
           </tr>
         </thead>
         <tbody>
-          {TONE_ITEMS.map((item) => (
+          {displayedItems.map((item) => (
             <tr key={item.id} className="border-y-2">
               <td className="p-2 font-semibold">{item.title}</td>
               <td className="w-2/3 whitespace-pre-line p-2">{item.content}</td>
@@ -28,6 +32,7 @@ export default function Tone() {
           ))}
         </tbody>
       </table>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
     </div>
   );
 }
