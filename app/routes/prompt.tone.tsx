@@ -1,15 +1,18 @@
+import Button from '~/components/prompt/Button';
+
 export default function Tone() {
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Tone</h1>
+        <Button text="Create" handleClick={() => {}} color="bg-green-500" />
       </div>
       <table className="h-full">
         <thead>
           <tr className="text-gray-500">
             <th className="py-2 text-start font-semibold">Title</th>
             <th className="text-start font-semibold">Content</th>
-            {/* <th className="text-end font-semibold">Action</th> */}
+            <th className="text-end font-semibold">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -17,6 +20,10 @@ export default function Tone() {
             <tr key={item.id} className="border-y-2">
               <td className="p-2 font-semibold">{item.title}</td>
               <td className="w-2/3 whitespace-pre-line p-2">{item.content}</td>
+              <td className="flex h-full items-center justify-center gap-2">
+                <Button text="Edit" handleClick={() => {}} color="bg-green-500" />
+                <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
+              </td>
             </tr>
           ))}
         </tbody>
