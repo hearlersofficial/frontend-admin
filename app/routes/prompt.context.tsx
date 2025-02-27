@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Button from '~/components/prompt/Button';
-import ContextModal from '~/components/prompt/context/ContextModal';
+import ContextModal from '~/components/prompt/modals/ContextModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';

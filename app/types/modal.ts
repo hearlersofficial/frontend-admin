@@ -10,3 +10,9 @@ export type ContextType = { title: string; content: string } | null;
 export interface ContextModalProps extends ModalProps {
   item: ContextType;
 }
+
+export type ToneType = { title: string; content: string } | null;
+
+export interface ToneModalProps extends ModalProps {
+  item: ToneType;
+}
