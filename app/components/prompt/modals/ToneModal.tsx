@@ -10,13 +10,8 @@ const ToneModal = ({ isOpen, setIsOpen, item }: ToneModalProps) => {
   const [body, setBody] = useState('');
 
   useEffect(() => {
-    if (item) {
-      setName(item.name);
-      setBody(item.body);
-    } else {
-      setName('');
-      setBody('');
-    }
+    setName(item?.name || '');
+    setBody(item?.body || '');
   }, [item]);
 
   const handleSave = () => {

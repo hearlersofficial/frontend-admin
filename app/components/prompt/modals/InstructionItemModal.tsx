@@ -3,17 +3,13 @@ import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from '../Button';
 
-import { InstructionModalProps } from '~/types/modal';
+import { InstructionItemModalProps } from '~/types/modal';
 
-const InstructionItemModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) => {
+const InstructionItemModal = ({ isOpen, setIsOpen, item }: InstructionItemModalProps) => {
   const [body, setBody] = useState('');
 
   useEffect(() => {
-    if (item) {
-      setBody(item.body);
-    } else {
-      setBody('');
-    }
+    setBody(item?.body || '');
   }, [item]);
 
   const handleSave = () => {
