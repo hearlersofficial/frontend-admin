@@ -111,7 +111,7 @@ const InstructionItem = () => {
       <table className="h-full">
         <thead>
           <tr className="text-gray-500">
-            <th className="text-start font-semibold">Content</th>
+            <th className="text-start font-semibold">Body</th>
             <th className="text-end font-semibold">Action</th>
           </tr>
         </thead>
