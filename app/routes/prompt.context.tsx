@@ -1,15 +1,31 @@
+import { useState } from 'react';
+
 import Button from '~/components/prompt/Button';
+import ContextModal from '~/components/prompt/context/ContextModal';
 import Pagination from '~/components/prompt/Pagination';
+
 import { usePagination } from '~/hooks/usePagination';
+import { ContextType } from '~/types/modal';
 
 export default function Context() {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(CONTEXT_ITEMS, 5);
+  const [isOpen, setIsOpen] = useState(false);
+  const [editItem, setEditItem] = useState<ContextType>(null);
+
+  const handleCreate = () => {
+    setEditItem(null);
+    setIsOpen(true);
+  };
+  const handleEdit = (item: ContextType) => {
+    setEditItem(item);
+    setIsOpen(true);
+  };
 
   return (
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Context</h1>
-        <Button text="Create" handleClick={() => {}} color="bg-green-500" />
+        <Button text="Create" handleClick={handleCreate} color="bg-green-500" />
       </div>
       <table className="h-full">
         <thead>
@@ -25,7 +41,7 @@ export default function Context() {
               <td className="p-2 font-semibold">{item.title}</td>
               <td className="w-2/3 whitespace-pre-line p-2">{item.content}</td>
               <td className="flex h-full items-center justify-end gap-2">
-                <Button text="Edit" handleClick={() => {}} color="bg-green-500" />
+                <Button text="Edit" handleClick={() => handleEdit(item)} color="bg-green-500" />
                 <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
               </td>
             </tr>
@@ -33,6 +49,8 @@ export default function Context() {
         </tbody>
       </table>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+      <ContextModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} />
     </div>
   );
 }
