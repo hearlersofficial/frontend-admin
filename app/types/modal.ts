@@ -16,3 +16,9 @@ export type ToneType = { title: string; content: string } | null;
 export interface ToneModalProps extends ModalProps {
   item: ToneType;
 }
+
+export type InstructionType = { content: string } | null;
+
+export interface InstructionModalProps extends ModalProps {
+  item: InstructionType;
+}
