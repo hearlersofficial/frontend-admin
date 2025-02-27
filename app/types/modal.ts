@@ -5,20 +5,20 @@ interface ModalProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export type ContextType = { title: string; content: string } | null;
+export type ContextType = { name: string; body: string } | null;
 
 export interface ContextModalProps extends ModalProps {
   item: ContextType;
 }
 
-export type ToneType = { title: string; content: string } | null;
+export type ToneType = { name: string; body: string } | null;
 
 export interface ToneModalProps extends ModalProps {
   item: ToneType;
 }
 
-export type InstructionType = { content: string } | null;
+export type InstructionItemType = { body: string } | null;
 
 export interface InstructionModalProps extends ModalProps {
-  item: InstructionType;
+  item: InstructionItemType;
 }

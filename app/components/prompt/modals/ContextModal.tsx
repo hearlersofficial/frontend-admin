@@ -6,16 +6,16 @@ import Button from '../Button';
 import { ContextModalProps } from '~/types/modal';
 
 const ContextModal = ({ isOpen, setIsOpen, item }: ContextModalProps) => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [name, setName] = useState('');
+  const [body, setBody] = useState('');
 
   useEffect(() => {
     if (item) {
-      setTitle(item.title);
-      setContent(item.content);
+      setName(item.name);
+      setBody(item.body);
     } else {
-      setTitle('');
-      setContent('');
+      setName('');
+      setBody('');
     }
   }, [item]);
 
@@ -29,30 +29,30 @@ const ContextModal = ({ isOpen, setIsOpen, item }: ContextModalProps) => {
         <h2 className="text-lg font-semibold">Context</h2>
 
         <div>
-          <label className="mb-1 block" htmlFor="title">
-            Title
+          <label className="mb-1 block" htmlFor="name">
+            Name
           </label>
           <input
-            id="title"
+            id="name"
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             className="w-full rounded border p-2"
-            placeholder="title"
+            placeholder="name"
           />
         </div>
 
         <div>
-          <label className="mb-1 block" htmlFor="content">
-            Content
+          <label className="mb-1 block" htmlFor="body">
+            Body
           </label>
           <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            id="body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
             className="row-4 w-full rounded border p-2"
             rows={8}
-            placeholder="content"
+            placeholder="body"
           />
         </div>
 

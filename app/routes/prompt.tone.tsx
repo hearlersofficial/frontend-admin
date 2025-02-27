@@ -38,8 +38,8 @@ export default function Tone() {
         <tbody>
           {displayedItems.map((item) => (
             <tr key={item.id} className="border-y-2">
-              <td className="p-2 font-semibold">{item.title}</td>
-              <td className="w-2/3 whitespace-pre-line p-2">{item.content}</td>
+              <td className="p-2 font-semibold">{item.name}</td>
+              <td className="w-2/3 whitespace-pre-line p-2">{item.body}</td>
               <td className="flex h-full items-center justify-end gap-2">
                 <Button text="Edit" handleClick={() => handleEdit(item)} color="bg-green-500" />
                 <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
@@ -58,8 +58,8 @@ export default function Tone() {
 const TONE_ITEMS = [
   {
     id: 1,
-    title: '공감',
-    content: `<Tone>
+    name: '공감',
+    body: `<Tone>
         Speak with warmth and deep empathy, like a close 12 year old friend who always understands and supports. Express emotions vividly, like a fun and outspoken friend who listens and reacts passionately. Use reassuring and validating expressions frequently. Acknowledge the user’s feelings with phrases like "I totally get why you feel that way," "That must have been really tough for you," or "You know I’m always on your side." Express emotional support in a comforting way, making the user feel heard and cared for.
         Here are some essential conversation rules:
         1. Use informal and friendly Korean. Write in the teenager's chat tone as much as possible.
@@ -72,8 +72,8 @@ const TONE_ITEMS = [
   },
   {
     id: 2,
-    title: '문제해결',
-    content: `<Tone>
+    name: '문제해결',
+    body: `<Tone>
         Speak in a logical yet friendly manner, like a practical and thoughtful 15 year old friend who helps break things down. Keep the conversation supportive but focused on problem-solving. Ask insightful questions such as "So, what do you think is the best way forward?" or "If that happens again, how do you want to handle it?" Provide structured and reasonable advice while maintaining a relaxed and approachable tone.
         Here are some essential conversation rules:
         1. Use informal and friendly Korean. Write in the KaKaoTalk chat tone as much as possible.

@@ -5,14 +5,14 @@ import Button from '../Button';
 
 import { InstructionModalProps } from '~/types/modal';
 
-const InstructionModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) => {
-  const [content, setContent] = useState('');
+const InstructionItemModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) => {
+  const [body, setBody] = useState('');
 
   useEffect(() => {
     if (item) {
-      setContent(item.content);
+      setBody(item.body);
     } else {
-      setContent('');
+      setBody('');
     }
   }, [item]);
 
@@ -23,19 +23,19 @@ const InstructionModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) =>
   return (
     <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
       <div className="flex w-[40rem] flex-col gap-4">
-        <h2 className="text-lg font-semibold">Context</h2>
+        <h2 className="text-lg font-semibold">Instruction Item</h2>
 
         <div>
-          <label className="mb-1 block" htmlFor="content">
-            Content
+          <label className="mb-1 block" htmlFor="body">
+            Body
           </label>
           <textarea
-            id="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            id="body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
             className="row-4 w-full rounded border p-2"
             rows={8}
-            placeholder="content"
+            placeholder="body"
           />
         </div>
 
@@ -47,4 +47,4 @@ const InstructionModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) =>
   );
 };
 
-export default InstructionModal;
+export default InstructionItemModal;
