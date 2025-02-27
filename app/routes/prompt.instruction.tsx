@@ -1,11 +1,12 @@
 import { useState } from 'react';
 
 import Button from '../components/prompt/Button';
+import InstructionModal from '~/components/prompt/modals/InstructionModal';
 import InstructionItemModal from '~/components/prompt/modals/InstructionItemModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';
-import { InstructionItemType } from '~/types/modal';
+import { InstructionItemType, InstructionType } from '~/types/modal';
 
 export default function Instructions_main() {
   const [activeTab, setActiveTab] = useState(0);
@@ -36,12 +37,23 @@ export default function Instructions_main() {
 
 const Instruction = () => {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(INSTRUCTIONS, 2);
+  const [isOpen, setIsOpen] = useState(false);
+  const [editItem, setEditItem] = useState<InstructionType>(null);
+
+  const handleCreate = () => {
+    setEditItem(null);
+    setIsOpen(true);
+  };
+  const handleEdit = (item: InstructionType) => {
+    setEditItem(item);
+    setIsOpen(true);
+  };
 
   return (
     <div className="flex w-full flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Instruction</h1>
-        <Button text="Create" handleClick={() => {}} color="bg-green-500" />
+        <Button text="Create" handleClick={handleCreate} color="bg-green-500" />
       </div>
       <table className="h-full">
         <thead>
@@ -63,7 +75,7 @@ const Instruction = () => {
                 ))}
               </td>
               <td className="flex h-full items-center justify-end gap-2">
-                <Button text="Edit" handleClick={() => {}} color="bg-green-500" />
+                <Button text="Edit" handleClick={() => handleEdit(item)} color="bg-green-500" />
                 <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
               </td>
             </tr>
@@ -71,6 +83,8 @@ const Instruction = () => {
         </tbody>
       </table>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+      <InstructionModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} />
     </div>
   );
 };

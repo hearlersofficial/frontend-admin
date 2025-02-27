@@ -19,6 +19,12 @@ export interface ToneModalProps extends ModalProps {
 
 export type InstructionItemType = { body: string } | null;
 
-export interface InstructionModalProps extends ModalProps {
+export interface InstructionItemModalProps extends ModalProps {
   item: InstructionItemType;
+}
+
+export type InstructionType = { name: string; instruction_items: InstructionItemType[] } | null;
+
+export interface InstructionModalProps extends ModalProps {
+  item: InstructionType;
 }
