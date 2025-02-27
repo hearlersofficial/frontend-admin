@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import Modal from '../Modal';
+import Modal from './Modal';
 import Button from '../Button';
 
 import { ContextModalProps } from '~/types/modal';
@@ -51,7 +51,7 @@ const ContextModal = ({ isOpen, setIsOpen, item }: ContextModalProps) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="row-4 w-full rounded border p-2"
-            rows={4}
+            rows={8}
             placeholder="content"
           />
         </div>
