@@ -8,9 +8,11 @@ import { InstructionItemType } from '~/types/modal';
 interface InstructionContainerProps {
   cards: InstructionItemType[];
   setCards: (cards: InstructionItemType[]) => void;
+  containerId: string;
+  moveItem: (item: InstructionItemType, containerId: string) => void;
 }
 
-const InstructionContainer = ({ cards, setCards }: InstructionContainerProps) => {
+const InstructionContainer = ({ cards, setCards, containerId, moveItem }: InstructionContainerProps) => {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -35,7 +37,11 @@ const InstructionContainer = ({ cards, setCards }: InstructionContainerProps) =>
       <SortableContext items={cards.map((card) => card.id)} strategy={horizontalListSortingStrategy}>
         <div className="flex flex-col gap-2">
           {cards.map((card) => (
-            <InstructionItemCard key={card.id} id={card.id} text={card.body} />
+            <div key={card.id} className="flex items-center justify-between gap-1">
+              <InstructionItemCard key={card.id} id={card.id} text={card.body} />
+              {containerId === 'available' && <button onClick={() => moveItem(card, containerId)}>{'->'}</button>}
+              {containerId === 'selected' && <button onClick={() => moveItem(card, containerId)}>X</button>}
+            </div>
           ))}
         </div>
       </SortableContext>

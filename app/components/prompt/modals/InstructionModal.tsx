@@ -2,16 +2,32 @@ import { useEffect, useState } from 'react';
 
 import Modal from './Modal';
 import Button from '../Button';
-import { InstructionItemType, InstructionModalProps } from '~/types/modal';
 import InstructionContainer from '../InstructionContainer';
 
+import { InstructionItemType, InstructionModalProps } from '~/types/modal';
+
 const InstructionModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) => {
-  const [availableItems, setAvailableItems] = useState<InstructionItemType[]>(INSTRUCTION_ITEMS); //전체 instruction item
+  const [availableItems, setAvailableItems] = useState<InstructionItemType[]>([]);
   const [selectedItems, setSelectedItems] = useState<InstructionItemType[]>([]);
 
   useEffect(() => {
+    const filteredAvailableItems = INSTRUCTION_ITEMS.filter(
+      (instructionItem) => !item?.instruction_items.some((selectedItem) => selectedItem.id === instructionItem.id)
+    );
+
+    setAvailableItems(filteredAvailableItems);
     setSelectedItems(item?.instruction_items || []);
   }, [item]);
+
+  const moveItem = (item: InstructionItemType, containerId: string) => {
+    if (containerId == 'available') {
+      setAvailableItems(availableItems.filter((i) => i.id !== item.id));
+      setSelectedItems([...selectedItems, item]);
+    } else if (containerId == 'selected') {
+      setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
+      setAvailableItems([...availableItems, item]);
+    }
+  };
 
   const handleSave = () => {
     setIsOpen(false);
@@ -25,12 +41,22 @@ const InstructionModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) =>
         <div className="flex h-[40rem] gap-4">
           <div className="w-1/2 overflow-y-auto rounded bg-gray-100 p-2">
             <h3 className="mb-2 font-semibold">Available</h3>
-            <InstructionContainer cards={availableItems} setCards={setAvailableItems} />
+            <InstructionContainer
+              cards={availableItems}
+              setCards={setAvailableItems}
+              containerId="available"
+              moveItem={moveItem}
+            />
           </div>
 
           <div className="w-1/2 overflow-y-auto rounded bg-gray-100 p-2">
             <h3 className="mb-2 font-semibold">Selected</h3>
-            <InstructionContainer cards={selectedItems} setCards={setSelectedItems} />
+            <InstructionContainer
+              cards={selectedItems}
+              setCards={setSelectedItems}
+              containerId="selected"
+              moveItem={moveItem}
+            />
           </div>
         </div>
 
