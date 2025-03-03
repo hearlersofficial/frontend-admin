@@ -44,6 +44,5 @@
   },
   "engines": {
     "node": ">=20.0.0"
-  },
-  "packageManager": "npm@10.8.0+sha1.f5a017649e934a59eba54af2ea908465eb830a8f"
+  }
 }
