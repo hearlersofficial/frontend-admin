@@ -10,7 +10,7 @@ import { ContextType } from '~/types/modal';
 export default function Context() {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(CONTEXT_ITEMS, 5);
   const [isOpen, setIsOpen] = useState(false);
-  const [editItem, setEditItem] = useState<ContextType>(null);
+  const [editItem, setEditItem] = useState<ContextType | null>(null);
 
   const handleCreate = () => {
     setEditItem(null);

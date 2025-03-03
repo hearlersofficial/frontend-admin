@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import Button from '../components/prompt/Button';
 import InstructionItemModal from '~/components/prompt/modals/InstructionItemModal';
+import InstructionModal from '~/components/prompt/modals/InstructionModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';
@@ -37,7 +38,7 @@ export default function Instructions_main() {
 const Instruction = () => {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(INSTRUCTIONS, 2);
   const [isOpen, setIsOpen] = useState(false);
-  const [editItem, setEditItem] = useState<InstructionType>(null);
+  const [editItem, setEditItem] = useState<InstructionType | null>(null);
 
   const handleCreate = () => {
     setEditItem(null);
@@ -82,13 +83,15 @@ const Instruction = () => {
         </tbody>
       </table>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+      <InstructionModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} />
     </div>
   );
 };
 const InstructionItem = () => {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(INSTRUCTION_ITEMS, 10);
   const [isOpen, setIsOpen] = useState(false);
-  const [editItem, setEditItem] = useState<InstructionItemType>(null);
+  const [editItem, setEditItem] = useState<InstructionItemType | null>(null);
 
   const handleCreate = () => {
     setEditItem(null);

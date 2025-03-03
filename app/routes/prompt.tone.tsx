@@ -10,7 +10,7 @@ import { ToneType } from '~/types/modal';
 export default function Tone() {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(TONE_ITEMS, 2);
   const [isOpen, setIsOpen] = useState(false);
-  const [editItem, setEditItem] = useState<ToneType>(null);
+  const [editItem, setEditItem] = useState<ToneType | null>(null);
 
   const handleCreate = () => {
     setEditItem(null);
