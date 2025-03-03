@@ -22,4 +22,5 @@ export interface InstructionItemModalProps extends ModalProps {
 
 export interface InstructionModalProps extends ModalProps {
   item: InstructionType | null;
+  allItem: InstructionItemType[];
 }
