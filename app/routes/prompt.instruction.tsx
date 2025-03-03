@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import Button from '../components/prompt/Button';
-import InstructionModal from '~/components/prompt/modals/InstructionModal';
 import InstructionItemModal from '~/components/prompt/modals/InstructionItemModal';
 import Pagination from '~/components/prompt/Pagination';
 
@@ -83,8 +82,6 @@ const Instruction = () => {
         </tbody>
       </table>
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-
-      <InstructionModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} />
     </div>
   );
 };
