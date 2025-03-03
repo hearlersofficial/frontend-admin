@@ -5,7 +5,7 @@ import ContextModal from '~/components/prompt/modals/ContextModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';
-import { ContextType } from '~/types/modal';
+import { ContextType } from '~/types/prompt';
 
 export default function Context() {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(CONTEXT_ITEMS, 5);

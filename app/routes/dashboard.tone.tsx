@@ -5,7 +5,7 @@ import ToneModal from '~/components/prompt/modals/ToneModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';
-import { ToneType } from '~/types/modal';
+import { ToneType } from '~/types/prompt';
 
 export default function Tone() {
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(TONE_ITEMS, 2);

@@ -4,7 +4,7 @@ import Modal from './Modal';
 import Button from '../Button';
 import InstructionContainer from '../InstructionContainer';
 
-import { InstructionItemType, InstructionModalProps } from '~/types/modal';
+import { InstructionItemType, InstructionModalProps } from '~/types/prompt';
 
 const InstructionModal = ({ isOpen, setIsOpen, item }: InstructionModalProps) => {
   const [availableItems, setAvailableItems] = useState<InstructionItemType[]>([]);

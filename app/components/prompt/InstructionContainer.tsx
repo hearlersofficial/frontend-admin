@@ -3,7 +3,7 @@ import { horizontalListSortingStrategy, SortableContext } from '@dnd-kit/sortabl
 
 import InstructionItemCard from './InstructionItemCard';
 
-import { InstructionItemType } from '~/types/modal';
+import { InstructionItemType } from '~/types/prompt';
 
 interface InstructionContainerProps {
   cards: InstructionItemType[];

@@ -6,7 +6,7 @@ import InstructionModal from '~/components/prompt/modals/InstructionModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';
-import { InstructionItemType, InstructionType } from '~/types/modal';
+import { InstructionItemType, InstructionType } from '~/types/prompt';
 
 export default function Instructions_main() {
   const [activeTab, setActiveTab] = useState(0);

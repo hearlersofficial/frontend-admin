@@ -1,4 +1,3 @@
-import type { FC } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -7,7 +6,7 @@ interface InstructionItemCardProps {
   text: string;
 }
 
-const InstructionItemCard: FC<InstructionItemCardProps> = ({ id, text }) => {
+const InstructionItemCard = ({ id, text }: InstructionItemCardProps) => {
   const { attributes, listeners, setNodeRef, transition, transform, isDragging } = useSortable({ id });
 
   const style = {

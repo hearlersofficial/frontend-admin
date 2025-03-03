@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from '../Button';
 
-import { InstructionItemModalProps } from '~/types/modal';
+import { InstructionItemModalProps } from '~/types/prompt';
 
 const InstructionItemModal = ({ isOpen, setIsOpen, item }: InstructionItemModalProps) => {
   const [body, setBody] = useState('');

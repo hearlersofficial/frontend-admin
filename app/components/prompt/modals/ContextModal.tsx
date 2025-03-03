@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from '../Button';
 
-import { ContextModalProps } from '~/types/modal';
+import { ContextModalProps } from '~/types/prompt';
 
 const ContextModal = ({ isOpen, setIsOpen, item }: ContextModalProps) => {
   const [name, setName] = useState('');

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Modal from './Modal';
 import Button from '../Button';
 
-import { ToneModalProps } from '~/types/modal';
+import { ToneModalProps } from '~/types/prompt';
 
 const ToneModal = ({ isOpen, setIsOpen, item }: ToneModalProps) => {
   const [name, setName] = useState('');
