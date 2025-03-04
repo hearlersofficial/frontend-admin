@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CircleArrowRightIcon } from 'lucide-react';
 
 import { Button } from '~/components/ui/button';
 import Modal from './Modal';
@@ -17,16 +18,15 @@ const InstructionModal = ({ isOpen, setIsOpen, item, allItem }: InstructionModal
 
     setAvailableItems(filteredAvailableItems);
     setSelectedItems(item?.instruction_items || []);
-  }, [item]);
+  }, [allItem, item]);
 
-  const moveItem = (item: InstructionItemType, containerId: string) => {
-    if (containerId == 'available') {
-      setAvailableItems(availableItems.filter((i) => i.id !== item.id));
-      setSelectedItems([...selectedItems, item]);
-    } else if (containerId == 'selected') {
-      setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
-      setAvailableItems([...availableItems, item]);
-    }
+  const moveToSelected = (item: InstructionItemType) => {
+    setAvailableItems(availableItems.filter((i) => i.id !== item.id));
+    setSelectedItems([...selectedItems, item]);
+  };
+  const moveToAvailable = (item: InstructionItemType) => {
+    setSelectedItems(selectedItems.filter((i) => i.id !== item.id));
+    setAvailableItems([...availableItems, item]);
   };
 
   const handleSave = () => {
@@ -39,24 +39,25 @@ const InstructionModal = ({ isOpen, setIsOpen, item, allItem }: InstructionModal
         <h2 className="text-lg font-semibold">Instruction</h2>
 
         <div className="flex h-[40rem] gap-4">
-          <div className="w-1/2 overflow-y-auto rounded bg-gray-100 p-2">
-            <h3 className="mb-2 font-semibold">Available</h3>
-            <InstructionContainer
-              cards={availableItems}
-              setCards={setAvailableItems}
-              containerId="available"
-              moveItem={moveItem}
-            />
+          <div className="flex w-1/2 flex-col gap-2 overflow-y-auto rounded bg-gray-100 p-2">
+            <h3 className="font-semibold">Available</h3>
+            {availableItems.map((item) => (
+              <div key={item.id} className="flex items-center gap-1">
+                <div className="flex gap-2 rounded border bg-white p-2">{item.body}</div>
+                <button
+                  onClick={() => {
+                    moveToSelected(item);
+                  }}
+                >
+                  <CircleArrowRightIcon />
+                </button>
+              </div>
+            ))}
           </div>
 
           <div className="w-1/2 overflow-y-auto rounded bg-gray-100 p-2">
             <h3 className="mb-2 font-semibold">Selected</h3>
-            <InstructionContainer
-              cards={selectedItems}
-              setCards={setSelectedItems}
-              containerId="selected"
-              moveItem={moveItem}
-            />
+            <InstructionContainer cards={selectedItems} setCards={setSelectedItems} deleteCard={moveToAvailable} />
           </div>
         </div>
 
