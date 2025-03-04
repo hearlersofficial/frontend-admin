@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import Modal from './Modal';
+import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogFooter } from '~/components/ui/dialog';
 
 import { InstructionItemModalProps } from '~/types/prompt';
 
@@ -17,29 +17,31 @@ const InstructionItemModal = ({ isOpen, setIsOpen, item }: InstructionItemModalP
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-      <div className="flex w-[40rem] flex-col gap-4">
-        <h2 className="text-lg font-semibold">Instruction Item</h2>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Instruction Item</DialogTitle>
 
-        <div>
-          <label className="mb-1 block" htmlFor="body">
-            Body
-          </label>
-          <textarea
-            id="body"
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            className="row-4 w-full rounded border p-2"
-            rows={8}
-            placeholder="body"
-          />
-        </div>
+          <div>
+            <label className="mb-1 block" htmlFor="body">
+              Body
+            </label>
+            <textarea
+              id="body"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              className="row-4 w-full rounded border p-2"
+              rows={8}
+              placeholder="body"
+            />
+          </div>
 
-        <div className="flex justify-end">
-          <Button onClick={handleSave}>Save</Button>
-        </div>
-      </div>
-    </Modal>
+          <DialogFooter>
+            <Button onClick={handleSave}>Save</Button>
+          </DialogFooter>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 };
 

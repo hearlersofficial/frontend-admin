@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import Modal from './Modal';
+import { Dialog, DialogContent, DialogTitle, DialogHeader, DialogFooter } from '~/components/ui/dialog';
 
 import { ToneModalProps } from '~/types/prompt';
 
@@ -19,43 +19,45 @@ const ToneModal = ({ isOpen, setIsOpen, item }: ToneModalProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-      <div className="flex w-[40rem] flex-col gap-4">
-        <h2 className="text-lg font-semibold">Tone</h2>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Tone</DialogTitle>
 
-        <div>
-          <label className="mb-1 block" htmlFor="name">
-            Name
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full rounded border p-2"
-            placeholder="name"
-          />
-        </div>
+          <div>
+            <label className="mb-1 block" htmlFor="name">
+              Name
+            </label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full rounded border p-2"
+              placeholder="name"
+            />
+          </div>
 
-        <div>
-          <label className="mb-1 block" htmlFor="body">
-            Body
-          </label>
-          <textarea
-            id="body"
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            className="row-4 w-full rounded border p-2"
-            rows={8}
-            placeholder="body"
-          />
-        </div>
+          <div>
+            <label className="mb-1 block" htmlFor="body">
+              Body
+            </label>
+            <textarea
+              id="body"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              className="row-4 w-full rounded border p-2"
+              rows={10}
+              placeholder="body"
+            />
+          </div>
 
-        <div className="flex justify-end">
-          <Button onClick={handleSave}>Save</Button>
-        </div>
-      </div>
-    </Modal>
+          <DialogFooter>
+            <Button onClick={handleSave}>Save</Button>
+          </DialogFooter>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 };
 
