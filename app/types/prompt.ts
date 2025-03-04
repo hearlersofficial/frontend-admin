@@ -24,3 +24,7 @@ export interface InstructionModalProps extends ModalProps {
   item: InstructionType | null;
   allItem: InstructionItemType[];
 }
+
+export interface TechniqueModalProps extends ModalProps {
+  addNewCard: (newCard: string) => void;
+}
