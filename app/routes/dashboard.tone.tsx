@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useLoaderData } from '@remix-run/react';
 
 import { Button } from '~/components/ui/button';
-import ToneModal from '~/components/prompt/modals/ToneModal';
 import Pagination from '~/components/prompt/Pagination';
+import ToneModal from '~/components/prompt/modals/ToneModal';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 
 import { usePagination } from '~/hooks/usePagination';
 import { ToneType } from '~/types/prompt';
@@ -65,27 +66,29 @@ export default function Tone() {
         <h1 className="text-2xl font-bold">Tone</h1>
         <Button onClick={handleCreate}>Create</Button>
       </div>
-      <table className="h-full">
-        <thead>
-          <tr className="text-gray-500">
-            <th className="py-2 text-start font-semibold">Title</th>
-            <th className="text-start font-semibold">Content</th>
-            <th className="text-end font-semibold">Action</th>
-          </tr>
-        </thead>
-        <tbody>
+
+      <Table className="h-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Body</TableHead>
+            <TableHead className="text-end">Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {displayedItems.map((item) => (
-            <tr key={item.id} className="border-y-2">
-              <td className="p-2 font-semibold">{item.name}</td>
-              <td className="w-2/3 whitespace-pre-line p-2">{item.body}</td>
-              <td className="flex h-full items-center justify-end gap-2">
+            <TableRow key={item.id}>
+              <TableCell className="font-semibold">{item.name}</TableCell>
+              <TableCell className="w-2/3 whitespace-pre-line">{item.body}</TableCell>
+              <TableCell className="flex h-full items-center justify-end gap-2">
                 <Button onClick={() => handleEdit(item)}>Edit</Button>
                 <Button onClick={() => {}}>Delete</Button>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
+
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
       <ToneModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} />

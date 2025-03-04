@@ -5,6 +5,7 @@ import { Button } from '~/components/ui/button';
 import InstructionItemModal from '~/components/prompt/modals/InstructionItemModal';
 import InstructionModal from '~/components/prompt/modals/InstructionModal';
 import Pagination from '~/components/prompt/Pagination';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 
 import { usePagination } from '~/hooks/usePagination';
 import { InstructionItemType, InstructionType } from '~/types/prompt';
@@ -133,33 +134,35 @@ const Instruction = () => {
         <h1 className="text-2xl font-bold">Instruction</h1>
         <Button onClick={handleCreate}>Create</Button>
       </div>
-      <table className="h-full">
-        <thead>
-          <tr className="text-gray-500">
-            <th className="py-2 text-start font-semibold">Name</th>
-            <th className="text-start font-semibold">Instruction Items</th>
-            <th className="text-end font-semibold">Action</th>
-          </tr>
-        </thead>
-        <tbody>
+
+      <Table className="h-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Instruction Items</TableHead>
+            <TableHead className="text-end">Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {displayedItems.map((item) => (
-            <tr key={item.id} className="border-y-2">
-              <td className="p-2 font-semibold">{item.name}</td>
-              <td className="w-2/3 whitespace-pre-line p-2">
+            <TableRow key={item.id}>
+              <TableCell className="font-semibold">{item.name}</TableCell>
+              <TableCell className="w-2/3 whitespace-pre-line">
                 {item.instruction_items.map((innerItem) => (
                   <p key={innerItem.id} className="mb-2">
                     {innerItem.body}
                   </p>
                 ))}
-              </td>
-              <td className="flex h-full items-center justify-end gap-2">
+              </TableCell>
+              <TableCell className="flex h-full items-center justify-end gap-2">
                 <Button onClick={() => handleEdit(item)}>Edit</Button>
                 <Button onClick={() => {}}>Delete</Button>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
+
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
       <InstructionModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} allItem={INSTRUCTION_ITEMS} />
@@ -188,25 +191,27 @@ const InstructionItem = () => {
         <h1 className="text-2xl font-bold">Instruction Item</h1>
         <Button onClick={handleCreate}>Create</Button>
       </div>
-      <table className="h-full">
-        <thead>
-          <tr className="text-gray-500">
-            <th className="text-start font-semibold">Body</th>
-            <th className="text-end font-semibold">Action</th>
-          </tr>
-        </thead>
-        <tbody>
+
+      <Table className="h-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Body</TableHead>
+            <TableHead className="text-end">Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {displayedItems.map((item) => (
-            <tr key={item.id} className="border-y-2">
-              <td className="w-4/5 whitespace-pre-line p-2">{item.body}</td>
-              <td className="flex h-full items-center justify-end gap-2">
+            <TableRow key={item.id}>
+              <TableCell className="w-4/5 whitespace-pre-line">{item.body}</TableCell>
+              <TableCell className="flex h-full items-center justify-end gap-2">
                 <Button onClick={() => handleEdit(item)}>Edit</Button>
                 <Button onClick={() => {}}>Delete</Button>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
+
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
       <InstructionItemModal isOpen={isOpen} setIsOpen={setIsOpen} item={editItem} />
