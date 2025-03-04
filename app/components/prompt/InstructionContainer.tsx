@@ -16,12 +16,9 @@ const InstructionContainer = ({ cards, setCards, containerId, moveItem }: Instru
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    const activeId = Number(active.id);
-    const overId = Number(over?.id);
-
     if (active.id !== over?.id) {
-      const oldIndex = cards.findIndex((card) => card?.id === activeId);
-      const newIndex = cards.findIndex((card) => card?.id === overId);
+      const oldIndex = cards.findIndex((card) => card?.id === active.id);
+      const newIndex = cards.findIndex((card) => card?.id === over?.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         const updatedCards = [...cards];

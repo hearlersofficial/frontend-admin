@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 interface InstructionItemCardProps {
-  id: number;
+  id: string;
   text: string;
 }
 
