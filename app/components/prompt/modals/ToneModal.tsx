@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { Button } from '~/components/ui/button';
 import Modal from './Modal';
-import Button from '../Button';
 
 import { ToneModalProps } from '~/types/prompt';
 
@@ -52,7 +52,7 @@ const ToneModal = ({ isOpen, setIsOpen, item }: ToneModalProps) => {
         </div>
 
         <div className="flex justify-end">
-          <Button text="Save" handleClick={handleSave} color="bg-green-500" />
+          <Button onClick={handleSave}>Save</Button>
         </div>
       </div>
     </Modal>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLoaderData } from '@remix-run/react';
 
-import Button from '~/components/prompt/Button';
+import { Button } from '~/components/ui/button';
 import ContextModal from '~/components/prompt/modals/ContextModal';
 import Pagination from '~/components/prompt/Pagination';
 
@@ -76,7 +76,7 @@ export default function Context() {
     <div className="flex flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Context</h1>
-        <Button text="Create" handleClick={handleCreate} color="bg-green-500" />
+        <Button onClick={handleCreate}>Create</Button>
       </div>
       <table className="h-full">
         <thead>
@@ -92,8 +92,8 @@ export default function Context() {
               <td className="p-2 font-semibold">{item.name}</td>
               <td className="w-2/3 whitespace-pre-line p-2">{item.body}</td>
               <td className="flex h-full items-center justify-end gap-2">
-                <Button text="Edit" handleClick={() => handleEdit(item)} color="bg-green-500" />
-                <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
+                <Button onClick={() => handleEdit(item)}>Edit</Button>
+                <Button onClick={() => {}}>Delete</Button>
               </td>
             </tr>
           ))}

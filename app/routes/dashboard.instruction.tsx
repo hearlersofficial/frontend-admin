@@ -1,13 +1,13 @@
 import { useState } from 'react';
+import { useLoaderData } from '@remix-run/react';
 
-import Button from '../components/prompt/Button';
+import { Button } from '~/components/ui/button';
 import InstructionItemModal from '~/components/prompt/modals/InstructionItemModal';
 import InstructionModal from '~/components/prompt/modals/InstructionModal';
 import Pagination from '~/components/prompt/Pagination';
 
 import { usePagination } from '~/hooks/usePagination';
 import { InstructionItemType, InstructionType } from '~/types/prompt';
-import { useLoaderData } from '@remix-run/react';
 
 export async function loader() {
   const INSTRUCTIONS = [
@@ -131,7 +131,7 @@ const Instruction = () => {
     <div className="flex w-full flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Instruction</h1>
-        <Button text="Create" handleClick={handleCreate} color="bg-green-500" />
+        <Button onClick={handleCreate}>Create</Button>
       </div>
       <table className="h-full">
         <thead>
@@ -153,8 +153,8 @@ const Instruction = () => {
                 ))}
               </td>
               <td className="flex h-full items-center justify-end gap-2">
-                <Button text="Edit" handleClick={() => handleEdit(item)} color="bg-green-500" />
-                <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
+                <Button onClick={() => handleEdit(item)}>Edit</Button>
+                <Button onClick={() => {}}>Delete</Button>
               </td>
             </tr>
           ))}
@@ -186,7 +186,7 @@ const InstructionItem = () => {
     <div className="flex w-full flex-col gap-4 p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Instruction Item</h1>
-        <Button text="Create" handleClick={handleCreate} color="bg-green-500" />
+        <Button onClick={handleCreate}>Create</Button>
       </div>
       <table className="h-full">
         <thead>
@@ -200,8 +200,8 @@ const InstructionItem = () => {
             <tr key={item.id} className="border-y-2">
               <td className="w-4/5 whitespace-pre-line p-2">{item.body}</td>
               <td className="flex h-full items-center justify-end gap-2">
-                <Button text="Edit" handleClick={() => handleEdit(item)} color="bg-green-500" />
-                <Button text="Delete" handleClick={() => {}} color="bg-red-500" />
+                <Button onClick={() => handleEdit(item)}>Edit</Button>
+                <Button onClick={() => {}}>Delete</Button>
               </td>
             </tr>
           ))}
