@@ -1,38 +1,46 @@
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '~/components/ui/pagination';
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 
-const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
+const CustomPagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
   return (
-    <div className="flex justify-center gap-2">
-      <button
-        className="rounded-full px-3 py-1 text-gray-500 hover:bg-gray-100 disabled:hidden"
-        disabled={currentPage === 1}
-        onClick={() => onPageChange(currentPage - 1)}
-      >
-        prev
-      </button>
+    <Pagination>
+      <PaginationContent className="flex justify-center gap-2">
+        <PaginationItem>
+          <PaginationPrevious
+            className={currentPage === 1 ? 'hidden' : ''}
+            onClick={() => onPageChange(currentPage - 1)}
+          />
+        </PaginationItem>
 
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-        <button
-          key={page}
-          className={`rounded-full px-3 py-1 ${page === currentPage ? 'bg-gray-300' : 'text-gray-500 hover:bg-gray-100'}`}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </button>
-      ))}
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <PaginationItem key={page}>
+            <PaginationLink isActive={page === currentPage} onClick={() => onPageChange(page)}>
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
 
-      <button
-        className="rounded-full px-3 py-1 text-gray-500 hover:bg-gray-100 disabled:hidden"
-        disabled={currentPage === totalPages}
-        onClick={() => onPageChange(currentPage + 1)}
-      >
-        next
-      </button>
-    </div>
+        <PaginationItem>
+          <PaginationNext
+            className={currentPage === totalPages ? 'hidden' : ''}
+            onClick={() => onPageChange(currentPage + 1)}
+          />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 };
-export default Pagination;
+
+export default CustomPagination;
