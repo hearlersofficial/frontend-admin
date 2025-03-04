@@ -1,7 +1,7 @@
-export type ContextType = { id: number; name: string; body: string };
-export type ToneType = { id: number; name: string; body: string };
-export type InstructionItemType = { id: number; body: string };
-export type InstructionType = { id: number; name: string; instruction_items: InstructionItemType[] };
+export type ContextType = { id: string; name: string; body: string };
+export type ToneType = { id: string; name: string; body: string };
+export type InstructionItemType = { id: string; body: string };
+export type InstructionType = { id: string; name: string; instruction_items: InstructionItemType[] };
 
 interface ModalProps {
   isOpen: boolean;
