@@ -39,7 +39,7 @@ export default function CounselorsPage() {
   const data = useLoaderData<typeof loader>();
 
   return (
-    <div>
+    <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">상담사 목록</h1>
       <CounselorContainer counselors={data.counselors} />
     </div>
