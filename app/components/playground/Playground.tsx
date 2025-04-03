@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
 import CharacterList from './CharacterList';
+import HistoryLoader from './HistoryLoader';
+import PromptActions from './PromptActions';
+import PromptEditor from './Prompt/Prompt';
+import TechniqueSelector from './CounselTechnique/Technique';
 
 const characters = [
   { id: '1', name: '다혜', description: '해결' },
@@ -9,7 +13,7 @@ const characters = [
   { id: '4', name: '다혜', description: '해결' },
 ];
 
-export default function Playground() {
+const Playground = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(characters[0].id);
 
   return (
@@ -20,7 +24,16 @@ export default function Playground() {
 
       <div
         className={`flex flex-1 rounded-xl bg-white px-8 py-6 ${selectedCharacter === characters[0].id && 'rounded-tl-none'}`}
-      ></div>
+      >
+        <div className="flex flex-1 flex-col gap-6">
+          <TechniqueSelector />
+          <PromptEditor />
+
+          <PromptActions />
+          <HistoryLoader />
+        </div>
+      </div>
     </div>
   );
-}
+};
+export default Playground;
