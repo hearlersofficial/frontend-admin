@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <header className="flex items-center justify-between bg-white px-10 py-4">
       <div className="flex items-center space-x-10">
-        <h1 className="text-xl font-bold text-[#4D3172]">DEV TEST</h1>
+        <h1 className="text-xl font-bold text-[#4D317E]">DEV TEST</h1>
 
         <TabsList className="flex items-center space-x-6 bg-transparent">
           <TabsTrigger
