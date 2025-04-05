@@ -4,7 +4,7 @@ import CharacterList from './CharacterList';
 import PromptEditor from './Prompt/Prompt';
 import PromptActions from './Prompt/PromptActions';
 import PromptLoader from './Prompt/PromptLoader';
-import TechniqueSelector from './CounselTechnique/Technique';
+import Technique from './CounselTechnique/Technique';
 
 const characters = [
   { id: '1', name: '다혜', description: '해결' },
@@ -26,7 +26,7 @@ const Playground = () => {
         className={`flex flex-1 rounded-xl bg-white px-8 py-6 ${selectedCharacter === characters[0].id && 'rounded-tl-none'}`}
       >
         <div className="flex flex-1 flex-col gap-6">
-          <TechniqueSelector />
+          <Technique />
           <PromptEditor />
 
           <PromptActions />
