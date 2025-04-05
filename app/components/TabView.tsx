@@ -1,5 +1,5 @@
 import { TabsContent } from '~/components/ui/tabs';
-import Character from './Character';
+import Character from './character/Character';
 import Playground from './playground/Playground';
 
 const TabView = () => {
