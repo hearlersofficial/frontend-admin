@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 import CharacterList from './CharacterList';
-import HistoryLoader from './HistoryLoader';
-import PromptActions from './PromptActions';
 import PromptEditor from './Prompt/Prompt';
+import PromptActions from './Prompt/PromptActions';
+import PromptLoader from './Prompt/PromptLoader';
 import TechniqueSelector from './CounselTechnique/Technique';
 
 const characters = [
@@ -30,7 +30,7 @@ const Playground = () => {
           <PromptEditor />
 
           <PromptActions />
-          <HistoryLoader />
+          <PromptLoader />
         </div>
       </div>
     </div>
