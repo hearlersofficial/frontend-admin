@@ -15,24 +15,35 @@ const counselTechniques: CounselTechnique[] = [
 
 const Technique = () => {
   const [selected, setSelected] = useState<string>(counselTechniques[0].id);
+  const [mode, setMode] = useState<string>("SELECT");
+
+  const [techniques, setTechniques] = useState<CounselTechnique[]>(counselTechniques);
+
+  const handleEditTechnique = () => {
+    if (mode === "EDIT") {
+      setMode("SELECT");
+    } else {
+      setMode("EDIT");
+    }
+  };
 
   return (
     <div className="w-full">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-semibold text-[#68676A]">상담기법</h3>
         <div className="space-x-2">
-          <Button className="rounded-full bg-[#736A84]" size="sm">
+          <Button className="rounded-full bg-[#736A84]" onClick={() => setMode("ADD")} size="sm">
             추가/삭제
           </Button>
-          <Button className="rounded-full bg-[#736A84]" size="sm">
-            수정
+          <Button className="rounded-full bg-[#736A84]" onClick={handleEditTechnique} size="sm">
+            {mode === "EDIT" ? "완료" : "수정"}
           </Button>
         </div>
       </div>
 
       <div className="mb-4 mt-2 h-[1px] bg-[#ECE9F1]" />
 
-      <TechniqueContainer techniques={counselTechniques} selected={selected} setSelected={setSelected} />
+      <TechniqueContainer mode={mode} techniques={techniques} selected={selected} setSelected={setSelected} setTechniques={setTechniques} />
     </div>
   );
 };
