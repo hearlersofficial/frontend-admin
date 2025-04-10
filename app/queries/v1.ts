@@ -29,6 +29,10 @@ const v1QueryKeys = createQueryKeys('v1', {
     queryKey: [query],
     queryFn: () => api.V1.getCounselors(query),
   }),
+  kakao: {
+    queryKey: null,
+    queryFn: () => api.V1.kakao(),
+  },
   kakaoCallback: (query: KakaoCallbackParams) => ({
     queryKey: [query],
     queryFn: () => api.V1.kakaoCallback(query),
