@@ -15,7 +15,7 @@ const counselTechniques: CounselTechnique[] = [
 
 const Technique = () => {
   const [selected, setSelected] = useState<string>(counselTechniques[0].id);
-  const [mode, setMode] = useState<string>("SELECT");
+  const [mode, setMode] = useState<"ADDANDDELETE" | "EDIT" | "SELECT">("SELECT");
 
   const [techniques, setTechniques] = useState<CounselTechnique[]>(counselTechniques);
 
@@ -27,15 +27,23 @@ const Technique = () => {
     }
   };
 
+  const handleAddAndDeleteTechnique = () => {
+    if (mode === "ADDANDDELETE") {
+      setMode("SELECT");
+    } else {
+      setMode("ADDANDDELETE");
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-semibold text-[#68676A]">상담기법</h3>
         <div className="space-x-2">
-          <Button className="rounded-full bg-[#736A84]" onClick={() => setMode("ADD")} size="sm">
-            추가/삭제
+          <Button className="rounded-full bg-[#736A84]" onClick={handleAddAndDeleteTechnique} disabled={mode === "EDIT"} size="sm">
+            {mode === "ADDANDDELETE" ? "완료" : "추가/삭제"}
           </Button>
-          <Button className="rounded-full bg-[#736A84]" onClick={handleEditTechnique} size="sm">
+          <Button className="rounded-full bg-[#736A84]" onClick={handleEditTechnique} disabled={mode === "ADDANDDELETE"} size="sm">
             {mode === "EDIT" ? "완료" : "수정"}
           </Button>
         </div>
@@ -46,5 +54,6 @@ const Technique = () => {
       <TechniqueContainer mode={mode} techniques={techniques} selected={selected} setSelected={setSelected} setTechniques={setTechniques} />
     </div>
   );
+  
 };
 export default Technique;

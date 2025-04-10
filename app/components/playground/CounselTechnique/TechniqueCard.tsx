@@ -3,12 +3,15 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 interface TechniqueCardProps {
+  mode: "ADDANDDELETE" | "EDIT" | "SELECT";
   technique: CounselTechnique;
   isSelected: boolean;
   setSelected: (id: string) => void;
+  setTechniques?: (techniques: CounselTechnique[]) => void;
+  techniques?: CounselTechnique[];
 }
 
-const TechniqueCard = ({ technique, isSelected, setSelected }: TechniqueCardProps) => {
+const TechniqueCard = ({ mode, technique, isSelected, setSelected, setTechniques, techniques }: TechniqueCardProps) => {
 
   const { attributes, listeners, setNodeRef, transition, transform } = useSortable({ id: technique.id });
 
@@ -16,6 +19,13 @@ const TechniqueCard = ({ technique, isSelected, setSelected }: TechniqueCardProp
     transform: CSS.Transform.toString(transform),
     transition,
     cursor: "grab",
+  };
+
+  const handleDelete = () => {
+    if (!techniques || !setTechniques) return;
+    
+    const updatedTechniques = techniques.filter(tech => tech.id !== technique.id);
+    setTechniques(updatedTechniques);
   };
 
   return (
@@ -28,9 +38,15 @@ const TechniqueCard = ({ technique, isSelected, setSelected }: TechniqueCardProp
       >
         <span className="text-xs">{technique.name}</span>
       </button>
-      <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
-        {technique.sentences}문장
-      </span>
+      {mode === "ADDANDDELETE" ? (
+        <button className="rounded-lg bg-[#F7F2F2] py-1 text-center text-xs font-semibold text-[#D39393]" onClick={handleDelete}>
+          삭제
+        </button>
+      ) : (
+        <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
+          {technique.sentences}문장
+        </span>
+      )}
     </div>
   );
 };

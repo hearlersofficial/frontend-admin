@@ -5,7 +5,7 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import { CounselTechnique } from '~/types/counselTechnique';
 
 interface TechniqueContainerProps {
-  mode: string;
+  mode: "ADDANDDELETE" | "EDIT" | "SELECT";
   techniques: CounselTechnique[];
   selected: string;
   setSelected: (id: string) => void;
@@ -32,7 +32,15 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
           const isSelected = selected === technique.id;
 
           return (
-            <TechniqueCard key={technique.id} technique={technique} isSelected={isSelected} setSelected={setSelected} />
+            <TechniqueCard 
+              key={technique.id} 
+              mode={mode} 
+              technique={technique} 
+              isSelected={isSelected} 
+              setSelected={setSelected}
+              setTechniques={setTechniques}
+              techniques={techniques} 
+            />
           );
         })}
       </div>
@@ -48,7 +56,15 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
         <div className="flex flex-wrap gap-3">
           {techniques.map((technique) => {
             return (
-              <TechniqueCard key={technique.id} technique={technique} isSelected={false} setSelected={setSelected} />
+              <TechniqueCard 
+                mode={mode} 
+                key={technique.id} 
+                technique={technique} 
+                isSelected={false} 
+                setSelected={setSelected}
+                setTechniques={setTechniques}
+                techniques={techniques}
+              />
             );
           })}
         </div>
