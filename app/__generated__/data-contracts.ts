@@ -10,18 +10,18 @@
  * ---------------------------------------------------------------
  */
 
-/** Tone 업데이트 요청 DTO */
-export interface UpdateToneRequestDto {
+/** 임시 버전 저장 요청 DTO */
+export interface SaveTemporaryVersionRequestDto {
   /**
-   * Tone 이름 (선택사항)
-   * @example "수정된 공감적 상담 톤"
+   * 프롬프트 버전 이름
+   * @example "2024년 7월 프롬프트 버전"
    */
-  name?: string;
+  name: string;
   /**
-   * Tone 내용 (선택사항)
-   * @example "내담자의 감정에 더욱 깊이 공감하고 더 따뜻한 어조로 응답합니다."
+   * 프롬프트 버전 설명
+   * @example "2024년 7월 배포 예정 버전입니다."
    */
-  body?: string;
+  description: string;
 }
 
 /** 에러 응답 DTO */
@@ -121,15 +121,91 @@ export interface Error {
   timestamp?: string;
 }
 
+/** 상담사별 프롬프트 응답 DTO */
+export interface CounselorScopedPromptResponseDto {
+  /**
+   * 상담사 ID
+   * @example "counselor_123456"
+   */
+  counselorId?: string;
+  /**
+   * 페르소나 프롬프트 ID
+   * @example "pp_123456"
+   */
+  personaPromptId?: string;
+  /**
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  createdAt?: string;
+  /**
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  updatedAt?: string;
+  /**
+   * 삭제 시간
+   * @example "null"
+   */
+  deletedAt?: string;
+}
+
+/** 프롬프트 버전 응답 DTO */
+export interface PromptVersionResponseDto {
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_123456"
+   */
+  id?: string;
+  /**
+   * 프롬프트 버전 이름
+   * @example "2024년 6월 프롬프트 버전"
+   */
+  name?: string;
+  /**
+   * 프롬프트 버전 설명
+   * @example "2024년 6월 배포 버전입니다."
+   */
+  description?: string;
+  /** 상담사별 프롬프트 목록 */
+  counselorScopedPrompts?: CounselorScopedPromptResponseDto[];
+  /** 톤별 프롬프트 목록 */
+  toneScopedPrompts?: ToneScopedPromptResponseDto[];
+  /**
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  createdAt?: string;
+  /**
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  updatedAt?: string;
+  /**
+   * 삭제 시간
+   * @example "null"
+   */
+  deletedAt?: string;
+  active?: boolean;
+  temporary?: boolean;
+  bookmarked?: boolean;
+}
+
+/** 임시 버전 저장 응답 DTO */
+export interface SaveTemporaryVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
+}
+
 /** 성공 응답 DTO */
-export interface SuccessUpdateToneResponseDto {
+export interface SuccessSaveTemporaryVersionResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** Tone 업데이트 응답 DTO */
-  data?: UpdateToneResponseDto;
+  /** 임시 버전 저장 응답 DTO */
+  data?: SaveTemporaryVersionResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -137,117 +213,286 @@ export interface SuccessUpdateToneResponseDto {
   timestamp?: string;
 }
 
-/** Tone 응답 DTO */
-export interface ToneResponseDto {
+/** 톤별 프롬프트 응답 DTO */
+export interface ToneScopedPromptResponseDto {
   /**
-   * Tone ID
-   * @example "tn_123456"
+   * 톤 ID
+   * @example "tone_123456"
    */
-  id?: string;
+  toneId?: string;
   /**
-   * Tone 이름
-   * @example "공감적 상담 톤"
+   * 톤 프롬프트 ID
+   * @example "tp_123456"
    */
-  name?: string;
+  tonePromptId?: string;
   /**
-   * Tone 내용
-   * @example "내담자의 감정에 공감하고 따뜻한 어조로 응답합니다."
+   * 첫 번째 상담 기법 ID
+   * @example "ct_123456"
    */
-  body?: string;
+  firstCounselTechniqueId?: string;
   /**
-   * Tone 생성 시간
-   * @example "2024-12-29T12:34:56.000Z"
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
    */
   createdAt?: string;
   /**
-   * Tone 수정 시간
-   * @example "2024-12-29T12:34:56.000Z"
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
    */
   updatedAt?: string;
   /**
-   * Tone 삭제 시간
-   * @example "2024-12-29T12:34:56.000Z"
+   * 삭제 시간
+   * @example "null"
    */
   deletedAt?: string;
 }
 
-/** Tone 업데이트 응답 DTO */
-export interface UpdateToneResponseDto {
-  /** Tone 응답 DTO */
-  tone?: ToneResponseDto;
+/** 기존 프롬프트 버전 로드 응답 DTO */
+export interface LoadExistingPromptVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
 }
 
-/** CounselTechnique 업데이트 요청 DTO */
+/** 성공 응답 DTO */
+export interface SuccessLoadExistingPromptVersionResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 기존 프롬프트 버전 로드 응답 DTO */
+  data?: LoadExistingPromptVersionResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 프롬프트 업데이트 요청 DTO */
+export interface UpdateTonePromptRequestDto {
+  /**
+   * 톤 ID
+   * @example "tone_123456"
+   */
+  toneId: string;
+  /**
+   * 톤 프롬프트 내용
+   * @example "공감적이고 따뜻한 어조로 대화하세요."
+   */
+  body: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessUpdateTonePromptResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 톤 프롬프트 업데이트 응답 DTO */
+  data?: UpdateTonePromptResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 프롬프트 응답 DTO */
+export interface TonePromptResponseDto {
+  /**
+   * 톤 프롬프트 ID
+   * @example "tp_123456"
+   */
+  id?: string;
+  /**
+   * 톤 프롬프트 내용
+   * @example "공감적이고 따뜻한 어조로 대화하세요."
+   */
+  body?: string;
+  /**
+   * 톤 ID
+   * @example "tone_123456"
+   */
+  toneId?: string;
+  /**
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  createdAt?: string;
+  /**
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  updatedAt?: string;
+  /**
+   * 삭제 시간
+   * @example "null"
+   */
+  deletedAt?: string;
+}
+
+/** 톤 프롬프트 업데이트 응답 DTO */
+export interface UpdateTonePromptResponseDto {
+  /** 톤 프롬프트 응답 DTO */
+  tonePrompt?: TonePromptResponseDto;
+}
+
+/** 페르소나 프롬프트 업데이트 요청 DTO */
+export interface UpdatePersonaPromptRequestDto {
+  /**
+   * 상담사 ID
+   * @example "counselor_123456"
+   */
+  counselorId: string;
+  /**
+   * 페르소나 프롬프트 내용
+   * @example "저는 12년 경력의 심리상담사로, 우울증, 불안장애, 트라우마 분야를 전문으로 다룹니다."
+   */
+  body: string;
+}
+
+/** 페르소나 프롬프트 응답 DTO */
+export interface PersonaPromptResponseDto {
+  /**
+   * 페르소나 프롬프트 ID
+   * @example "pp_123456"
+   */
+  id?: string;
+  /**
+   * 페르소나 프롬프트 내용
+   * @example "저는 10년 경력의 심리상담사로, 우울증과 불안장애 분야를 전문으로 다룹니다."
+   */
+  body?: string;
+  /**
+   * 상담사 ID
+   * @example "counselor_123456"
+   */
+  counselorId?: string;
+  /**
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  createdAt?: string;
+  /**
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  updatedAt?: string;
+  /**
+   * 삭제 시간
+   * @example "null"
+   */
+  deletedAt?: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessUpdatePersonaPromptResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 페르소나 프롬프트 업데이트 응답 DTO */
+  data?: UpdatePersonaPromptResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 페르소나 프롬프트 업데이트 응답 DTO */
+export interface UpdatePersonaPromptResponseDto {
+  /** 페르소나 프롬프트 응답 DTO */
+  personaPrompt?: PersonaPromptResponseDto;
+}
+
+/** 상담 기법 업데이트 요청 DTO */
 export interface UpdateCounselTechniqueRequestDto {
   /**
-   * CounselTechnique 이름 (선택사항)
+   * 상담 기법 ID
+   * @example "ct_123456"
+   */
+  counselTechniqueId?: string;
+  /**
+   * 상담 기법 이름
    * @example "개선된 공감 반응 기법"
    */
   name?: string;
   /**
-   * Tone ID (선택사항)(null로 보낼 시 톤 미변경)
-   * @example "tone_567890"
-   */
-  toneId?: string | null;
-  /**
-   * Context (선택사항)
-   * @example "ctx_123456"
+   * 컨텍스트
+   * @example "내담자의 감정에 더 깊이 공감하는 컨텍스트"
    */
   context?: string;
   /**
-   * Instruction (선택사항)
-   * @example "instr_789012"
+   * 지시사항
+   * @example "내담자의 감정을 더 깊이 반영하고 공감하세요."
    */
   instruction?: string;
+  /**
+   * 메시지 임계값
+   * @format int32
+   * @example 5
+   */
+  messageThreshold?: number;
 }
 
-/** CounselTechnique 응답 DTO */
+/** 상담 기법 응답 DTO */
 export interface CounselTechniqueResponseDto {
   /**
-   * CounselTechnique ID
+   * 상담 기법 ID
    * @example "ct_123456"
    */
   id?: string;
   /**
-   * CounselTechnique 이름
+   * 상담 기법 이름
    * @example "공감 반응 기법"
    */
   name?: string;
   /**
-   * Tone ID
-   * @example "tone_789012"
+   * 톤 ID
+   * @example "tone_123456"
    */
   toneId?: string;
   /**
-   * Context ID
-   * @example "ctx_345678"
+   * 컨텍스트
+   * @example "내담자의 감정에 공감하는 컨텍스트"
    */
   context?: string;
   /**
-   * Instruction ID
-   * @example "instr_901234"
+   * 지시사항
+   * @example "내담자의 감정을 반영하고 공감하세요."
    */
   instruction?: string;
   /**
-   * 다음 CounselTechnique ID
-   * @example "ct_567890"
+   * 메시지 임계값
+   * @format int32
+   * @example 3
+   */
+  messageThreshold?: number;
+  /**
+   * 다음 상담 기법 ID
+   * @example "ct_789012"
    */
   nextCounselTechniqueId?: string;
   /**
-   * CounselTechnique 생성 시간
-   * @example "2024-12-29T12:34:56.000Z"
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
    */
   createdAt?: string;
   /**
-   * CounselTechnique 수정 시간
-   * @example "2024-12-29T12:34:56.000Z"
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
    */
   updatedAt?: string;
   /**
-   * CounselTechnique 삭제 시간
-   * @example "2024-12-29T12:34:56.000Z"
+   * 삭제 시간
+   * @example "null"
    */
   deletedAt?: string;
+  temporary?: boolean;
 }
 
 /** 성공 응답 DTO */
@@ -257,7 +502,7 @@ export interface SuccessUpdateCounselTechniqueResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** CounselTechnique 업데이트 응답 DTO */
+  /** 상담 기법 업데이트 응답 DTO */
   data?: UpdateCounselTechniqueResponseDto;
   /**
    * 응답 시간
@@ -266,9 +511,9 @@ export interface SuccessUpdateCounselTechniqueResponseDto {
   timestamp?: string;
 }
 
-/** CounselTechnique 업데이트 응답 DTO */
+/** 상담 기법 업데이트 응답 DTO */
 export interface UpdateCounselTechniqueResponseDto {
-  /** CounselTechnique 응답 DTO */
+  /** 상담 기법 응답 DTO */
   counselTechnique?: CounselTechniqueResponseDto;
 }
 
@@ -306,35 +551,21 @@ export interface TokenResponseDto {
   refreshTokenExpiresAt?: string;
 }
 
-/** Tone 생성 요청 DTO */
-export interface CreateToneRequestDto {
-  /**
-   * Tone 이름
-   * @example "공감적 상담 톤"
-   */
-  name: string;
-  /**
-   * Tone 내용
-   * @example "내담자의 감정에 공감하고 따뜻한 어조로 응답합니다."
-   */
-  body: string;
-}
-
-/** Tone 생성 응답 DTO */
-export interface CreateToneResponseDto {
-  /** Tone 응답 DTO */
-  tone?: ToneResponseDto;
+/** 프롬프트 버전 활성화 응답 DTO */
+export interface ActivatePromptVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
 }
 
 /** 성공 응답 DTO */
-export interface SuccessCreateToneResponseDto {
+export interface SuccessActivatePromptVersionResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** Tone 생성 응답 DTO */
-  data?: CreateToneResponseDto;
+  /** 프롬프트 버전 활성화 응답 DTO */
+  data?: ActivatePromptVersionResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -342,33 +573,39 @@ export interface SuccessCreateToneResponseDto {
   timestamp?: string;
 }
 
-/** CounselTechnique 생성 요청 DTO */
+/** 상담 기법 생성 요청 DTO */
 export interface CreateCounselTechniqueRequestDto {
   /**
-   * CounselTechnique 이름
+   * 상담 기법 이름
    * @example "공감 반응 기법"
    */
   name: string;
   /**
-   * Tone ID (선택사항)
-   * @example "tone_789012"
+   * 톤 ID
+   * @example "tone_123456"
    */
-  toneId?: string;
+  toneId: string;
   /**
-   * Context
-   * @example "ctx_345678"
+   * 컨텍스트
+   * @example "내담자의 감정에 공감하는 컨텍스트"
    */
   context: string;
   /**
-   * Instruction
-   * @example "instr_901234"
+   * 지시사항
+   * @example "내담자의 감정을 반영하고 공감하세요."
    */
   instruction: string;
+  /**
+   * 메시지 임계값
+   * @format int32
+   * @example 3
+   */
+  messageThreshold: number;
 }
 
-/** CounselTechnique 생성 응답 DTO */
+/** 상담 기법 생성 응답 DTO */
 export interface CreateCounselTechniqueResponseDto {
-  /** CounselTechnique 응답 DTO */
+  /** 상담 기법 응답 DTO */
   counselTechnique?: CounselTechniqueResponseDto;
 }
 
@@ -379,7 +616,7 @@ export interface SuccessCreateCounselTechniqueResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** CounselTechnique 생성 응답 DTO */
+  /** 상담 기법 생성 응답 DTO */
   data?: CreateCounselTechniqueResponseDto;
   /**
    * 응답 시간
@@ -388,18 +625,23 @@ export interface SuccessCreateCounselTechniqueResponseDto {
   timestamp?: string;
 }
 
-/** CounselTechnique 시퀀스 저장 요청 DTO */
+/** 상담 기법 시퀀스 저장 요청 DTO */
 export interface SaveCounselTechniqueSequenceRequestDto {
   /**
-   * 순서대로 정렬된 CounselTechnique ID 목록
-   * @example ["ct_123","ct_456","ct_789"]
+   * 톤 ID
+   * @example "tone_123456"
+   */
+  toneId: string;
+  /**
+   * 상담 기법 ID 목록
+   * @example ["ct_123456","ct_789012"]
    */
   counselTechniqueIds: string[];
 }
 
-/** CounselTechnique 시퀀스 저장 응답 DTO */
+/** 상담 기법 시퀀스 저장 응답 DTO */
 export interface SaveCounselTechniqueSequenceResponseDto {
-  /** 업데이트된 CounselTechnique 목록 */
+  /** 상담 기법 목록 */
   counselTechniques?: CounselTechniqueResponseDto[];
 }
 
@@ -410,8 +652,80 @@ export interface SuccessSaveCounselTechniqueSequenceResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** CounselTechnique 시퀀스 저장 응답 DTO */
+  /** 상담 기법 시퀀스 저장 응답 DTO */
   data?: SaveCounselTechniqueSequenceResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 목록 조회 요청 */
+export interface FindTonesRequest {
+  /**
+   * 톤 이름 (선택)
+   * @example "공감"
+   */
+  name?: string | null;
+}
+
+/** 톤 목록 조회 응답 */
+export interface FindTonesResponse {
+  /** 톤 목록 */
+  tones?: Tone[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindTonesResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 톤 목록 조회 응답 */
+  data?: FindTonesResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 */
+export interface Tone {
+  /** 톤 ID */
+  id?: string;
+  /**
+   * 톤 이름
+   * @example "공감"
+   */
+  name?: string;
+  /** 톤 설명 */
+  description?: string;
+  /** 톤 생성 시간 */
+  createdAt?: string;
+  /** 톤 수정 시간 */
+  updatedAt?: string;
+  /** 톤 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 톤 ID로 조회 응답 */
+export interface FindToneResponse {
+  /** 톤 */
+  tone?: Tone;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindToneResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 톤 ID로 조회 응답 */
+  data?: FindToneResponse;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -456,7 +770,7 @@ export interface Counselor {
   /** 상담사 수정 시간 */
   updatedAt?: string;
   /** 상담사 삭제 시간 */
-  deletedAt?: string;
+  deletedAt?: string | null;
 }
 
 /** 상담사 조회 응답 */
@@ -481,30 +795,21 @@ export interface SuccessFindCounselorsResponse {
   timestamp?: string;
 }
 
-/** Tone 목록 조회 요청 DTO */
-export interface GetTonesRequestDto {
-  /**
-   * 조회할 Tone 이름 (선택사항)
-   * @example "공감적 상담"
-   */
-  name?: string;
-}
-
-/** Tone 목록 조회 응답 DTO */
-export interface GetTonesResponseDto {
-  /** Tone 목록 */
-  tones?: ToneResponseDto[];
+/** 상담사 단일 조회 응답 */
+export interface FindCounselorResponse {
+  /** 상담사 */
+  counselor?: Counselor;
 }
 
 /** 성공 응답 DTO */
-export interface SuccessGetTonesResponseDto {
+export interface SuccessFindCounselorResponse {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** Tone 목록 조회 응답 DTO */
-  data?: GetTonesResponseDto;
+  /** 상담사 단일 조회 응답 */
+  data?: FindCounselorResponse;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -512,21 +817,21 @@ export interface SuccessGetTonesResponseDto {
   timestamp?: string;
 }
 
-/** Tone 조회 응답 DTO */
-export interface GetToneByIdResponseDto {
-  /** Tone 응답 DTO */
-  tone?: ToneResponseDto;
+/** 톤 프롬프트 조회 응답 DTO */
+export interface FindTonePromptByIdResponseDto {
+  /** 톤 프롬프트 응답 DTO */
+  tonePrompt?: TonePromptResponseDto;
 }
 
 /** 성공 응답 DTO */
-export interface SuccessGetToneByIdResponseDto {
+export interface SuccessFindTonePromptByIdResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** Tone 조회 응답 DTO */
-  data?: GetToneByIdResponseDto;
+  /** 톤 프롬프트 조회 응답 DTO */
+  data?: FindTonePromptByIdResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -534,35 +839,190 @@ export interface SuccessGetToneByIdResponseDto {
   timestamp?: string;
 }
 
-/** CounselTechnique 목록 조회 요청 DTO */
-export interface GetCounselTechniquesRequestDto {
+/** 프롬프트 버전 조회 요청 DTO */
+export interface FindPromptVersionsRequestDto {
   /**
-   * 조회할 CounselTechnique 이름 (선택사항)
-   * @example "공감"
+   * 프롬프트 버전 이름
+   * @example "2024년"
    */
   name?: string;
-  /**
-   * 조회할 Tone ID (선택사항)
-   * @example "tone_789012"
-   */
-  toneId?: string;
 }
 
-/** CounselTechnique 목록 조회 응답 DTO */
-export interface GetCounselTechniquesResponseDto {
-  /** CounselTechnique 목록 */
+/** 프롬프트 버전 목록 조회 응답 DTO */
+export interface FindPromptVersionsResponseDto {
+  /** 프롬프트 버전 목록 */
+  promptVersions?: PromptVersionResponseDto[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindPromptVersionsResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 프롬프트 버전 목록 조회 응답 DTO */
+  data?: FindPromptVersionsResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 프롬프트 버전 조회 응답 DTO */
+export interface FindPromptVersionByIdResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindPromptVersionByIdResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 프롬프트 버전 조회 응답 DTO */
+  data?: FindPromptVersionByIdResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 임시 버전 조회 응답 DTO */
+export interface FindTemporaryVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindTemporaryVersionResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 임시 버전 조회 응답 DTO */
+  data?: FindTemporaryVersionResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessVoid {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: object;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 프롬프트 활성화 히스토리 목록 조회 응답 DTO */
+export interface FindPromptActivateHistoriesResponseDto {
+  /** 프롬프트 활성화 히스토리 목록 */
+  promptActivateHistories?: PromptActivateHistoryResponseDto[];
+}
+
+/** 프롬프트 활성화 히스토리 응답 DTO */
+export interface PromptActivateHistoryResponseDto {
+  /**
+   * 프롬프트 활성화 히스토리 ID
+   * @example "pah_123456"
+   */
+  id?: string;
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_123456"
+   */
+  promptVersionId?: string;
+  /**
+   * 활성화 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  activatedAt?: string;
+  /**
+   * 생성 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  createdAt?: string;
+  /**
+   * 수정 시간
+   * @example "2024-06-01T12:34:56.000Z"
+   */
+  updatedAt?: string;
+  /**
+   * 삭제 시간
+   * @example "null"
+   */
+  deletedAt?: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindPromptActivateHistoriesResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 프롬프트 활성화 히스토리 목록 조회 응답 DTO */
+  data?: FindPromptActivateHistoriesResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 페르소나 프롬프트 조회 응답 DTO */
+export interface FindPersonaPromptByIdResponseDto {
+  /** 페르소나 프롬프트 응답 DTO */
+  personaPrompt?: PersonaPromptResponseDto;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindPersonaPromptByIdResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 페르소나 프롬프트 조회 응답 DTO */
+  data?: FindPersonaPromptByIdResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 기법 목록 조회 응답 DTO */
+export interface FindOrderedCounselTechniquesResponseDto {
+  /** 상담 기법 목록 */
   counselTechniques?: CounselTechniqueResponseDto[];
 }
 
 /** 성공 응답 DTO */
-export interface SuccessGetCounselTechniquesResponseDto {
+export interface SuccessFindOrderedCounselTechniquesResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** CounselTechnique 목록 조회 응답 DTO */
-  data?: GetCounselTechniquesResponseDto;
+  /** 상담 기법 목록 조회 응답 DTO */
+  data?: FindOrderedCounselTechniquesResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -570,21 +1030,21 @@ export interface SuccessGetCounselTechniquesResponseDto {
   timestamp?: string;
 }
 
-/** CounselTechnique 조회 응답 DTO */
-export interface GetCounselTechniqueByIdResponseDto {
-  /** CounselTechnique 응답 DTO */
+/** 상담 기법 조회 응답 DTO */
+export interface FindCounselTechniqueByIdResponseDto {
+  /** 상담 기법 응답 DTO */
   counselTechnique?: CounselTechniqueResponseDto;
 }
 
 /** 성공 응답 DTO */
-export interface SuccessGetCounselTechniqueByIdResponseDto {
+export interface SuccessFindCounselTechniqueByIdResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** CounselTechnique 조회 응답 DTO */
-  data?: GetCounselTechniqueByIdResponseDto;
+  /** 상담 기법 조회 응답 DTO */
+  data?: FindCounselTechniqueByIdResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -592,17 +1052,25 @@ export interface SuccessGetCounselTechniqueByIdResponseDto {
   timestamp?: string;
 }
 
-export type GetToneData = SuccessGetToneByIdResponseDto;
+export type GetTemporaryVersionData = SuccessFindTemporaryVersionResponseDto;
 
-export type GetToneError = Error;
+export type GetTemporaryVersionError = Error;
 
-export type UpdateToneData = SuccessUpdateToneResponseDto;
+export type SaveVersionData = SuccessSaveTemporaryVersionResponseDto;
 
-export type UpdateToneError = Error;
+export type SaveVersionError = Error;
 
-export type GetCounselTechniqueData = SuccessGetCounselTechniqueByIdResponseDto;
+export type LoadPromptVersionData = SuccessLoadExistingPromptVersionResponseDto;
 
-export type GetCounselTechniqueError = Error;
+export type LoadPromptVersionError = Error;
+
+export type UpdateTonePromptData = SuccessUpdateTonePromptResponseDto;
+
+export type UpdateTonePromptError = Error;
+
+export type UpdatePersonaPromptData = SuccessUpdatePersonaPromptResponseDto;
+
+export type UpdatePersonaPromptError = Error;
 
 export type UpdateCounselTechniqueData = SuccessUpdateCounselTechniqueResponseDto;
 
@@ -616,27 +1084,9 @@ export type CreateUserData = SuccessTokenResponseDto;
 
 export type CreateUserError = Error;
 
-export interface GetTonesParams {
-  /** Tone 목록 조회 요청 DTO */
-  request: GetTonesRequestDto;
-}
+export type ActivatePromptVersionData = SuccessActivatePromptVersionResponseDto;
 
-export type GetTonesData = SuccessGetTonesResponseDto;
-
-export type GetTonesError = Error;
-
-export type CreateToneData = SuccessCreateToneResponseDto;
-
-export type CreateToneError = Error;
-
-export interface GetCounselTechniquesParams {
-  /** CounselTechnique 목록 조회 요청 DTO */
-  request: GetCounselTechniquesRequestDto;
-}
-
-export type GetCounselTechniquesData = SuccessGetCounselTechniquesResponseDto;
-
-export type GetCounselTechniquesError = Error;
+export type ActivatePromptVersionError = Error;
 
 export type CreateCounselTechniqueData = SuccessCreateCounselTechniqueResponseDto;
 
@@ -645,6 +1095,19 @@ export type CreateCounselTechniqueError = Error;
 export type SaveCounselTechniqueSequenceData = SuccessSaveCounselTechniqueSequenceResponseDto;
 
 export type SaveCounselTechniqueSequenceError = Error;
+
+export interface GetTonesParams {
+  /** 톤 목록 조회 요청 */
+  request: FindTonesRequest;
+}
+
+export type GetTonesData = SuccessFindTonesResponse;
+
+export type GetTonesError = Error;
+
+export type GetToneData = SuccessFindToneResponse;
+
+export type GetToneError = Error;
 
 export interface GetCounselorsParams {
   /** 상담사 조회 요청 */
@@ -655,11 +1118,60 @@ export type GetCounselorsData = SuccessFindCounselorsResponse;
 
 export type GetCounselorsError = Error;
 
+export type GetCounselorData = SuccessFindCounselorResponse;
+
+export type GetCounselorError = Error;
+
 export type KakaoError = Error;
 
 export interface KakaoCallbackParams {
-  code: string;
+  code?: string;
   state: string;
 }
 
 export type KakaoCallbackError = Error;
+
+export type GetTonePromptByIdData = SuccessFindTonePromptByIdResponseDto;
+
+export type GetTonePromptByIdError = Error;
+
+export interface GetPromptVersionsParams {
+  /** 프롬프트 버전 조회 요청 DTO */
+  request: FindPromptVersionsRequestDto;
+}
+
+export type GetPromptVersionsData = SuccessFindPromptVersionsResponseDto;
+
+export type GetPromptVersionsError = Error;
+
+export type GetPromptVersionByIdData = SuccessFindPromptVersionByIdResponseDto;
+
+export type GetPromptVersionByIdError = Error;
+
+export type GetActiveVersionData = SuccessVoid;
+
+export type GetActiveVersionError = Error;
+
+export interface GetPromptActivateHistoriesParams {
+  'prompt-version-id'?: string;
+}
+
+export type GetPromptActivateHistoriesData = SuccessFindPromptActivateHistoriesResponseDto;
+
+export type GetPromptActivateHistoriesError = Error;
+
+export type GetPersonaPromptByIdData = SuccessFindPersonaPromptByIdResponseDto;
+
+export type GetPersonaPromptByIdError = Error;
+
+export interface GetOrderedCounselTechniquesParams {
+  'first-counsel-technique-id': string;
+}
+
+export type GetOrderedCounselTechniquesData = SuccessFindOrderedCounselTechniquesResponseDto;
+
+export type GetOrderedCounselTechniquesError = Error;
+
+export type GetCounselTechniqueByIdData = SuccessFindCounselTechniqueByIdResponseDto;
+
+export type GetCounselTechniqueByIdError = Error;

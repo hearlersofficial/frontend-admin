@@ -11,74 +11,99 @@
  */
 
 import {
+  ActivatePromptVersionData,
+  ActivatePromptVersionError,
   CreateCounselTechniqueData,
   CreateCounselTechniqueError,
   CreateCounselTechniqueRequestDto,
-  CreateToneData,
-  CreateToneError,
-  CreateToneRequestDto,
   CreateUserData,
   CreateUserError,
+  GetActiveVersionData,
+  GetActiveVersionError,
+  GetCounselorData,
+  GetCounselorError,
   GetCounselorsData,
   GetCounselorsError,
   GetCounselorsParams,
-  GetCounselTechniqueData,
-  GetCounselTechniqueError,
-  GetCounselTechniquesData,
-  GetCounselTechniquesError,
-  GetCounselTechniquesParams,
+  GetCounselTechniqueByIdData,
+  GetCounselTechniqueByIdError,
+  GetOrderedCounselTechniquesData,
+  GetOrderedCounselTechniquesError,
+  GetOrderedCounselTechniquesParams,
+  GetPersonaPromptByIdData,
+  GetPersonaPromptByIdError,
+  GetPromptActivateHistoriesData,
+  GetPromptActivateHistoriesError,
+  GetPromptActivateHistoriesParams,
+  GetPromptVersionByIdData,
+  GetPromptVersionByIdError,
+  GetPromptVersionsData,
+  GetPromptVersionsError,
+  GetPromptVersionsParams,
+  GetTemporaryVersionData,
+  GetTemporaryVersionError,
   GetToneData,
   GetToneError,
+  GetTonePromptByIdData,
+  GetTonePromptByIdError,
   GetTonesData,
   GetTonesError,
   GetTonesParams,
   KakaoCallbackError,
   KakaoCallbackParams,
   KakaoError,
+  LoadPromptVersionData,
+  LoadPromptVersionError,
   RefreshTokenData,
   RefreshTokenError,
   SaveCounselTechniqueSequenceData,
   SaveCounselTechniqueSequenceError,
   SaveCounselTechniqueSequenceRequestDto,
+  SaveTemporaryVersionRequestDto,
+  SaveVersionData,
+  SaveVersionError,
   UpdateCounselTechniqueData,
   UpdateCounselTechniqueError,
   UpdateCounselTechniqueRequestDto,
-  UpdateToneData,
-  UpdateToneError,
-  UpdateToneRequestDto,
+  UpdatePersonaPromptData,
+  UpdatePersonaPromptError,
+  UpdatePersonaPromptRequestDto,
+  UpdateTonePromptData,
+  UpdateTonePromptError,
+  UpdateTonePromptRequestDto,
 } from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
 export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
-   * @description ID로 Tone을 조회합니다.
+   * @description 현재 수정 중인 임시 프롬프트 버전을 조회합니다. 2025.04.17 기준 피그마 상 보이는 모든 뷰는 이 API를 통하면 됩니다. 추후 토글을 통해 임시 버전과 활성화 버전을 왔다갈 수 있게 해야 좋을 듯 합니다. 임시 버전이 비게 되면, 임시 버전 라이프사이클에 의해 새로운 임시 버전이 자동 생성됩니다. 즉 오직 1개의 임시 버전이 항상 존재합니다.
    *
    * @tags 상담 프롬프트
-   * @name GetTone
-   * @summary Tone 조회
-   * @request GET:/v1/admin/tones/{toneId}
+   * @name GetTemporaryVersion
+   * @summary 현재 수정 중인 임시 프롬프트 버전 조회
+   * @request GET:/v1/admin/prompt-versions/temporary-version
    * @secure
    */
-  getTone = (toneId: string, params: RequestParams = {}) =>
-    this.request<GetToneData, GetToneError>({
-      path: `/v1/admin/tones/${toneId}`,
+  getTemporaryVersion = (params: RequestParams = {}) =>
+    this.request<GetTemporaryVersionData, GetTemporaryVersionError>({
+      path: `/v1/admin/prompt-versions/temporary-version`,
       method: 'GET',
       secure: true,
       format: 'json',
       ...params,
     });
   /**
-   * @description 기존 Tone을 업데이트합니다.
+   * @description 현재 수정 중인 임시 프롬프트 버전을 영구 저장합니다. 이름과 설명을 지정하여 임시 상태(isTemporary=true)에서 정식 버전(isTemporary=false)으로 전환됩니다. 저장을 통해 임시 버전이 비게 되면, 임시 버전 라이프사이클에 의해 새로운 임시 버전이 자동 생성됩니다.
    *
    * @tags 상담 프롬프트
-   * @name UpdateTone
-   * @summary Tone 업데이트
-   * @request PUT:/v1/admin/tones/{toneId}
+   * @name SaveVersion
+   * @summary 임시 프롬프트 버전에 이름과 설명을 지정하고 영구 상태로 변경하여 저장
+   * @request PUT:/v1/admin/prompt-versions/temporary-version
    * @secure
    */
-  updateTone = (toneId: string, data: UpdateToneRequestDto, params: RequestParams = {}) =>
-    this.request<UpdateToneData, UpdateToneError>({
-      path: `/v1/admin/tones/${toneId}`,
+  saveVersion = (data: SaveTemporaryVersionRequestDto, params: RequestParams = {}) =>
+    this.request<SaveVersionData, SaveVersionError>({
+      path: `/v1/admin/prompt-versions/temporary-version`,
       method: 'PUT',
       body: data,
       secure: true,
@@ -87,29 +112,67 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description ID로 CounselTechnique를 조회합니다.
+   * @description 저장된 버전을 임시 버전으로 복사합니다. 기존 수정 중이던 임시 버전을 덮어씁니다.
    *
    * @tags 상담 프롬프트
-   * @name GetCounselTechnique
-   * @summary CounselTechnique 조회
-   * @request GET:/v1/admin/counsel-techniques/{counselTechniqueId}
+   * @name LoadPromptVersion
+   * @summary 임시 버전에 기존 프롬프트 버전 로드
+   * @request PUT:/v1/admin/prompt-versions/temporary-version/{prompt-version-id}
    * @secure
    */
-  getCounselTechnique = (counselTechniqueId: string, params: RequestParams = {}) =>
-    this.request<GetCounselTechniqueData, GetCounselTechniqueError>({
-      path: `/v1/admin/counsel-techniques/${counselTechniqueId}`,
-      method: 'GET',
+  loadPromptVersion = (promptVersionId: string, params: RequestParams = {}) =>
+    this.request<LoadPromptVersionData, LoadPromptVersionError>({
+      path: `/v1/admin/prompt-versions/temporary-version/${promptVersionId}`,
+      method: 'PUT',
       secure: true,
       format: 'json',
       ...params,
     });
   /**
-   * @description 기존 CounselTechnique를 업데이트합니다.
+   * @description 임시 버전에서 톤 프롬프트를 업데이트합니다. 톤 ID와 본문을 지정할 수 있습니다.
+   *
+   * @tags 상담 프롬프트
+   * @name UpdateTonePrompt
+   * @summary 임시 버전에서 톤 프롬프트 업데이트
+   * @request PUT:/v1/admin/prompt-versions/temporary-version/tone-prompts
+   * @secure
+   */
+  updateTonePrompt = (data: UpdateTonePromptRequestDto, params: RequestParams = {}) =>
+    this.request<UpdateTonePromptData, UpdateTonePromptError>({
+      path: `/v1/admin/prompt-versions/temporary-version/tone-prompts`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 임시 버전에서 페르소나 프롬프트를 업데이트합니다. 카운셀러 ID와 본문을 지정할 수 있습니다.
+   *
+   * @tags 상담 프롬프트
+   * @name UpdatePersonaPrompt
+   * @summary 임시 버전에서 페르소나 프롬프트 업데이트
+   * @request PUT:/v1/admin/prompt-versions/temporary-version/persona-prompts
+   * @secure
+   */
+  updatePersonaPrompt = (data: UpdatePersonaPromptRequestDto, params: RequestParams = {}) =>
+    this.request<UpdatePersonaPromptData, UpdatePersonaPromptError>({
+      path: `/v1/admin/prompt-versions/temporary-version/persona-prompts`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 임시 버전에서 기존 상담 기법을 업데이트합니다. 아직 링크되지 않은 임시기법은 수정할 수 없습니다. 수정 후 해당 기법이 포함된 기법리스트가 반환됩니다.
    *
    * @tags 상담 프롬프트
    * @name UpdateCounselTechnique
-   * @summary CounselTechnique 업데이트
-   * @request PUT:/v1/admin/counsel-techniques/{counselTechniqueId}
+   * @summary 임시 버전에서 상담 기법 업데이트
+   * @request PUT:/v1/admin/prompt-versions/temporary-version/counsel-techniques/{counsel-technique-id}
    * @secure
    */
   updateCounselTechnique = (
@@ -118,7 +181,7 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
     params: RequestParams = {}
   ) =>
     this.request<UpdateCounselTechniqueData, UpdateCounselTechniqueError>({
-      path: `/v1/admin/counsel-techniques/${counselTechniqueId}`,
+      path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques/${counselTechniqueId}`,
       method: 'PUT',
       body: data,
       secure: true,
@@ -158,72 +221,34 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description Tone 목록을 조회합니다.
+   * @description 저장된 버전을 활성화합니다(서비스에 반영). 이후 생성되는 상담들부터 해당 버전이 적용되며, 기존 상담들에는 영향이 없습니다. 임시버전은 활성화할 수 없습니다.
    *
    * @tags 상담 프롬프트
-   * @name GetTones
-   * @summary Tone 목록 조회
-   * @request GET:/v1/admin/tones
+   * @name ActivatePromptVersion
+   * @summary 프롬프트 버전 활성화
+   * @request POST:/v1/admin/prompt-versions/{prompt-version-id}/activate
    * @secure
    */
-  getTones = (query: GetTonesParams, params: RequestParams = {}) =>
-    this.request<GetTonesData, GetTonesError>({
-      path: `/v1/admin/tones`,
-      method: 'GET',
-      query: query,
-      secure: true,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * @description 새로운 Tone을 생성합니다.
-   *
-   * @tags 상담 프롬프트
-   * @name CreateTone
-   * @summary Tone 생성
-   * @request POST:/v1/admin/tones
-   * @secure
-   */
-  createTone = (data: CreateToneRequestDto, params: RequestParams = {}) =>
-    this.request<CreateToneData, CreateToneError>({
-      path: `/v1/admin/tones`,
+  activatePromptVersion = (promptVersionId: string, params: RequestParams = {}) =>
+    this.request<ActivatePromptVersionData, ActivatePromptVersionError>({
+      path: `/v1/admin/prompt-versions/${promptVersionId}/activate`,
       method: 'POST',
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * @description CounselTechnique 목록을 조회합니다.
-   *
-   * @tags 상담 프롬프트
-   * @name GetCounselTechniques
-   * @summary CounselTechnique 목록 조회
-   * @request GET:/v1/admin/counsel-techniques
-   * @secure
-   */
-  getCounselTechniques = (query: GetCounselTechniquesParams, params: RequestParams = {}) =>
-    this.request<GetCounselTechniquesData, GetCounselTechniquesError>({
-      path: `/v1/admin/counsel-techniques`,
-      method: 'GET',
-      query: query,
       secure: true,
       format: 'json',
       ...params,
     });
   /**
-   * @description 새로운 CounselTechnique를 생성합니다.
+   * @description 새로운 상담 기법을 임시기법으로 생성합니다. 임시기법은 다른 기법들과 링크되지 않으며, 추후 순서 지정이 필요합니다.
    *
    * @tags 상담 프롬프트
    * @name CreateCounselTechnique
-   * @summary CounselTechnique 생성
-   * @request POST:/v1/admin/counsel-techniques
+   * @summary 임시 버전에 새로운 상담 기법 생성
+   * @request POST:/v1/admin/prompt-versions/temporary-version/counsel-techniques
    * @secure
    */
   createCounselTechnique = (data: CreateCounselTechniqueRequestDto, params: RequestParams = {}) =>
     this.request<CreateCounselTechniqueData, CreateCounselTechniqueError>({
-      path: `/v1/admin/counsel-techniques`,
+      path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques`,
       method: 'POST',
       body: data,
       secure: true,
@@ -232,17 +257,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description CounselTechnique 시퀀스를 저장합니다.
+   * @description 임시 버전에서 상담 기법 시퀀스를 저장합니다. 기존 기법 및 임시기법들을 연결하고, 연결된 최종 기법 리스트를 반환합니다.
    *
    * @tags 상담 프롬프트
    * @name SaveCounselTechniqueSequence
-   * @summary CounselTechnique 시퀀스 저장
-   * @request POST:/v1/admin/counsel-techniques/sequence
+   * @summary 임시 버전에서 상담 기법 시퀀스 저장
+   * @request POST:/v1/admin/prompt-versions/temporary-version/counsel-techniques/all/sequences
    * @secure
    */
   saveCounselTechniqueSequence = (data: SaveCounselTechniqueSequenceRequestDto, params: RequestParams = {}) =>
     this.request<SaveCounselTechniqueSequenceData, SaveCounselTechniqueSequenceError>({
-      path: `/v1/admin/counsel-techniques/sequence`,
+      path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques/all/sequences`,
       method: 'POST',
       body: data,
       secure: true,
@@ -251,11 +276,46 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description 상담사를 조회합니다.
+   * @description 톤을 복수 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetTones
+   * @summary 톤 복수 조회
+   * @request GET:/v1/tones
+   * @secure
+   */
+  getTones = (query: GetTonesParams, params: RequestParams = {}) =>
+    this.request<GetTonesData, GetTonesError>({
+      path: `/v1/tones`,
+      method: 'GET',
+      query: query,
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 톤을 단건 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetTone
+   * @summary 톤 단건 조회
+   * @request GET:/v1/tones/{toneId}
+   * @secure
+   */
+  getTone = (toneId: string, params: RequestParams = {}) =>
+    this.request<GetToneData, GetToneError>({
+      path: `/v1/tones/${toneId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 상담사를 복수 조회합니다.
    *
    * @tags 상담사
    * @name GetCounselors
-   * @summary 상담사 조회
+   * @summary 상담사 복수 조회
    * @request GET:/v1/counselors
    * @secure
    */
@@ -264,6 +324,23 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       path: `/v1/counselors`,
       method: 'GET',
       query: query,
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 상담사를 단건 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetCounselor
+   * @summary 상담사 단건 조회
+   * @request GET:/v1/counselors/{counselorId}
+   * @secure
+   */
+  getCounselor = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetCounselorData, GetCounselorError>({
+      path: `/v1/counselors/${counselorId}`,
+      method: 'GET',
       secure: true,
       format: 'json',
       ...params,
@@ -299,6 +376,145 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       method: 'GET',
       query: query,
       secure: true,
+      ...params,
+    });
+  /**
+   * @description ID로 톤 프롬프트를 조회합니다. 톤 프롬프트는 불변객체이며, 수정 시 새로운 객체가 생성됩니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetTonePromptById
+   * @summary 톤 프롬프트 조회
+   * @request GET:/v1/admin/tone-prompts/{tonePromptId}
+   * @secure
+   */
+  getTonePromptById = (tonePromptId: string, params: RequestParams = {}) =>
+    this.request<GetTonePromptByIdData, GetTonePromptByIdError>({
+      path: `/v1/admin/tone-prompts/${tonePromptId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 프롬프트 버전 목록을 조회합니다. 옵션으로 이름 검색이 가능합니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetPromptVersions
+   * @summary 프롬프트 버전 목록 조회
+   * @request GET:/v1/admin/prompt-versions
+   * @secure
+   */
+  getPromptVersions = (query: GetPromptVersionsParams, params: RequestParams = {}) =>
+    this.request<GetPromptVersionsData, GetPromptVersionsError>({
+      path: `/v1/admin/prompt-versions`,
+      method: 'GET',
+      query: query,
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description ID로 특정 프롬프트 버전을 조회합니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetPromptVersionById
+   * @summary 프롬프트 버전 조회
+   * @request GET:/v1/admin/prompt-versions/{prompt-version-id}
+   * @secure
+   */
+  getPromptVersionById = (promptVersionId: string, params: RequestParams = {}) =>
+    this.request<GetPromptVersionByIdData, GetPromptVersionByIdError>({
+      path: `/v1/admin/prompt-versions/${promptVersionId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 현재 활성화된 프롬프트 버전을 조회합니다. 활성화된 버전은 수정이 불가능 합니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetActiveVersion
+   * @summary 현재 활성화된 프롬프트 버전 조회 (TBD)
+   * @request GET:/v1/admin/prompt-versions/active-version
+   * @secure
+   */
+  getActiveVersion = (params: RequestParams = {}) =>
+    this.request<GetActiveVersionData, GetActiveVersionError>({
+      path: `/v1/admin/prompt-versions/active-version`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 프롬프트 활성화 히스토리 목록을 조회합니다. 특정 버전 ID로 필터링할 수 있습니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetPromptActivateHistories
+   * @summary 프롬프트 활성화 히스토리 목록 조회
+   * @request GET:/v1/admin/prompt-activate-histories
+   * @secure
+   */
+  getPromptActivateHistories = (query: GetPromptActivateHistoriesParams, params: RequestParams = {}) =>
+    this.request<GetPromptActivateHistoriesData, GetPromptActivateHistoriesError>({
+      path: `/v1/admin/prompt-activate-histories`,
+      method: 'GET',
+      query: query,
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description ID로 페르소나 프롬프트를 조회합니다. 페르소나 프롬프트는 불변객체이며, 수정 시 새로운 객체가 생성됩니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetPersonaPromptById
+   * @summary 페르소나 프롬프트 조회
+   * @request GET:/v1/admin/persona-prompts/{persona-prompt-id}
+   * @secure
+   */
+  getPersonaPromptById = (personaPromptId: string, params: RequestParams = {}) =>
+    this.request<GetPersonaPromptByIdData, GetPersonaPromptByIdError>({
+      path: `/v1/admin/persona-prompts/${personaPromptId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 상담 기법을 전체 조회하거나, 첫 번째 상담 기법 ID를 통해 연결된 모든 상담 기법 목록을 조회합니다. first-counsel-technique-id 파라미터가 없으면 전체 조회, 있으면 해당 ID로 시작하는 연결된 기법들을 순서대로 반환합니다. **현재 전체 조회는 구현되지 않았습니다. 이에 따라 쿼리 파라미터가 필수입니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetOrderedCounselTechniques
+   * @summary 상담 기법 전체 조회 || 첫 번째 상담 기법 ID를 통해 연결된 모든 상담 기법 목록 조회
+   * @request GET:/v1/admin/counsel-techniques
+   * @secure
+   */
+  getOrderedCounselTechniques = (query: GetOrderedCounselTechniquesParams, params: RequestParams = {}) =>
+    this.request<GetOrderedCounselTechniquesData, GetOrderedCounselTechniquesError>({
+      path: `/v1/admin/counsel-techniques`,
+      method: 'GET',
+      query: query,
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description ID로 상담 기법을 조회합니다. 상담 기법은 불변객체이며, 수정 시 새로운 객체가 생성됩니다.
+   *
+   * @tags 상담 프롬프트
+   * @name GetCounselTechniqueById
+   * @summary 상담 기법 조회
+   * @request GET:/v1/admin/counsel-techniques/{counsel-technique-id}
+   * @secure
+   */
+  getCounselTechniqueById = (counselTechniqueId: string, params: RequestParams = {}) =>
+    this.request<GetCounselTechniqueByIdData, GetCounselTechniqueByIdError>({
+      path: `/v1/admin/counsel-techniques/${counselTechniqueId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
       ...params,
     });
 }
