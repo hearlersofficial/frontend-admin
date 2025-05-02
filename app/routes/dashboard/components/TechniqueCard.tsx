@@ -2,7 +2,6 @@ import type { FC } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-
 export interface TechniqueCardProps {
   id: string
   text: string
@@ -15,19 +14,19 @@ export const TechniqueCard: FC<TechniqueCardProps> = ({ id, text, index}) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    padding: "10px",
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    backgroundColor: "#f9f9f9",
-    color: "#000",
     cursor: "grab",
-    width: "100px",
-    height: "100px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    width: "100%",
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {text}
+    <div ref={setNodeRef} className="flex-col gap-[10px]" style={style} {...attributes} {...listeners}>
+      <div className="flex w-[88px] h-[51px] px-[10px] py-[8px] items-center justify-center bg-[#F2F2F7] rounded-[10px]">
+        {text}
+      </div>
     </div>
   );
 };
