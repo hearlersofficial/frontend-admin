@@ -661,15 +661,6 @@ export interface SuccessSaveCounselTechniqueSequenceResponseDto {
   timestamp?: string;
 }
 
-/** 톤 목록 조회 요청 */
-export interface FindTonesRequest {
-  /**
-   * 톤 이름 (선택)
-   * @example "공감"
-   */
-  name?: string | null;
-}
-
 /** 톤 목록 조회 응답 */
 export interface FindTonesResponse {
   /** 톤 목록 */
@@ -731,15 +722,6 @@ export interface SuccessFindToneResponse {
    * @example "2024-07-01 14:30:45"
    */
   timestamp?: string;
-}
-
-/** 상담사 조회 요청 */
-export interface FindCounselorsRequest {
-  /**
-   * 톤 ID (선택)
-   * @example "tone_123456"
-   */
-  toneId?: string | null;
 }
 
 /** 상담사 */
@@ -837,15 +819,6 @@ export interface SuccessFindTonePromptByIdResponseDto {
    * @example "2024-07-01 14:30:45"
    */
   timestamp?: string;
-}
-
-/** 프롬프트 버전 조회 요청 DTO */
-export interface FindPromptVersionsRequestDto {
-  /**
-   * 프롬프트 버전 이름
-   * @example "2024년"
-   */
-  name?: string;
 }
 
 /** 프롬프트 버전 목록 조회 응답 DTO */
@@ -1097,8 +1070,11 @@ export type SaveCounselTechniqueSequenceData = SuccessSaveCounselTechniqueSequen
 export type SaveCounselTechniqueSequenceError = Error;
 
 export interface GetTonesParams {
-  /** 톤 목록 조회 요청 */
-  request: FindTonesRequest;
+  /**
+   * 톤 이름 (선택)
+   * @example "공감"
+   */
+  name?: string | null;
 }
 
 export type GetTonesData = SuccessFindTonesResponse;
@@ -1110,8 +1086,11 @@ export type GetToneData = SuccessFindToneResponse;
 export type GetToneError = Error;
 
 export interface GetCounselorsParams {
-  /** 상담사 조회 요청 */
-  request: FindCounselorsRequest;
+  /**
+   * 톤 ID (선택)
+   * @example "tone_123456"
+   */
+  toneId?: string | null;
 }
 
 export type GetCounselorsData = SuccessFindCounselorsResponse;
@@ -1136,8 +1115,11 @@ export type GetTonePromptByIdData = SuccessFindTonePromptByIdResponseDto;
 export type GetTonePromptByIdError = Error;
 
 export interface GetPromptVersionsParams {
-  /** 프롬프트 버전 조회 요청 DTO */
-  request: FindPromptVersionsRequestDto;
+  /**
+   * 프롬프트 버전 이름
+   * @example "2024년"
+   */
+  name?: string;
 }
 
 export type GetPromptVersionsData = SuccessFindPromptVersionsResponseDto;

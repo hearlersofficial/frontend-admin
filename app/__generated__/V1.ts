@@ -299,7 +299,7 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @tags 상담사
    * @name GetTone
    * @summary 톤 단건 조회
-   * @request GET:/v1/tones/{toneId}
+   * @request GET:/v1/tones/{tone-id}
    * @secure
    */
   getTone = (toneId: string, params: RequestParams = {}) =>
@@ -334,7 +334,7 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @tags 상담사
    * @name GetCounselor
    * @summary 상담사 단건 조회
-   * @request GET:/v1/counselors/{counselorId}
+   * @request GET:/v1/counselors/{counselor-id}
    * @secure
    */
   getCounselor = (counselorId: string, params: RequestParams = {}) =>
