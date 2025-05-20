@@ -20,7 +20,7 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
               // value={}
               onChange={() => {}}
               className="w-full rounded border p-2"
-              placeholder="제목을 입력하세요"
+              placeholder="제목을 입력하세요..."
             />
           </div>
 
@@ -40,6 +40,20 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
           </div>
 
           <div>
+            <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="gpt">
+              권장 GPT 모델
+            </label>
+            <select
+              id="gpt"
+              // value={}
+              onChange={() => {}}
+              className="w-full rounded border p-2"
+            >
+              <option value="4o">GPT 4o preview_0428</option>
+            </select>
+          </div>
+
+          <div>
             <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="memo">
               메모
             </label>
@@ -49,7 +63,7 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
               onChange={() => {}}
               className="row-4 w-full rounded border p-2"
               rows={4}
-              placeholder="메모를 입력하세요"
+              placeholder="메모를 입력하세요..."
             />
           </div>
         </DialogHeader>
