@@ -18,6 +18,7 @@ interface LoadPromptModalProps {
 
 const LoadPromptModal = ({ isOpen, setIsOpen, prompts }: LoadPromptModalProps) => {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [showFavsOnly, setShowFavsOnly] = useState(false);
 
   const filteredPrompts = showFavsOnly ? prompts.filter((p) => p.fav) : prompts;
@@ -31,6 +32,7 @@ const LoadPromptModal = ({ isOpen, setIsOpen, prompts }: LoadPromptModalProps) =
           <Table>
             <TableHeader>
               <TableRow className="text-left">
+                {isDeleteMode && <TableHead className="w-4 px-2"></TableHead>}
                 <TableHead className="w-4 px-2"></TableHead>
                 <TableHead className="px-4 py-2 font-semibold text-[#B5B7C0]">프롬프트 제목</TableHead>
                 <TableHead className="px-4 font-semibold text-[#B5B7C0]">시간</TableHead>
@@ -41,6 +43,15 @@ const LoadPromptModal = ({ isOpen, setIsOpen, prompts }: LoadPromptModalProps) =
             <TableBody>
               {displayedItems.map((prompt) => (
                 <TableRow key={prompt.id} className="border-b border-[#E0E0E0] hover:bg-[#F9F9F9]">
+                  {isDeleteMode && (
+                    <TableCell className="w-4 px-2">
+                      <input
+                        type="checkbox"
+                        onChange={() => {}}
+                        // checked={}
+                      />
+                    </TableCell>
+                  )}
                   <TableCell className="w-4 px-2">
                     {prompt.fav && <Star className="h-4 w-4 fill-current text-[#F0D467]" />}
                   </TableCell>
@@ -79,13 +90,33 @@ const LoadPromptModal = ({ isOpen, setIsOpen, prompts }: LoadPromptModalProps) =
                   <Star className="fill-[#848484]" />
                   즐겨찾기만 보기
                 </Button>
-                <Button className="rounded-full bg-[#D39393] text-sm font-semibold" size="default">
-                  기록삭제
-                </Button>
+                {!isDeleteMode && (
+                  <Button
+                    onClick={() => {
+                      setIsDeleteMode((prev) => !prev);
+                    }}
+                    className="rounded-full bg-[#D39393] text-sm font-semibold"
+                    size="default"
+                  >
+                    기록삭제
+                  </Button>
+                )}
               </div>
-              <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
-                불러오기
-              </Button>
+              {!isDeleteMode ? (
+                <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
+                  불러오기
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setIsDeleteMode(false);
+                  }}
+                  className="rounded-full bg-[#D39393] px-20 text-base font-semibold"
+                  size="lg"
+                >
+                  삭제하기
+                </Button>
+              )}
             </div>
           </DialogFooter>
         </DialogContent>
