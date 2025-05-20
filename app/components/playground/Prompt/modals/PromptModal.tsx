@@ -68,9 +68,19 @@ const PromptModal = ({ isOpen, setIsOpen, prompt }: PromptModalProps) => {
           </div>
         </DialogHeader>
         <DialogFooter>
-          <Button className="rounded-xl bg-[#736A84] text-base font-semibold" size="lg">
-            불러오기
-          </Button>
+          <div className="flex w-full items-center justify-between">
+            <div className="flex gap-2">
+              <Button className="rounded-full bg-[#D39393] text-base font-semibold" size="lg">
+                삭제
+              </Button>
+              <Button className="rounded-full bg-[#848484] text-base font-semibold" size="lg">
+                수정
+              </Button>
+            </div>
+            <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
+              불러오기
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
