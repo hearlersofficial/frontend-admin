@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import SavePromptModal from './modals/SavePromptModal';
+import SavePromptModal from '../modals/SavePromptModal';
 
 const PromptActions = () => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import LoadPromptModal from './modals/LoadPromptModal';
+import LoadPromptModal from '../modals/LoadPromptModal';
 
 import { Prompt } from '~/types/prompt';
 
