@@ -8,6 +8,7 @@ import PromptModal from './PromptModal';
 
 import { usePagination } from '~/hooks/usePagination';
 import { Prompt } from '~/types/prompt';
+import { Star } from 'lucide-react';
 
 interface LoadPromptModalProps {
   isOpen: boolean;
@@ -58,9 +59,23 @@ const LoadPromptModal = ({ isOpen, setIsOpen, prompts }: LoadPromptModalProps) =
           <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
           <DialogFooter>
-            <Button className="mx-auto block rounded-xl bg-[#736A84] text-base font-semibold" size="lg">
-              불러오기
-            </Button>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex gap-2">
+                <Button
+                  className="flex items-center rounded-full border-2 border-[#848484] bg-white text-sm font-semibold text-[#848484]"
+                  size="default"
+                >
+                  <Star className="fill-[#848484]" />
+                  즐겨찾기만 보기
+                </Button>
+                <Button className="rounded-full bg-[#D39393] text-sm font-semibold" size="default">
+                  기록삭제
+                </Button>
+              </div>
+              <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
+                불러오기
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
