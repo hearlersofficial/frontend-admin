@@ -1,27 +1,21 @@
-import { useState } from 'react';
-
 import { Button } from '~/components/ui/button';
 import DeploymentHistoryModal from './modals/DeploymentHistoryModal';
-
+import { useModal } from '../hooks/useModal';
 import { Prompt } from '~/types/prompt';
 
 const DeploymentHistoryButton = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(true);
-  };
+  const { isOpen, setIsOpen, openModal } = useModal(false);
 
   return (
     <>
-      <Button onClick={handleClick} className="rounded-full bg-[#736A84] text-sm" size="sm">
+      <Button onClick={openModal} className="rounded-full bg-[#736A84] text-sm" size="sm">
         배포기록
       </Button>
-
       <DeploymentHistoryModal isOpen={isOpen} setIsOpen={setIsOpen} prompts={mockPrompts} />
     </>
   );
 };
+
 export default DeploymentHistoryButton;
 
 const mockPrompts: Prompt[] = [

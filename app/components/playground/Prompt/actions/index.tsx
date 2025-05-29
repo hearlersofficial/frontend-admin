@@ -1,18 +1,14 @@
-import { useState } from 'react';
-
 import { Button } from '~/components/ui/button';
 import SavePromptModal from '../modals/SavePromptModal';
 
-const PromptActions = () => {
-  const [isOpen, setIsOpen] = useState(false);
+import { useModal } from '../../hooks/useModal';
 
-  const handleSave = () => {
-    setIsOpen(true);
-  };
+const PromptActions = () => {
+  const { isOpen, setIsOpen, openModal } = useModal(false);
 
   return (
     <div className="flex justify-center gap-2">
-      <Button onClick={handleSave} className="rounded-xl bg-[#736A84] text-base font-semibold" size="lg">
+      <Button onClick={openModal} className="rounded-xl bg-[#736A84] text-base font-semibold" size="lg">
         프롬프트 기록 저장
       </Button>
       <Button className="rounded-xl bg-[#4D317E] text-base font-semibold" size="lg">
