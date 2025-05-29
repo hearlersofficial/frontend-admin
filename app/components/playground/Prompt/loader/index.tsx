@@ -1,7 +1,7 @@
 import { Button } from '~/components/ui/button';
 import LoadPromptModal from '../modals/LoadPromptModal';
 
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '~/hooks/useModal';
 import { Prompt } from '~/types/prompt';
 
 const PromptLoader = () => {

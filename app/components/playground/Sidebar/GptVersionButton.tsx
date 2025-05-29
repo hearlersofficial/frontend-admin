@@ -1,7 +1,7 @@
 import { Button } from '~/components/ui/button';
 import GptVersionModal from './modals/GptVersionModal';
 
-import { useModal } from '../hooks/useModal';
+import { useModal } from '~/hooks/useModal';
 
 const GptVersionButton = () => {
   const { isOpen, setIsOpen, openModal } = useModal(false);

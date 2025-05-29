@@ -1,6 +1,6 @@
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
-import { Modal } from '../../components/common/Modal';
+import { Modal } from '~/components/Modal';
 
 interface SavePromptModalProps {
   isOpen: boolean;

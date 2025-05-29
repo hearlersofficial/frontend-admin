@@ -2,8 +2,8 @@ import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { Modal } from '~/components/Modal';
 import Pagination from '~/components/Pagination';
-import { Modal } from '../../components/common/Modal';
 import PromptModal from '../../Prompt/modals/PromptModal';
 
 import { usePagination } from '~/hooks/usePagination';

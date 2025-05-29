@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
-import { Modal } from '../../components/common/Modal';
+import { Modal } from '~/components/Modal';
 import Pagination from '~/components/Pagination';
 import PromptModal from './PromptModal';
 import { Star } from 'lucide-react';

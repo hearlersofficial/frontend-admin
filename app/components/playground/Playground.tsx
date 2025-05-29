@@ -1,6 +1,6 @@
 import Technique from './CounselTechnique/Technique';
-import Prompt from './Prompt/Prompt';
-import Sidebar from './Sidebar/Sidebar';
+import Prompt from './Prompt';
+import Sidebar from './Sidebar';
 
 const Playground = () => {
   return (

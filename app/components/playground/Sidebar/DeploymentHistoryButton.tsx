@@ -1,6 +1,7 @@
 import { Button } from '~/components/ui/button';
 import DeploymentHistoryModal from './modals/DeploymentHistoryModal';
-import { useModal } from '../hooks/useModal';
+
+import { useModal } from '~/hooks/useModal';
 import { Prompt } from '~/types/prompt';
 
 const DeploymentHistoryButton = () => {

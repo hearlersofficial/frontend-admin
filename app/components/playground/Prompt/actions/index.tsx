@@ -1,7 +1,7 @@
 import { Button } from '~/components/ui/button';
 import SavePromptModal from '../modals/SavePromptModal';
 
-import { useModal } from '../../hooks/useModal';
+import { useModal } from '~/hooks/useModal';
 
 const PromptActions = () => {
   const { isOpen, setIsOpen, openModal } = useModal(false);
