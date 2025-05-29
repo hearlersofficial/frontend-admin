@@ -16,17 +16,36 @@ import {
   CreateCounselTechniqueData,
   CreateCounselTechniqueError,
   CreateCounselTechniqueRequestDto,
+  CreateCounselorData,
+  CreateCounselorError,
+  CreateCounselorRequest,
+  CreateEpisodeData,
+  CreateEpisodeError,
+  CreateEpisodeRequest,
+  CreateToneData,
+  CreateToneError,
+  CreateToneRequest,
   CreateUserData,
   CreateUserError,
+  GenerateCounselorImageUrlData,
+  GenerateCounselorImageUrlError,
+  GenerateCounselorImageUrlRequest,
+  GenerateCutSceneImageUrlData,
+  GenerateCutSceneImageUrlError,
+  GenerateCutSceneImageUrlRequest,
   GetActiveVersionData,
   GetActiveVersionError,
+  GetCounselTechniqueByIdData,
+  GetCounselTechniqueByIdError,
   GetCounselorData,
   GetCounselorError,
   GetCounselorsData,
   GetCounselorsError,
   GetCounselorsParams,
-  GetCounselTechniqueByIdData,
-  GetCounselTechniqueByIdError,
+  GetEpisodeData,
+  GetEpisodeError,
+  GetEpisodesData,
+  GetEpisodesError,
   GetOrderedCounselTechniquesData,
   GetOrderedCounselTechniquesError,
   GetOrderedCounselTechniquesParams,
@@ -52,6 +71,7 @@ import {
   KakaoCallbackError,
   KakaoCallbackParams,
   KakaoError,
+  KakaoParams,
   LoadPromptVersionData,
   LoadPromptVersionError,
   RefreshTokenData,
@@ -65,16 +85,61 @@ import {
   UpdateCounselTechniqueData,
   UpdateCounselTechniqueError,
   UpdateCounselTechniqueRequestDto,
+  UpdateCounselorData,
+  UpdateCounselorError,
+  UpdateCounselorRequest,
+  UpdateEpisodeData,
+  UpdateEpisodeError,
+  UpdateEpisodeRequest,
   UpdatePersonaPromptData,
   UpdatePersonaPromptError,
   UpdatePersonaPromptRequestDto,
+  UpdateToneData,
+  UpdateToneError,
   UpdateTonePromptData,
   UpdateTonePromptError,
   UpdateTonePromptRequestDto,
+  UpdateToneRequest,
 } from './data-contracts';
 import { ContentType, HttpClient, RequestParams } from './http-client';
 
 export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * @description 톤을 단건 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetTone
+   * @summary 톤 단건 조회
+   * @request GET:/v1/admin/tones/{tone-id}
+   * @secure
+   */
+  getTone = (toneId: string, params: RequestParams = {}) =>
+    this.request<GetToneData, GetToneError>({
+      path: `/v1/admin/tones/${toneId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 기존 톤 정보를 업데이트합니다.
+   *
+   * @tags 상담사
+   * @name UpdateTone
+   * @summary 톤 업데이트
+   * @request PUT:/v1/admin/tones/{tone-id}
+   * @secure
+   */
+  updateTone = (toneId: string, data: UpdateToneRequest, params: RequestParams = {}) =>
+    this.request<UpdateToneData, UpdateToneError>({
+      path: `/v1/admin/tones/${toneId}`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
   /**
    * @description 현재 수정 중인 임시 프롬프트 버전을 조회합니다. 2025.04.17 기준 피그마 상 보이는 모든 뷰는 이 API를 통하면 됩니다. 추후 토글을 통해 임시 버전과 활성화 버전을 왔다갈 수 있게 해야 좋을 듯 합니다. 임시 버전이 비게 되면, 임시 버전 라이프사이클에 의해 새로운 임시 버전이 자동 생성됩니다. 즉 오직 1개의 임시 버전이 항상 존재합니다.
    *
@@ -190,6 +255,61 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
+   * @description 상담사를 단건 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetCounselor
+   * @summary 상담사 단건 조회
+   * @request GET:/v1/admin/counselors/{counselor-id}
+   * @secure
+   */
+  getCounselor = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetCounselorData, GetCounselorError>({
+      path: `/v1/admin/counselors/${counselorId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 기존 상담사 정보를 업데이트합니다.
+   *
+   * @tags 상담사
+   * @name UpdateCounselor
+   * @summary 상담사 업데이트
+   * @request PUT:/v1/admin/counselors/{counselor-id}
+   * @secure
+   */
+  updateCounselor = (counselorId: string, data: UpdateCounselorRequest, params: RequestParams = {}) =>
+    this.request<UpdateCounselorData, UpdateCounselorError>({
+      path: `/v1/admin/counselors/${counselorId}`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 기존 에피소드 정보를 업데이트합니다.
+   *
+   * @tags 상담사
+   * @name UpdateEpisode
+   * @summary 에피소드 업데이트
+   * @request PUT:/v1/admin/counselors/{counselor-id}/admin/episodes/{episode-id}
+   * @secure
+   */
+  updateEpisode = (episodeId: string, counselorId: string, data: UpdateEpisodeRequest, params: RequestParams = {}) =>
+    this.request<UpdateEpisodeData, UpdateEpisodeError>({
+      path: `/v1/admin/counselors/${counselorId}/admin/episodes/${episodeId}`,
+      method: 'PUT',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
    * @description 리프레시 토큰으로 액세스 토큰 재발급
    *
    * @tags 인증
@@ -203,6 +323,7 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       path: `/v1/auth/refresh`,
       method: 'POST',
       secure: true,
+      format: 'json',
       ...params,
     });
   /**
@@ -217,6 +338,43 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
     this.request<CreateUserData, CreateUserError>({
       path: `/v1/auth/initiate`,
       method: 'POST',
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 톤을 복수 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetTones
+   * @summary 톤 복수 조회
+   * @request GET:/v1/admin/tones
+   * @secure
+   */
+  getTones = (query: GetTonesParams, params: RequestParams = {}) =>
+    this.request<GetTonesData, GetTonesError>({
+      path: `/v1/admin/tones`,
+      method: 'GET',
+      query: query,
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 새로운 톤을 생성합니다.
+   *
+   * @tags 상담사
+   * @name CreateTone
+   * @summary 톤 생성
+   * @request POST:/v1/admin/tones
+   * @secure
+   */
+  createTone = (data: CreateToneRequest, params: RequestParams = {}) =>
+    this.request<CreateToneData, CreateToneError>({
+      path: `/v1/admin/tones`,
+      method: 'POST',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
       format: 'json',
       ...params,
     });
@@ -276,52 +434,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description 톤을 복수 조회합니다.
-   *
-   * @tags 상담사
-   * @name GetTones
-   * @summary 톤 복수 조회
-   * @request GET:/v1/tones
-   * @secure
-   */
-  getTones = (query: GetTonesParams, params: RequestParams = {}) =>
-    this.request<GetTonesData, GetTonesError>({
-      path: `/v1/tones`,
-      method: 'GET',
-      query: query,
-      secure: true,
-      format: 'json',
-      ...params,
-    });
-  /**
-   * @description 톤을 단건 조회합니다.
-   *
-   * @tags 상담사
-   * @name GetTone
-   * @summary 톤 단건 조회
-   * @request GET:/v1/tones/{tone-id}
-   * @secure
-   */
-  getTone = (toneId: string, params: RequestParams = {}) =>
-    this.request<GetToneData, GetToneError>({
-      path: `/v1/tones/${toneId}`,
-      method: 'GET',
-      secure: true,
-      format: 'json',
-      ...params,
-    });
-  /**
    * @description 상담사를 복수 조회합니다.
    *
    * @tags 상담사
    * @name GetCounselors
    * @summary 상담사 복수 조회
-   * @request GET:/v1/counselors
+   * @request GET:/v1/admin/counselors
    * @secure
    */
   getCounselors = (query: GetCounselorsParams, params: RequestParams = {}) =>
     this.request<GetCounselorsData, GetCounselorsError>({
-      path: `/v1/counselors`,
+      path: `/v1/admin/counselors`,
       method: 'GET',
       query: query,
       secure: true,
@@ -329,24 +452,92 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description 상담사를 단건 조회합니다.
+   * @description 새로운 상담사를 생성합니다.
    *
    * @tags 상담사
-   * @name GetCounselor
-   * @summary 상담사 단건 조회
-   * @request GET:/v1/counselors/{counselor-id}
+   * @name CreateCounselor
+   * @summary 상담사 생성
+   * @request POST:/v1/admin/counselors
    * @secure
    */
-  getCounselor = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetCounselorData, GetCounselorError>({
-      path: `/v1/counselors/${counselorId}`,
-      method: 'GET',
+  createCounselor = (data: CreateCounselorRequest, params: RequestParams = {}) =>
+    this.request<CreateCounselorData, CreateCounselorError>({
+      path: `/v1/admin/counselors`,
+      method: 'POST',
+      body: data,
       secure: true,
+      type: ContentType.Json,
       format: 'json',
       ...params,
     });
   /**
-   * @description 카카오 로그인을 위한 인증 코드 요청, 카카오로 리다이렉트
+   * @description 상담사 이미지 업로드를 위한 Presigned URL을 생성합니다.
+   *
+   * @tags 상담사
+   * @name GenerateCounselorImageUrl
+   * @summary 상담사 이미지 URL 생성
+   * @request POST:/v1/admin/counselors/{counselor-id}/image-url
+   * @secure
+   */
+  generateCounselorImageUrl = (
+    counselorId: string,
+    data: GenerateCounselorImageUrlRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<GenerateCounselorImageUrlData, GenerateCounselorImageUrlError>({
+      path: `/v1/admin/counselors/${counselorId}/image-url`,
+      method: 'POST',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 새로운 에피소드를 생성합니다.
+   *
+   * @tags 상담사
+   * @name CreateEpisode
+   * @summary 에피소드 생성
+   * @request POST:/v1/admin/counselors/{counselor-id}/episodes
+   * @secure
+   */
+  createEpisode = (counselorId: string, data: CreateEpisodeRequest, params: RequestParams = {}) =>
+    this.request<CreateEpisodeData, CreateEpisodeError>({
+      path: `/v1/admin/counselors/${counselorId}/episodes`,
+      method: 'POST',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 컷신 이미지 업로드를 위한 Presigned URL을 생성합니다.
+   *
+   * @tags 상담사
+   * @name GenerateCutSceneImageUrl
+   * @summary 컷신 이미지 URL 생성
+   * @request POST:/v1/admin/counselors/{counselor-id}/episodes/{episode-id}/image-url
+   * @secure
+   */
+  generateCutSceneImageUrl = (
+    episodeId: string,
+    counselorId: string,
+    data: GenerateCutSceneImageUrlRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<GenerateCutSceneImageUrlData, GenerateCutSceneImageUrlError>({
+      path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}/image-url`,
+      method: 'POST',
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 카카오 로그인을 위한 인증 코드 요청, 카카오로 리다이렉트. swagger에서는 사용 불가. a 태그로 접근
    *
    * @tags 인증
    * @name Kakao
@@ -354,10 +545,11 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/auth/login/kakao
    * @secure
    */
-  kakao = (params: RequestParams = {}) =>
+  kakao = (query: KakaoParams, params: RequestParams = {}) =>
     this.request<any, KakaoError>({
       path: `/v1/auth/login/kakao`,
       method: 'GET',
+      query: query,
       secure: true,
       ...params,
     });
@@ -368,14 +560,12 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @name KakaoCallback
    * @summary 카카오 로그인 콜백
    * @request GET:/v1/auth/callback/kakao
-   * @secure
    */
   kakaoCallback = (query: KakaoCallbackParams, params: RequestParams = {}) =>
     this.request<any, KakaoCallbackError>({
       path: `/v1/auth/callback/kakao`,
       method: 'GET',
       query: query,
-      secure: true,
       ...params,
     });
   /**
@@ -477,6 +667,40 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getPersonaPromptById = (personaPromptId: string, params: RequestParams = {}) =>
     this.request<GetPersonaPromptByIdData, GetPersonaPromptByIdError>({
       path: `/v1/admin/persona-prompts/${personaPromptId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 에피소드를 단건 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetEpisode
+   * @summary 에피소드 단건 조회
+   * @request GET:/v1/admin/counselors/{counselor-id}/episodes/{episode-id}
+   * @secure
+   */
+  getEpisode = (episodeId: string, counselorId: string, params: RequestParams = {}) =>
+    this.request<GetEpisodeData, GetEpisodeError>({
+      path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}`,
+      method: 'GET',
+      secure: true,
+      format: 'json',
+      ...params,
+    });
+  /**
+   * @description 에피소드를 복수 조회합니다.
+   *
+   * @tags 상담사
+   * @name GetEpisodes
+   * @summary 에피소드 복수 조회
+   * @request GET:/v1/admin/counselors/{counselor-id}/admin/episodes
+   * @secure
+   */
+  getEpisodes = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetEpisodesData, GetEpisodesError>({
+      path: `/v1/admin/counselors/${counselorId}/admin/episodes`,
       method: 'GET',
       secure: true,
       format: 'json',
