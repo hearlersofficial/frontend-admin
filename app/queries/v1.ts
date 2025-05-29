@@ -4,6 +4,7 @@ import { api } from '~/api';
 import {
   GetTonesParams,
   GetCounselorsParams,
+  KakaoParams,
   KakaoCallbackParams,
   GetPromptVersionsParams,
   GetPromptActivateHistoriesParams,
@@ -11,30 +12,30 @@ import {
 } from '~/__generated__/data-contracts';
 
 const v1QueryKeys = createQueryKeys('v1', {
+  getTone: (toneId: string) => ({
+    queryKey: [toneId],
+    queryFn: () => api.V1.getTone(toneId),
+  }),
   getTemporaryVersion: {
     queryKey: null,
     queryFn: () => api.V1.getTemporaryVersion(),
   },
+  getCounselor: (counselorId: string) => ({
+    queryKey: [counselorId],
+    queryFn: () => api.V1.getCounselor(counselorId),
+  }),
   getTones: (query: GetTonesParams) => ({
     queryKey: [query],
     queryFn: () => api.V1.getTones(query),
-  }),
-  getTone: (toneId: string) => ({
-    queryKey: [toneId],
-    queryFn: () => api.V1.getTone(toneId),
   }),
   getCounselors: (query: GetCounselorsParams) => ({
     queryKey: [query],
     queryFn: () => api.V1.getCounselors(query),
   }),
-  getCounselor: (counselorId: string) => ({
-    queryKey: [counselorId],
-    queryFn: () => api.V1.getCounselor(counselorId),
+  kakao: (query: KakaoParams) => ({
+    queryKey: [query],
+    queryFn: () => api.V1.kakao(query),
   }),
-  kakao: {
-    queryKey: null,
-    queryFn: () => api.V1.kakao(),
-  },
   kakaoCallback: (query: KakaoCallbackParams) => ({
     queryKey: [query],
     queryFn: () => api.V1.kakaoCallback(query),
@@ -62,6 +63,14 @@ const v1QueryKeys = createQueryKeys('v1', {
   getPersonaPromptById: (personaPromptId: string) => ({
     queryKey: [personaPromptId],
     queryFn: () => api.V1.getPersonaPromptById(personaPromptId),
+  }),
+  getEpisode: (episodeId: string, counselorId: string) => ({
+    queryKey: [episodeId, counselorId],
+    queryFn: () => api.V1.getEpisode(episodeId, counselorId),
+  }),
+  getEpisodes: (counselorId: string) => ({
+    queryKey: [counselorId],
+    queryFn: () => api.V1.getEpisodes(counselorId),
   }),
   getOrderedCounselTechniques: (query: GetOrderedCounselTechniquesParams) => ({
     queryKey: [query],
