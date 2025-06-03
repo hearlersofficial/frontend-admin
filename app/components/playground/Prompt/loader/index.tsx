@@ -1,16 +1,11 @@
-import { useState } from 'react';
-
 import { Button } from '~/components/ui/button';
-import LoadPromptModal from './modals/LoadPromptModal';
+import LoadPromptModal from '../modals/LoadPromptModal';
 
+import { useModal } from '~/hooks/useModal';
 import { Prompt } from '~/types/prompt';
 
 const PromptLoader = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleClick = () => {
-    setIsOpen(true);
-  };
+  const { isOpen, setIsOpen, openModal } = useModal(false);
 
   return (
     <div className="flex w-full items-center justify-center gap-2">
@@ -28,14 +23,15 @@ const PromptLoader = () => {
         );
       })}
 
-      <Button onClick={handleClick} className="rounded-full bg-[#736A84]" size="sm">
+      <Button onClick={openModal} className="rounded-full bg-[#736A84]" size="sm">
         더보기
       </Button>
 
-      <LoadPromptModal isOpen={isOpen} setIsOpen={setIsOpen} prompts={mockPrompts} />
+      <LoadPromptModal prompts={mockPrompts} isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 };
+
 export default PromptLoader;
 
 const mockPrompts: Prompt[] = [

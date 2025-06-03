@@ -19,7 +19,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }: PaginationP
       <PaginationContent className="flex justify-center gap-2">
         <PaginationItem>
           <PaginationPrevious
-            className={`${currentPage === 1 ? 'hidden' : ''} cursor-pointer border border-[#EEE] bg-[#F5F5F5] text-[#404B52]`}
+            className={`${currentPage === 1 ? 'hidden' : ''} h-8 w-8 cursor-pointer border border-[#EEE] bg-[#F5F5F5] text-[#404B52]`}
             onClick={() => onPageChange(currentPage - 1)}
           />
         </PaginationItem>
@@ -29,7 +29,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }: PaginationP
             <PaginationLink
               isActive={page === currentPage}
               onClick={() => onPageChange(page)}
-              className={`cursor-pointer rounded-md border px-3 py-1 text-sm ${
+              className={`h-8 w-8 cursor-pointer rounded-md border text-sm ${
                 page === currentPage
                   ? 'pointer-events-none border-[#68676A] bg-[#68676A] text-white'
                   : 'border-[#EEE] bg-[#F5F5F5] text-[#404B52]'
@@ -42,7 +42,7 @@ const CustomPagination = ({ currentPage, totalPages, onPageChange }: PaginationP
 
         <PaginationItem>
           <PaginationNext
-            className={`${currentPage === totalPages ? 'hidden' : ''} cursor-pointer border border-[#EEE] bg-[#F5F5F5] text-[#404B52]`}
+            className={`${currentPage === totalPages ? 'hidden' : ''} h-8 w-8 cursor-pointer border border-[#EEE] bg-[#F5F5F5] text-[#404B52]`}
             onClick={() => onPageChange(currentPage + 1)}
           />
         </PaginationItem>

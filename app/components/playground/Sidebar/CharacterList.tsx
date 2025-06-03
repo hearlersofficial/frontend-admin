@@ -23,7 +23,7 @@ const CharacterList = ({ characters, selected, onSelect }: CharacterListProps) =
               isSelected ? 'bg-white' : 'bg-transparent'
             }`}
           >
-            <div className="bg-purpleGrad h-16 w-16 rounded-full" />
+            <div className="h-16 w-16 rounded-full bg-purpleGrad" />
             {isSelected && (
               <div className="flex flex-col items-center justify-center">
                 <span className="text-base font-bold text-[#878787]">{name}</span>

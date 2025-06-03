@@ -1,9 +1,16 @@
+import { useRouteLoaderData } from '@remix-run/react';
 import { UserIcon } from 'lucide-react';
 
-import { Button } from '~/components/ui/button';
 import { TabsList, TabsTrigger } from '~/components/ui/tabs';
+import { RootLoaderData } from '~/types/root';
 
 const Header = () => {
+  const data = useRouteLoaderData<RootLoaderData>('root');
+  const apiURL = data?.ENV.API_URL;
+
+  const redirectURL = encodeURIComponent('~');
+  const loginURL = `${apiURL}/v1/auth/login/kakao?redirect_url=${redirectURL}`;
+
   return (
     <header className="flex items-center justify-between bg-white px-10 py-4">
       <div className="flex items-center space-x-10">
@@ -27,9 +34,9 @@ const Header = () => {
 
       <div className="flex items-center">
         <UserIcon className="text-[#A99FAA]" />
-        <Button variant="ghost" className="text-base font-semibold text-[#A99FAA]">
-          Logout
-        </Button>
+        <a href={loginURL} className="px-4 text-base font-semibold text-[#A99FAA]">
+          Login
+        </a>
       </div>
     </header>
   );

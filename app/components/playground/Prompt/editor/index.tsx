@@ -8,7 +8,7 @@ import { PromptType } from '~/types/prompt';
 
 const TABS = ['Persona', 'Context', 'Instruction', 'Tone'] as const;
 
-const Prompt = () => {
+const PromptEditor = () => {
   const [activeTab, setActiveTab] = useState<PromptType>('Persona');
 
   const [personaValue, setPersonaValue] = useState('');
@@ -50,4 +50,4 @@ const Prompt = () => {
     </div>
   );
 };
-export default Prompt;
+export default PromptEditor;
