@@ -8,7 +8,7 @@ const Header = () => {
   const data = useRouteLoaderData<RootLoaderData>('root');
   const apiURL = data?.ENV.API_URL;
 
-  const redirectURL = encodeURIComponent('https://hearlers-admin-dev-584278316466.asia-northeast3.run.app');
+  const redirectURL = encodeURIComponent('https://hearlers-admin-dev-584278316466.asia-northeast1.run.app');
   const loginURL = `${apiURL}/v1/auth/login/kakao?redirect-url=${redirectURL}`;
 
   return (
