@@ -8,8 +8,8 @@ const Header = () => {
   const data = useRouteLoaderData<RootLoaderData>('root');
   const apiURL = data?.ENV.API_URL;
 
-  const redirectURL = encodeURIComponent('~');
-  const loginURL = `${apiURL}/v1/auth/login/kakao?redirect_url=${redirectURL}`;
+  const redirectURL = encodeURIComponent('https://hearlers-admin-dev-584278316466.asia-northeast3.run.app');
+  const loginURL = `${apiURL}/v1/auth/login/kakao?redirect-url=${redirectURL}`;
 
   return (
     <header className="flex items-center justify-between bg-white px-10 py-4">
