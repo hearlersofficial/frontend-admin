@@ -7,6 +7,8 @@ import './tailwind.css';
 export const loader: LoaderFunction = async () => {
   return json({
     ENV: {
+      ENVIRONMENT: process.env.ENVIRONMENT,
+      BASE_URL: process.env.BASE_URL,
       API_URL: process.env.API_URL,
     },
   });
