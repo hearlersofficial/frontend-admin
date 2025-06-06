@@ -1,26 +1,25 @@
 import { Button } from "~/components/ui/button";
 import EpisodeList from "./episode-list";
 import AddEpisodeModal from "./add-episode-modal";
-import { useState } from 'react';
-
-interface Episode {
-  id: string;
-  title: string;
-  level: number;
-  createdAt: string;
-  status: string;
-  imageUrl: string;
-}
+import { useState, useEffect } from 'react';
+import { useEpisodeStore } from "~/stores/episodeStore";
+import { Episode } from "./types/Episode";
 
 interface CharacterTabsProps {
   characterName: string;
   episodes: Episode[];
 }
 
-const CharacterTabs = ({ characterName, episodes }: CharacterTabsProps) => {
+const CharacterTabs = ({ characterName, episodes: initialEpisodes }: CharacterTabsProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-
   const [isDraftOnly, setIsDraftOnly] = useState(false);
+  
+  const { episodes, setEpisodes } = useEpisodeStore();
+
+  // Initialize episodes in store
+  useEffect(() => {
+    setEpisodes(initialEpisodes);
+  }, [initialEpisodes, setEpisodes]);
 
   return (
     <div className="mt-4 p-6 bg-white rounded-lg shadow">
@@ -42,4 +41,5 @@ const CharacterTabs = ({ characterName, episodes }: CharacterTabsProps) => {
     </div>
   );
 };
+
 export default CharacterTabs; 

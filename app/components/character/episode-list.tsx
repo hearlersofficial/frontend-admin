@@ -1,15 +1,8 @@
-import { useState } from "react";
+import React from "react";
 import { Button } from "~/components/ui/button";
 import EpisodeDetailModal from "./episode-detail-modal";
-
-interface Episode {
-  id: string;
-  title: string;
-  level: number;
-  createdAt: string;
-  status: string;
-  imageUrl: string;
-}
+import { useEpisodeStore } from "~/stores/episodeStore";
+import { Episode } from "./types/Episode";
 
 interface EpisodeListProps {
   episodes: Episode[];
@@ -18,8 +11,7 @@ interface EpisodeListProps {
 }
 
 const EpisodeList = ({ episodes, isDraftOnly, characterName }: EpisodeListProps) => {
-  const [selectedEpisode, setSelectedEpisode] = useState<Episode | null>(null);
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const { openModal } = useEpisodeStore();
 
   const currentPage = 1;
   const itemsPerPage = 5;
@@ -31,13 +23,7 @@ const EpisodeList = ({ episodes, isDraftOnly, characterName }: EpisodeListProps)
   );
 
   const handleViewDetails = (episode: Episode) => {
-    setSelectedEpisode(episode);
-    setIsDetailModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsDetailModalOpen(false);
-    setSelectedEpisode(null);
+    openModal(episode);
   };
 
   return (
@@ -103,13 +89,9 @@ const EpisodeList = ({ episodes, isDraftOnly, characterName }: EpisodeListProps)
       </div>
 
       {/* Episode Detail Modal */}
-      <EpisodeDetailModal
-        isOpen={isDetailModalOpen}
-        onClose={handleCloseModal}
-        episode={selectedEpisode}
-        characterName={characterName}
-      />
+      <EpisodeDetailModal characterName={characterName} />
     </div>
   );
 };
+
 export default EpisodeList; 
