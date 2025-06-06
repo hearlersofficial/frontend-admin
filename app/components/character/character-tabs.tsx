@@ -17,8 +17,10 @@ interface CharacterTabsProps {
   episodes: Episode[];
 }
 
-export default function CharacterTabs({ characterName, episodes }: CharacterTabsProps) {
+const CharacterTabs = ({ characterName, episodes }: CharacterTabsProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const [isDraftOnly, setIsDraftOnly] = useState(false);
 
   return (
     <div className="mt-4 p-6 bg-white rounded-lg shadow">
@@ -26,11 +28,18 @@ export default function CharacterTabs({ characterName, episodes }: CharacterTabs
         <h2 className="text-xl font-semibold">{characterName} 에피소드</h2>
         <Button onClick={() => setIsAddModalOpen(true)}>에피소드 추가</Button>
       </div>
-      <EpisodeList episodes={episodes} />
+      <EpisodeList 
+        episodes={episodes} 
+        isDraftOnly={isDraftOnly} 
+        characterName={characterName}
+      />
       <div className="mt-6 text-center">
-        <Button variant="outline">임시저장만 보기</Button>
+        <Button onClick={() => setIsDraftOnly(!isDraftOnly)} variant="outline">
+          {isDraftOnly ? "전체 보기" : "임시저장만 보기"}
+        </Button>
       </div>
       <AddEpisodeModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
     </div>
   );
-} 
+};
+export default CharacterTabs; 

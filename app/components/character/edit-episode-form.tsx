@@ -1,6 +1,5 @@
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
 
@@ -11,7 +10,7 @@ const dummyImages = Array.from({ length: 15 }, (_, i) => ({
   alt: `Thumbnail ${i + 1}`,
 }));
 
-export default function EditEpisodeForm() {
+const EditEpisodeForm = () => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-xl max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-6">
@@ -23,12 +22,12 @@ export default function EditEpisodeForm() {
         </div>
 
       <div className="mb-6">
-        <Label htmlFor="episodeTitle" className="font-medium">에피소드 제목</Label>
+        <div className="font-medium">에피소드 제목</div>
         <Input id="episodeTitle" defaultValue="다혜의 하루" className="mt-1" />
       </div>
 
       <div className="mb-6">
-        <Label className="font-medium">컷씬 이미지</Label>
+        <div className="font-medium">컷씬 이미지</div>
         <div className="mt-2 flex items-center space-x-2 overflow-x-auto p-2 bg-gray-100 rounded">
           {dummyImages.map((img) => (
             <div key={img.id} className="flex-shrink-0 w-24 h-16 border-2 border-transparent hover:border-blue-500 cursor-pointer rounded overflow-hidden">
@@ -44,7 +43,7 @@ export default function EditEpisodeForm() {
         </div>
         <div>
             <div className="mb-4">
-                <Label htmlFor="speaker">화자</Label>
+                <div className="font-medium">화자</div>
                 <Select defaultValue="jihoo">
                     <SelectTrigger id="speaker">
                         <SelectValue placeholder="화자 선택" />
@@ -59,7 +58,7 @@ export default function EditEpisodeForm() {
                 </Select>
             </div>
             <div>
-                <Label htmlFor="dialogue">대사</Label>
+                <div className="font-medium">대사</div>
                 <Textarea 
                     id="dialogue" 
                     rows={6} 
@@ -80,4 +79,6 @@ export default function EditEpisodeForm() {
       </div>
     </div>
   );
-} 
+};
+
+export default EditEpisodeForm; 
