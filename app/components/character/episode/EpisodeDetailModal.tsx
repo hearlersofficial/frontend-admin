@@ -1,10 +1,10 @@
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 import { useEpisodeStore } from "~/stores/episodeStore";
-import StatusWarningModal from "./components/StatusWarningModal";
-import EpisodeInfoSection from "./components/EpisodeInfoSection";
-import ImageThumbnailsSection from "./components/ImageThumbnailsSection";
-import SceneContentSection from "./components/SceneContentSection";
+import StatusWarningModal from "./StatusWarningModal";
+import EpisodeInfoSection from "./EpisodeInfoSection";
+import ImageThumbnailsSection from "./ImageThumbnailsSection";
+import SceneContentSection from "./SceneContentSection";
 
 interface EpisodeDetailModalProps {
   characterName?: string;

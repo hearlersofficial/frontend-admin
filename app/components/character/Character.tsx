@@ -1,5 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import CharacterTabs from "~/components/character/character-tabs";
+import CharacterTabs from "~/components/character/CharacterTabs";
 
 const CharacterPage = () => {
   const mainTabs = [

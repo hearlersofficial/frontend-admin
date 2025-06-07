@@ -1,6 +1,6 @@
 import { Button } from "~/components/ui/button";
-import EpisodeList from "./episode-list";
-import AddEpisodeModal from "./add-episode-modal";
+import EpisodeList from "./episode/EpisodeList";
+import AddEpisodeModal from "./episode/AddEpisodeModal";
 import { useState, useEffect } from 'react';
 import { useEpisodeStore } from "~/stores/episodeStore";
 import { Episode } from "./types/Episode";

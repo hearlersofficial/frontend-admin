@@ -1,8 +1,8 @@
 import React from "react";
 import { Button } from "~/components/ui/button";
-import EpisodeDetailModal from "./episode-detail-modal";
+import EpisodeDetailModal from "./EpisodeDetailModal";
 import { useEpisodeStore } from "~/stores/episodeStore";
-import { Episode } from "./types/Episode";
+import { Episode } from "../types/Episode";
 
 interface EpisodeListProps {
   episodes: Episode[];
