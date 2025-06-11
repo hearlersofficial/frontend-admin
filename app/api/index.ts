@@ -1,6 +1,6 @@
 import { V1 } from '~/__generated__/V1';
 
-const baseURL = 'https://dev.api.hearlers.com';
+const baseURL = 'https://api.dev.hearlers.com';
 const baseConfig = { baseURL };
 
 export const api = {
