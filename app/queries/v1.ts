@@ -74,7 +74,7 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getOrderedCounselTechniques: (query: GetOrderedCounselTechniquesParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getOrderedCounselTechniques(query),
+    queryFn: () => api.V1.getOrderedCounselTechniques(query).then((res) => res.data.data?.counselTechniques),
   }),
   getCounselTechniqueById: (counselTechniqueId: string) => ({
     queryKey: [counselTechniqueId],
