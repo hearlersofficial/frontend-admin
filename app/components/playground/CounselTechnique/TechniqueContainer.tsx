@@ -2,6 +2,7 @@ import TechniqueCard from './TechniqueCard';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+import { usePromptStore } from '~/store/usePromptStore';
 
 interface TechniqueContainerProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
@@ -12,6 +13,8 @@ interface TechniqueContainerProps {
 }
 
 const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechniques }: TechniqueContainerProps) => {
+  const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
@@ -37,6 +40,7 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
               technique={technique}
               isSelected={isSelected}
               setSelected={setSelected}
+              setSelectedCounselTechnique={setSelectedCounselTechnique}
               setTechniques={setTechniques}
               techniques={techniques}
             />
@@ -58,6 +62,7 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
                 technique={technique}
                 isSelected={false}
                 setSelected={setSelected}
+                setSelectedCounselTechnique={setSelectedCounselTechnique}
                 setTechniques={setTechniques}
                 techniques={techniques}
               />

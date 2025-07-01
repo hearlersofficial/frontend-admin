@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Counselor, PromptVersionResponseDto } from '~/__generated__/data-contracts';
+import { Counselor, CounselTechniqueResponseDto, PromptVersionResponseDto } from '~/__generated__/data-contracts';
 
 interface PromptState {
   temporaryVersion: PromptVersionResponseDto | null;
@@ -7,6 +7,9 @@ interface PromptState {
 
   selectedCounselor: Counselor | null;
   setSelectedCounselor: (counselor: Counselor) => void;
+
+  selectedCounselTechnique: CounselTechniqueResponseDto | null;
+  setSelectedCounselTechnique: (t: CounselTechniqueResponseDto) => void;
 }
 
 export const usePromptStore = create<PromptState>((set) => ({
@@ -15,4 +18,7 @@ export const usePromptStore = create<PromptState>((set) => ({
 
   selectedCounselor: null,
   setSelectedCounselor: (counselor) => set({ selectedCounselor: counselor }),
+
+  selectedCounselTechnique: null,
+  setSelectedCounselTechnique: (t) => set({ selectedCounselTechnique: t }),
 }));

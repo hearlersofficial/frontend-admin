@@ -7,11 +7,20 @@ interface TechniqueCardProps {
   technique: CounselTechniqueResponseDto;
   isSelected: boolean;
   setSelected: (id: string) => void;
+  setSelectedCounselTechnique: (technique: CounselTechniqueResponseDto) => void;
   setTechniques?: (techniques: CounselTechniqueResponseDto[]) => void;
   techniques?: CounselTechniqueResponseDto[];
 }
 
-const TechniqueCard = ({ mode, technique, isSelected, setSelected, setTechniques, techniques }: TechniqueCardProps) => {
+const TechniqueCard = ({
+  mode,
+  technique,
+  isSelected,
+  setSelected,
+  setSelectedCounselTechnique,
+  setTechniques,
+  techniques,
+}: TechniqueCardProps) => {
   const { attributes, listeners, setNodeRef, transition, transform } = useSortable({ id: technique.id! });
 
   const style = {
@@ -30,7 +39,10 @@ const TechniqueCard = ({ mode, technique, isSelected, setSelected, setTechniques
   return (
     <div ref={setNodeRef} className="flex flex-col gap-2" style={style} {...attributes} {...listeners}>
       <button
-        onClick={() => setSelected(technique.id!)}
+        onClick={() => {
+          setSelected(technique.id!);
+          setSelectedCounselTechnique(technique);
+        }}
         className={`h-14 w-20 break-keep rounded-lg border-2 px-2 py-1 text-center text-sm font-semibold leading-tight ${
           isSelected ? 'border-transparent bg-purpleGrad text-white' : 'border-[#A99FAA] text-[#A99FAA]'
         }`}

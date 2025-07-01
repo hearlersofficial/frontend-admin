@@ -11,6 +11,7 @@ import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 const Technique = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
+  const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
   const toneId = selectedCounselor?.toneId;
   const toneScopedPrompts = temporaryVersion?.toneScopedPrompts ?? [];
@@ -29,8 +30,9 @@ const Technique = () => {
     if (counselTechniques.length) {
       setTechniques(counselTechniques);
       setSelected(counselTechniques[0].id ?? '');
+      setSelectedCounselTechnique(counselTechniques[0]);
     }
-  }, [counselTechniques]);
+  }, [counselTechniques, setSelectedCounselTechnique]);
 
   const handleEditTechnique = () => {
     if (mode === 'EDIT') {

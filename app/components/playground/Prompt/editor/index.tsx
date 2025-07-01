@@ -21,10 +21,11 @@ const PromptEditor = () => {
     Tone: '',
   });
 
-  /// persona
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
+  const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique);
 
+  /// persona
   const personaPromptId =
     temporaryVersion?.counselorScopedPrompts?.find((p) => p.counselorId === selectedCounselor?.id)?.personaPromptId ??
     '';
@@ -61,6 +62,17 @@ const PromptEditor = () => {
       [activeTab]: value,
     }));
   };
+
+  // context, instruction
+  useEffect(() => {
+    if (!selectedCounselTechnique) return;
+
+    setPromptValues((prev) => ({
+      ...prev,
+      Context: selectedCounselTechnique.context ?? '',
+      Instruction: selectedCounselTechnique.instruction ?? '',
+    }));
+  }, [selectedCounselTechnique]);
 
   return (
     <div className="h-full w-full">
