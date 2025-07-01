@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useLoaderData } from '@remix-run/react';
 
 import { Counselor } from '~/__generated__/data-contracts';
@@ -9,7 +10,13 @@ const CounselorList = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const setSelectedCounselor = usePromptStore((s) => s.setSelectedCounselor);
 
-  const currentId = selectedCounselor?.id ?? counselors[0] ?? '';
+  useEffect(() => {
+    if (!selectedCounselor && counselors.length > 0) {
+      setSelectedCounselor(counselors[0]);
+    }
+  }, [counselors, selectedCounselor, setSelectedCounselor]);
+
+  const currentId = selectedCounselor?.id ?? '';
 
   return (
     <div className="space-y-1">
