@@ -42,7 +42,7 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getTonePromptById: (tonePromptId: string) => ({
     queryKey: [tonePromptId],
-    queryFn: () => api.V1.getTonePromptById(tonePromptId),
+    queryFn: () => api.V1.getTonePromptById(tonePromptId).then((res) => res.data.data?.tonePrompt),
   }),
   getPromptVersions: (query: GetPromptVersionsParams) => ({
     queryKey: [query],
@@ -62,7 +62,7 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getPersonaPromptById: (personaPromptId: string) => ({
     queryKey: [personaPromptId],
-    queryFn: () => api.V1.getPersonaPromptById(personaPromptId),
+    queryFn: () => api.V1.getPersonaPromptById(personaPromptId).then((res) => res.data.data?.personaPrompt),
   }),
   getEpisode: (episodeId: string, counselorId: string) => ({
     queryKey: [episodeId, counselorId],

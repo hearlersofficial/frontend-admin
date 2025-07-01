@@ -1,34 +1,65 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '~/components/ui/button';
 import PromptTab from './PromptTab';
 import PromptTextarea from './PromptTextarea';
 
 import { PromptType } from '~/types/prompt';
+import { usePromptStore } from '~/store/usePromptStore';
+import { useQuery } from '@tanstack/react-query';
+import { queries } from '~/queries';
 
 const TABS = ['Persona', 'Context', 'Instruction', 'Tone'] as const;
 
 const PromptEditor = () => {
   const [activeTab, setActiveTab] = useState<PromptType>('Persona');
 
-  const [personaValue, setPersonaValue] = useState('');
-
-  type OtherTabs = Exclude<PromptType, 'Persona'>;
-  const [promptValues, setPromptValues] = useState<Record<OtherTabs, string>>({
+  const [promptValues, setPromptValues] = useState<Record<PromptType, string>>({
+    Persona: '',
     Context: '',
     Instruction: '',
     Tone: '',
   });
 
-  const handleChange = (value: string) => {
-    if (activeTab === 'Persona') {
-      setPersonaValue(value);
-    } else {
-      setPromptValues((prev) => ({
-        ...prev,
-        [activeTab]: value,
-      }));
+  /// persona
+  const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
+  const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
+
+  const personaPromptId =
+    temporaryVersion?.counselorScopedPrompts?.find((p) => p.counselorId === selectedCounselor?.id)?.personaPromptId ??
+    '';
+
+  const { data: personaData } = useQuery({
+    enabled: !!personaPromptId,
+    ...queries.v1.getPersonaPromptById(personaPromptId),
+  });
+
+  useEffect(() => {
+    if (personaData?.body) {
+      setPromptValues((prev) => ({ ...prev, Persona: personaData?.body ?? '' }));
     }
+  }, [personaData]);
+
+  // tone
+  const toneId = selectedCounselor?.toneId;
+  const tonePromptId = temporaryVersion?.toneScopedPrompts?.find((p) => p.toneId === toneId)?.tonePromptId ?? '';
+
+  const { data: toneData } = useQuery({
+    enabled: !!tonePromptId,
+    ...queries.v1.getTonePromptById(tonePromptId),
+  });
+
+  useEffect(() => {
+    if (toneData?.body) {
+      setPromptValues((prev) => ({ ...prev, Tone: toneData.body ?? '' }));
+    }
+  }, [toneData]);
+
+  const handleChange = (value: string) => {
+    setPromptValues((prev) => ({
+      ...prev,
+      [activeTab]: value,
+    }));
   };
 
   return (
@@ -43,10 +74,7 @@ const PromptEditor = () => {
       <div className="mb-4 mt-2 h-[1px] bg-[#ECE9F1]" />
 
       <PromptTab tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
-      <PromptTextarea
-        value={activeTab === 'Persona' ? personaValue : promptValues[activeTab]}
-        onChange={handleChange}
-      />
+      <PromptTextarea value={promptValues[activeTab]} onChange={handleChange} />
     </div>
   );
 };
