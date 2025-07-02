@@ -7,6 +7,7 @@ import { usePromptStore } from '~/store/usePromptStore';
 import { useQuery } from '@tanstack/react-query';
 import { queries } from '~/queries';
 import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+import { useSaveCounselTechniqueSequence } from '~/hooks/mutations';
 
 const Technique = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
@@ -34,8 +35,18 @@ const Technique = () => {
     }
   }, [counselTechniques, setSelectedCounselTechnique]);
 
+  const { mutate: updateCounselTechniqueSequence } = useSaveCounselTechniqueSequence();
+
   const handleEditTechnique = () => {
     if (mode === 'EDIT') {
+      const counselTechniqueIds = techniques.map((t) => t.id).filter(Boolean) as string[];
+      if (toneId && counselTechniqueIds.length) {
+        updateCounselTechniqueSequence({
+          toneId,
+          counselTechniqueIds: counselTechniqueIds,
+        });
+      }
+
       setMode('SELECT');
     } else {
       setMode('EDIT');
