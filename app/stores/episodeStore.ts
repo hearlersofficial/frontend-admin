@@ -25,6 +25,10 @@ interface EpisodeStore {
   pendingStatusChange: string | null;
   warningType: 'deploy' | 'undeploy' | null;
   
+  // Image order state
+  isOrderAdjustmentMode: boolean;
+  imageOrder: number[];
+  
   // Actions
   setEpisodes: (episodes: Episode[]) => void;
   openModal: (episode: Episode) => void;
@@ -37,6 +41,8 @@ interface EpisodeStore {
   handleStatusChange: (newStatus: string) => void;
   confirmStatusChange: () => void;
   cancelStatusChange: () => void;
+  toggleOrderAdjustmentMode: () => void;
+  reorderImages: (newOrder: number[]) => void;
 }
 
 export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
@@ -54,6 +60,8 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   showWarningModal: false,
   pendingStatusChange: null,
   warningType: null,
+  isOrderAdjustmentMode: false,
+  imageOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
 
   // Actions
   setEpisodes: (episodes) => set({ episodes }),
@@ -182,5 +190,13 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
     showWarningModal: false,
     pendingStatusChange: null,
     warningType: null,
+  }),
+  
+  toggleOrderAdjustmentMode: () => set((state) => ({
+    isOrderAdjustmentMode: !state.isOrderAdjustmentMode
+  })),
+  
+  reorderImages: (newOrder) => set({
+    imageOrder: newOrder
   }),
 })); 

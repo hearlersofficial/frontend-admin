@@ -1,3 +1,4 @@
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Episode } from "../types/Episode";
@@ -9,6 +10,8 @@ interface EpisodeInfoSectionProps {
   onTitleChange: (title: string) => void;
   onLevelChange: (level: number) => void;
   onStatusChange: (status: string) => void;
+  onOrderAdjustment: () => void;
+  isOrderAdjustmentMode?: boolean;
 }
 
 const EpisodeInfoSection = ({
@@ -18,12 +21,14 @@ const EpisodeInfoSection = ({
   onTitleChange,
   onLevelChange,
   onStatusChange,
+  onOrderAdjustment,
+  isOrderAdjustmentMode = false,
 }: EpisodeInfoSectionProps) => {
   if (!episode) return null;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div>
+    <div className="flex flex-row gap-4 mb-6 items-end">
+      <div className="w-full">
         <div className="font-medium mb-1">에피소드 제목</div>
         <Input 
           value={episode.title || ''} 
@@ -32,14 +37,14 @@ const EpisodeInfoSection = ({
           onChange={(e) => onTitleChange(e.target.value)}
         />
       </div>
-      <div>
+      <div className="w-full">
         <div className="font-medium mb-1">기준 레벨</div>
         <Select 
           defaultValue={episode.level.toString()} 
           disabled={!isEditing}
           onValueChange={(value) => onLevelChange(parseInt(value))}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger className="w-full h-9">
             <SelectValue placeholder="기준 레벨" />
           </SelectTrigger>
           <SelectContent className="w-full">
@@ -51,7 +56,7 @@ const EpisodeInfoSection = ({
           </SelectContent>
         </Select>
       </div>
-      <div>
+      <div className="w-full">
         <div className="font-medium mb-1">배포 상태</div>
         <Select 
           value={status}
@@ -59,7 +64,7 @@ const EpisodeInfoSection = ({
           onValueChange={onStatusChange}
         >
           <SelectTrigger 
-            className={`w-full ${status === '배포' ? 'text-white' : ''}`}
+            className={`w-full h-9 ${status === '배포' ? 'text-white' : ''}`}
             style={status === '배포' ? { backgroundColor: '#EC5E5E' } : {}}
           >
             <SelectValue placeholder="배포 상태" />
@@ -69,6 +74,17 @@ const EpisodeInfoSection = ({
             <SelectItem value="임시">임시</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="flex items-end h-full">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onOrderAdjustment}
+          className="w-full"
+          disabled={!isEditing}
+        >
+          {isOrderAdjustmentMode ? "완료" : "순서 조정"}
+        </Button>
       </div>
     </div>
   );

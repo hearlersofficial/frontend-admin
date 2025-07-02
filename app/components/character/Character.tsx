@@ -1,99 +1,86 @@
+import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import CharacterTabs from "~/components/character/CharacterTabs";
 
 const CharacterPage = () => {
+  const [activeTab, setActiveTab] = useState('cutscene');
+  
   const mainTabs = [
     { id: "cutscene", name: "Cutscene" },
     { id: "opening", name: "Opening" },
   ];
 
   const characters = [
-    { id: "dahye", name: "다혜", avatar: "/images/dahye-avatar.png" },
-    { id: "rian", name: "리안", avatar: "/images/rian-avatar.png" },
-    { id: "jerry", name: "제리", avatar: "/images/jerry-avatar.png" },
-    { id: "yoon", name: "윤", avatar: "/images/yoon-avatar.png" },
+    { id: "dahye", name: "다혜", avatar: "/images/dahye-avatar.png", tag: "#해결" },
+    { id: "rian", name: "리안", avatar: "/images/rian-avatar.png", tag: "#성장" },
+    { id: "jerry", name: "제리", avatar: "/images/jerry-avatar.png", tag: "#탐색" },
+    { id: "yoon", name: "윤", avatar: "/images/yoon-avatar.png", tag: "#안정" },
   ];
 
-  // Dummy data for episodes - replace with actual data fetching later
-  const dummyEpisodes = [
-    {
-      id: "1",
-      title: "Cutscene 01. 첫 만남",
-      level: 1,
-      createdAt: "25.03.27 15:30",
-      status: "배포",
-      imageUrl: "/images/cutscene01.png",
-    },
-    {
-      id: "2",
-      title: "Cutscene 02. 상담실 구경",
-      level: 2,
-      createdAt: "25.03.27 15:30",
-      status: "임시",
-      imageUrl: "/images/cutscene02.png",
-    },
-    {
-      id: "3",
-      title: "Cutscene 03. 기분전환",
-      level: 4, // Mismatched level with screenshot, using dummy data value
-      createdAt: "25.03.27 15:30",
-      status: "임시",
-      imageUrl: "/images/cutscene03.png",
-    },
-    {
-      id: "4",
-      title: "Cutscene 04. 다혜의 하루",
-      level: 4,
-      createdAt: "25.03.27 15:30",
-      status: "임시",
-      imageUrl: "/images/cutscene04.png",
-    },
-    {
-      id: "5",
-      title: "Cutscene 05. 소소한 행복",
-      level: 5,
-      createdAt: "25.03.27 15:30",
-      status: "임시",
-      imageUrl: "/images/cutscene05.png",
-    },
-  ];
+  const dummyEpisodes = Array.from({ length: 15 }, (_, i) => ({
+    id: `${i + 1}`,
+    title: `Cutscene ${String(i + 1).padStart(2, '0')}. 에피소드 제목 ${i + 1}`,
+    level: (i % 5) + 1,
+    createdAt: "25.03.27 15:30",
+    status: i % 3 === 0 ? "배포" : "임시",
+    imageUrl: "",
+  }));
 
   return (
-    <div className="min-h-screen bg-[#F2F2F7] mx-auto p-4 md:p-8">
-      <Tabs defaultValue={mainTabs[0].id} orientation="vertical" className="w-full">
-        <div className="flex space-x-6">
-          <TabsList className="flex flex-col space-y-1 w-auto md:w-[200px]">
+    <div className="min-h-screen bg-[#F2F2F7]">
+      <div className="flex gap-8 max-w-7xl mx-auto">
+        <aside className="w-[150px] flex-shrink-0">
+          <div className="flex flex-col space-y-4">
             {mainTabs.map((tab) => (
-              <TabsTrigger key={tab.id} value={tab.id} className="justify-start w-full px-4 py-2">
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`
+                  justify-start w-full text-left
+                  text-[22px] font-light
+                  p-2
+                  ${activeTab === tab.id 
+                    ? 'text-black font-extrabold border-r-4 border-black' 
+                    : 'text-gray-400'
+                  }
+                `}
+              >
                 {tab.name}
-              </TabsTrigger>
+              </button>
             ))}
-          </TabsList>
-
-          <div className="flex-grow">
-            <TabsContent value="cutscene" className="mt-0">
+          </div>
+        </aside>
+        
+        <main className="flex-grow">
+          <div className="bg-white rounded-xl shadow-md p-6 h-full">
+            {activeTab === 'cutscene' && (
               <Tabs defaultValue={characters[0].id} className="w-full">
-                <TabsList className="grid w-full grid-cols-4 md:w-[400px]">
+                <TabsList className="grid w-full grid-cols-4 md:w-[400px] rounded-lg bg-gray-200 p-1">
                   {characters.map((char) => (
-                    <TabsTrigger key={char.id} value={char.id}>
+                    <TabsTrigger key={char.id} value={char.id} className="data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:shadow-md rounded-md">
                       {char.name}
                     </TabsTrigger>
                   ))}
                 </TabsList>
                 {characters.map((char) => (
-                  <TabsContent key={char.id} value={char.id}>
-                    <CharacterTabs characterName={char.name} episodes={dummyEpisodes} />
+                  <TabsContent key={char.id} value={char.id} className="mt-6">
+                    <CharacterTabs 
+                      characterName={char.name} 
+                      episodes={dummyEpisodes} 
+                      tag={char.tag}
+                    />
                   </TabsContent>
                 ))}
               </Tabs>
-            </TabsContent>
-
-            <TabsContent value="opening" className="mt-0">
-              {/* Opening content will be implemented later */}
-            </TabsContent>
+            )}
+            {activeTab === 'opening' && (
+              <div>
+                <h2 className="text-2xl">Opening Content</h2>
+              </div>
+            )}
           </div>
-        </div>
-      </Tabs>
+        </main>
+      </div>
     </div>
   );
 };

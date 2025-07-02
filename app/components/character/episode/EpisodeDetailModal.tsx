@@ -19,6 +19,8 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
     editData,
     showWarningModal,
     warningType,
+    isOrderAdjustmentMode,
+    imageOrder,
     closeModal,
     startEditing,
     saveChanges,
@@ -28,6 +30,8 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
     handleStatusChange,
     confirmStatusChange,
     cancelStatusChange,
+    toggleOrderAdjustmentMode,
+    reorderImages,
   } = useEpisodeStore();
 
   if (!currentEpisode) return null;
@@ -48,11 +52,31 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
     updateEditData({ dialogue });
   };
 
+  // Additional handlers for new features
+  const handleOrderAdjustment = () => {
+    toggleOrderAdjustmentMode();
+  };
+
+  const handlePageDelete = () => {
+    console.log('페이지 삭제 기능');
+    // TODO: Implement page deletion logic
+  };
+
+  const handleExistingImages = () => {
+    console.log('기존 이미지 기능');
+    // TODO: Implement existing images browser
+  };
+
+  const handlePCUpload = () => {
+    console.log('PC에서 추가 기능');
+    // TODO: Implement PC file upload
+  };
+
   return (
     <>
       <Dialog open={isModalOpen} onOpenChange={closeModal}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-          <div className="p-4">
+        <DialogContent className="w-full h-full max-w-[1420px] max-h-[700px] p-0">
+          <div className="w-full h-full p-6 overflow-y-auto">
             {/* Character and Episode Info Row */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-4">
@@ -73,10 +97,16 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
               onTitleChange={handleTitleChange}
               onLevelChange={handleLevelChange}
               onStatusChange={handleStatusChange}
+              onOrderAdjustment={handleOrderAdjustment}
+              isOrderAdjustmentMode={isOrderAdjustmentMode}
             />
 
             {/* Image Thumbnails Section */}
-            <ImageThumbnailsSection />
+            <ImageThumbnailsSection 
+              isOrderAdjustmentMode={isOrderAdjustmentMode}
+              imageOrder={imageOrder}
+              onReorderImages={reorderImages}
+            />
 
             {/* Scene Content Section */}
             <SceneContentSection
@@ -86,6 +116,23 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
               onSpeakerChange={handleSpeakerChange}
               onDialogueChange={handleDialogueChange}
             />
+
+            {/* Image Management Buttons - Only visible when editing */}
+            {isEditing && (
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex space-x-2">
+                  <Button variant="outline" onClick={handlePageDelete}>
+                    페이지 삭제
+                  </Button>
+                  <Button variant="outline" onClick={handleExistingImages}>
+                    기존 이미지
+                  </Button>
+                  <Button variant="outline" onClick={handlePCUpload}>
+                    PC에서 추가
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex justify-center space-x-3">

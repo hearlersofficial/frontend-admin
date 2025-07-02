@@ -1,24 +1,94 @@
-// Dummy data for images - replace with actual data
-const dummyImages = Array.from({ length: 15 }, (_, i) => ({
-  id: i + 1,
-  src: `/images/placeholder-thumbnail.png`,
-  alt: `Thumbnail ${i + 1}`,
-}));
+import { useState } from "react";
+import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-const ImageThumbnailsSection = () => {
+interface ImageThumbnailsSectionProps {
+  isOrderAdjustmentMode?: boolean;
+  imageOrder?: number[];
+  onReorderImages?: (newOrder: number[]) => void;
+}
+
+const ImageThumbnail = ({ 
+  id, 
+  index, 
+  isSelected, 
+  onSelect, 
+  isDraggable 
+}: { 
+  id: number; 
+  index: number; 
+  isSelected: boolean; 
+  onSelect: (id: number) => void; 
+  isDraggable: boolean; 
+}) => {
+  const sortable = useSortable({ id: id.toString(), disabled: !isDraggable });
+
+  const style = isDraggable ? {
+    transform: CSS.Transform.toString(sortable.transform),
+    transition: sortable.transition,
+  } : {};
+
+  return (
+    <div 
+      ref={sortable.setNodeRef}
+      style={style}
+      {...(isDraggable ? sortable.attributes : {})}
+      {...(isDraggable ? sortable.listeners : {})}
+      className={`w-[90px] h-[120px] rounded-lg ${isSelected ? 'bg-pink-200' : 'bg-white'} ${isDraggable ? 'cursor-grab' : 'cursor-pointer'}`}
+      onClick={() => !isDraggable && onSelect(id)}
+    >
+      <div className="flex items-center justify-center">{index + 1}</div>
+      <div className="mx-[7.5px] w-[75px] h-[75px] rounded-lg bg-gray-300 animate-pulse" />
+    </div>
+  );
+};
+
+const ImageThumbnailsSection = ({ 
+  isOrderAdjustmentMode = false, 
+  imageOrder = Array.from({ length: 15 }, (_, i) => i), 
+  onReorderImages 
+}: ImageThumbnailsSectionProps) => {
+  const [selectedImage, setSelectedImage] = useState(0);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id !== over?.id && onReorderImages) {
+      const oldIndex = imageOrder.indexOf(Number(active.id));
+      const newIndex = imageOrder.indexOf(Number(over?.id));
+      const newOrder = [...imageOrder];
+      const [movedItem] = newOrder.splice(oldIndex, 1);
+      newOrder.splice(newIndex, 0, movedItem);
+      onReorderImages(newOrder);
+    }
+  };
+
+  const content = (
+    <div className="flex items-center space-x-2 overflow-x-auto">
+      {imageOrder.map((id, index) => (
+        <ImageThumbnail
+          key={id}
+          id={id}
+          index={index}
+          isSelected={selectedImage === id}
+          onSelect={setSelectedImage}
+          isDraggable={isOrderAdjustmentMode}
+        />
+      ))}
+    </div>
+  );
+
   return (
     <div className="mb-6">
-      <div className="font-medium mb-2">컷씬 이미지</div>
-      <div className="flex items-center space-x-2 overflow-x-auto p-2 bg-gray-100 rounded">
-        {dummyImages.map((img) => (
-          <div key={img.id} className="flex-shrink-0 w-16 h-12 border-2 border-transparent hover:border-blue-500 cursor-pointer rounded overflow-hidden relative">
-            <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
-            <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white text-xs px-1 rounded-br">
-              {img.id}
-            </div>
-          </div>
-        ))}
-      </div>
+      {isOrderAdjustmentMode ? (
+        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={imageOrder.map(id => id.toString())} strategy={horizontalListSortingStrategy}>
+            {content}
+          </SortableContext>
+        </DndContext>
+      ) : (
+        content
+      )}
     </div>
   );
 };

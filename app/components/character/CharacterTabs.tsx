@@ -8,11 +8,11 @@ import { Episode } from "./types/Episode";
 interface CharacterTabsProps {
   characterName: string;
   episodes: Episode[];
+  tag: string;
 }
 
-const CharacterTabs = ({ characterName, episodes: initialEpisodes }: CharacterTabsProps) => {
+const CharacterTabs = ({ characterName, episodes: initialEpisodes, tag }: CharacterTabsProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isDraftOnly, setIsDraftOnly] = useState(false);
   
   const { episodes, setEpisodes } = useEpisodeStore();
 
@@ -22,21 +22,26 @@ const CharacterTabs = ({ characterName, episodes: initialEpisodes }: CharacterTa
   }, [initialEpisodes, setEpisodes]);
 
   return (
-    <div className="mt-4 p-6 bg-white rounded-lg shadow">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold">{characterName} 에피소드</h2>
-        <Button onClick={() => setIsAddModalOpen(true)}>에피소드 추가</Button>
+    <div>
+      <div className="flex justify-between items-start mb-6">
+        <div className="flex items-center space-x-4">
+          <div className="w-16 h-16 rounded-full bg-gray-200"></div>
+          <div>
+            <h2 className="text-2xl font-bold">{characterName}</h2>
+            <span className="text-sm text-white bg-[#A2BBFE99] px-2 py-1 rounded-[6px]">{tag}</span>
+          </div>
+        </div>
+        <Button 
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-[#8A83A3] text-white hover:bg-[#6E648B] rounded-lg px-6 py-3"
+        >
+          에피소드 추가
+        </Button>
       </div>
       <EpisodeList 
         episodes={episodes} 
-        isDraftOnly={isDraftOnly} 
         characterName={characterName}
       />
-      <div className="mt-6 text-center">
-        <Button onClick={() => setIsDraftOnly(!isDraftOnly)} variant="outline">
-          {isDraftOnly ? "전체 보기" : "임시저장만 보기"}
-        </Button>
-      </div>
       <AddEpisodeModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
     </div>
   );
