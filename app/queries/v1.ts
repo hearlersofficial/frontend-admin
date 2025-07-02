@@ -46,11 +46,11 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getPromptVersions: (query: GetPromptVersionsParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getPromptVersions(query),
+    queryFn: () => api.V1.getPromptVersions(query).then((res) => res.data.data?.promptVersions),
   }),
   getPromptVersionById: (promptVersionId: string) => ({
     queryKey: [promptVersionId],
-    queryFn: () => api.V1.getPromptVersionById(promptVersionId),
+    queryFn: () => api.V1.getPromptVersionById(promptVersionId).then((res) => res.data.data?.promptVersion),
   }),
   getActiveVersion: {
     queryKey: null,
@@ -58,7 +58,7 @@ const v1QueryKeys = createQueryKeys('v1', {
   },
   getPromptActivateHistories: (query: GetPromptActivateHistoriesParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getPromptActivateHistories(query),
+    queryFn: () => api.V1.getPromptActivateHistories(query).then((res) => res.data.data?.promptActivateHistories),
   }),
   getPersonaPromptById: (personaPromptId: string) => ({
     queryKey: [personaPromptId],
