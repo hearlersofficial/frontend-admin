@@ -8,11 +8,13 @@ import { PromptType } from '~/types/prompt';
 import { usePromptStore } from '~/store/usePromptStore';
 import { useQuery } from '@tanstack/react-query';
 import { queries } from '~/queries';
+import { useUpdateCounselTechnique, useUpdatePersonaPrompt, useUpdateTonePrompt } from '~/hooks/mutations';
 
 const TABS = ['Persona', 'Context', 'Instruction', 'Tone'] as const;
 
 const PromptEditor = () => {
   const [activeTab, setActiveTab] = useState<PromptType>('Persona');
+  const [isEditing, setIsEditing] = useState(false);
 
   const [promptValues, setPromptValues] = useState<Record<PromptType, string>>({
     Persona: '',
@@ -35,12 +37,6 @@ const PromptEditor = () => {
     ...queries.v1.getPersonaPromptById(personaPromptId),
   });
 
-  useEffect(() => {
-    if (personaData?.body) {
-      setPromptValues((prev) => ({ ...prev, Persona: personaData?.body ?? '' }));
-    }
-  }, [personaData]);
-
   // tone
   const toneId = selectedCounselor?.toneId;
   const tonePromptId = temporaryVersion?.toneScopedPrompts?.find((p) => p.toneId === toneId)?.tonePromptId ?? '';
@@ -51,10 +47,20 @@ const PromptEditor = () => {
   });
 
   useEffect(() => {
-    if (toneData?.body) {
-      setPromptValues((prev) => ({ ...prev, Tone: toneData.body ?? '' }));
-    }
-  }, [toneData]);
+    if (!personaData?.body || !selectedCounselTechnique || !toneData?.body) return;
+
+    setPromptValues({
+      Persona: personaData?.body ?? '',
+      Context: selectedCounselTechnique?.context ?? '',
+      Instruction: selectedCounselTechnique?.instruction ?? '',
+      Tone: toneData?.body ?? '',
+    });
+  }, [personaData, toneData, selectedCounselTechnique]);
+
+  const handleTabChange = (tab: PromptType) => {
+    setActiveTab(tab);
+    setIsEditing(false);
+  };
 
   const handleChange = (value: string) => {
     setPromptValues((prev) => ({
@@ -63,30 +69,62 @@ const PromptEditor = () => {
     }));
   };
 
-  // context, instruction
-  useEffect(() => {
-    if (!selectedCounselTechnique) return;
+  const { mutate: updatePersonaPrompt } = useUpdatePersonaPrompt({});
+  const { mutate: updateTonePrompt } = useUpdateTonePrompt();
+  const { mutate: updateCounselTechnique } = useUpdateCounselTechnique();
 
-    setPromptValues((prev) => ({
-      ...prev,
-      Context: selectedCounselTechnique.context ?? '',
-      Instruction: selectedCounselTechnique.instruction ?? '',
-    }));
-  }, [selectedCounselTechnique]);
+  const handleEditToggle = () => {
+    if (isEditing) {
+      switch (activeTab) {
+        case 'Persona':
+          if (selectedCounselor?.id) {
+            updatePersonaPrompt({
+              counselorId: selectedCounselor.id,
+              body: promptValues.Persona,
+            });
+          }
+          break;
+        case 'Tone':
+          if (selectedCounselor?.toneId) {
+            updateTonePrompt({
+              toneId: selectedCounselor.toneId,
+              body: promptValues.Tone,
+            });
+          }
+          break;
+        case 'Context':
+        case 'Instruction':
+          if (selectedCounselTechnique?.id) {
+            updateCounselTechnique({
+              counselTechniqueId: selectedCounselTechnique.id,
+              data: {
+                context: promptValues.Context,
+                instruction: promptValues.Instruction,
+              },
+            });
+          }
+          break;
+      }
+
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
+    }
+  };
 
   return (
     <div className="h-full w-full">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-semibold text-[#68676A]">프롬프트</h3>
-        <Button className="rounded-full bg-[#736A84]" size="sm">
-          수정
+        <Button onClick={handleEditToggle} className="rounded-full bg-[#736A84]" size="sm">
+          {isEditing ? '완료' : '수정'}
         </Button>
       </div>
 
       <div className="mb-4 mt-2 h-[1px] bg-[#ECE9F1]" />
 
-      <PromptTab tabs={TABS} activeTab={activeTab} onSelect={setActiveTab} />
-      <PromptTextarea value={promptValues[activeTab]} onChange={handleChange} />
+      <PromptTab tabs={TABS} activeTab={activeTab} onSelect={handleTabChange} />
+      <PromptTextarea value={promptValues[activeTab]} onChange={handleChange} disabled={!isEditing} />
     </div>
   );
 };
