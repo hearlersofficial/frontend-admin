@@ -1,11 +1,12 @@
+import dayjs from 'dayjs';
+
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
-
-import { Prompt } from '~/types/prompt';
+import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 
 interface PromptModalProps {
-  prompt: Prompt;
+  prompt: PromptVersionResponseDto;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
@@ -20,7 +21,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
         <input
           id="title"
           type="text"
-          value={prompt.title}
+          value={prompt.name}
           onChange={() => {}}
           className="w-full rounded border p-2"
           placeholder="제목을 입력하세요"
@@ -34,7 +35,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           id="time"
           type="text"
           readOnly
-          value={prompt.time}
+          value={dayjs(prompt.createdAt).format('YY.MM.DD HH:mm')}
           onChange={() => {}}
           className="w-full rounded border p-2"
         />
@@ -43,7 +44,12 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
         <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="fav">
           즐겨찾기
         </label>
-        <select id="fav" value={prompt.fav ? 'on' : 'off'} onChange={() => {}} className="w-full rounded border p-2">
+        <select
+          id="fav"
+          value={prompt.bookmarked ? 'on' : 'off'}
+          onChange={() => {}}
+          className="w-full rounded border p-2"
+        >
           <option value="on">ON</option>
           <option value="off">OFF</option>
         </select>
@@ -54,7 +60,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
         </label>
         <textarea
           id="memo"
-          value={prompt.memo}
+          value={prompt.description}
           onChange={() => {}}
           className="row-4 w-full rounded border p-2"
           rows={4}
