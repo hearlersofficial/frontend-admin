@@ -98,11 +98,7 @@ const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) =
                 </Button>
               )}
             </div>
-            {!isDeleteMode ? (
-              <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
-                불러오기
-              </Button>
-            ) : (
+            {isDeleteMode && (
               <Button
                 onClick={() => setIsDeleteMode(false)}
                 className="rounded-full bg-[#D39393] px-20 text-base font-semibold"

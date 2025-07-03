@@ -4,6 +4,8 @@ import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
 import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
+import { useLoadPromptVersion } from '~/hooks/mutations';
+import { usePromptStore } from '~/store/usePromptStore';
 
 interface PromptModalProps {
   prompt: PromptVersionResponseDto;
@@ -12,6 +14,17 @@ interface PromptModalProps {
 }
 
 const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
+  const { mutate: loadPromptVersion } = useLoadPromptVersion({
+    onSuccess: (res) => {
+      const newVersion = res.data.data?.promptVersion;
+      if (newVersion) {
+        usePromptStore.getState().setTemporaryVersion(newVersion);
+      }
+      setIsOpen(false);
+    },
+    onError: () => {},
+  });
+
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} maxWidth="3xl">
       <div>
@@ -25,6 +38,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           onChange={() => {}}
           className="w-full rounded border p-2"
           placeholder="제목을 입력하세요"
+          disabled
         />
       </div>
       <div>
@@ -38,6 +52,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           value={dayjs(prompt.createdAt).format('YY.MM.DD HH:mm')}
           onChange={() => {}}
           className="w-full rounded border p-2"
+          disabled
         />
       </div>
       <div>
@@ -49,6 +64,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           value={prompt.bookmarked ? 'on' : 'off'}
           onChange={() => {}}
           className="w-full rounded border p-2"
+          disabled
         >
           <option value="on">ON</option>
           <option value="off">OFF</option>
@@ -65,6 +81,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           className="row-4 w-full rounded border p-2"
           rows={4}
           placeholder="메모를 입력하세요"
+          disabled
         />
       </div>
 
@@ -78,7 +95,11 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
               수정
             </Button>
           </div>
-          <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
+          <Button
+            onClick={() => prompt.id && loadPromptVersion(prompt.id)}
+            className="rounded-full bg-[#736A84] px-20 text-base font-semibold"
+            size="lg"
+          >
             불러오기
           </Button>
         </div>
