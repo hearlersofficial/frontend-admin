@@ -4,34 +4,47 @@ import { Textarea } from "~/components/ui/textarea";
 
 interface SceneContentSectionProps {
   isEditing: boolean;
-  speaker: string;
-  dialogue: string;
+  selectedImageIndex?: number;
+  currentScene?: {
+    speaker: string;
+    dialogue: string;
+  };
   onSpeakerChange: (speaker: string) => void;
   onDialogueChange: (dialogue: string) => void;
+  onNavigateImage?: (direction: 'prev' | 'next') => void;
 }
 
 const SceneContentSection = ({
   isEditing,
-  speaker,
-  dialogue,
+  selectedImageIndex = 0,
+  currentScene = { speaker: 'jihoo', dialogue: '' },
   onSpeakerChange,
   onDialogueChange,
+  onNavigateImage,
 }: SceneContentSectionProps) => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
       {/* Navigation and Main Image */}
       <div className="lg:col-span-2 flex items-center space-x-4">
-        <Button variant="outline" size="sm" className="px-2" disabled={!isEditing}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="px-2" 
+          onClick={() => onNavigateImage?.('prev')}
+        >
           {'<<'}
         </Button>
-        <div className="flex-grow">
-          <img 
-            src="/images/placeholder-large.png" 
-            alt="Selected scene" 
-            className="w-full h-auto rounded-lg shadow-md" 
-          />
+        <div className="flex-grow flex flex-col items-center">
+          <div className="w-full h-80 rounded-lg bg-gray-300 animate-pulse flex items-center justify-center">
+            <span className="text-gray-500 text-lg">Scene {selectedImageIndex + 1}</span>
+          </div>
         </div>
-        <Button variant="outline" size="sm" className="px-2" disabled={!isEditing}>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="px-2" 
+          onClick={() => onNavigateImage?.('next')}
+        >
           {'>>'}
         </Button>
       </div>
@@ -41,7 +54,7 @@ const SceneContentSection = ({
         <div>
           <div className="font-medium mb-1">화자</div>
           <Select 
-            value={speaker} 
+            value={currentScene.speaker} 
             disabled={!isEditing}
             onValueChange={onSpeakerChange}
           >
@@ -61,7 +74,7 @@ const SceneContentSection = ({
           <div className="font-medium mb-1">대사</div>
           <Textarea 
             rows={6} 
-            value={dialogue}
+            value={currentScene.dialogue}
             readOnly={!isEditing}
             className={!isEditing ? "bg-gray-50" : ""}
             onChange={(e) => onDialogueChange(e.target.value)}

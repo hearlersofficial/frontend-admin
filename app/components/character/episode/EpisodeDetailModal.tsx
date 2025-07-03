@@ -21,17 +21,21 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
     warningType,
     isOrderAdjustmentMode,
     imageOrder,
+    selectedImageIndex,
     closeModal,
     startEditing,
     saveChanges,
     cancelEditing,
     updateEditedEpisode,
     updateEditData,
+    updateSceneData,
     handleStatusChange,
     confirmStatusChange,
     cancelStatusChange,
     toggleOrderAdjustmentMode,
     reorderImages,
+    setSelectedImageIndex,
+    navigateImage,
   } = useEpisodeStore();
 
   if (!currentEpisode) return null;
@@ -45,11 +49,11 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
   };
 
   const handleSpeakerChange = (speaker: string) => {
-    updateEditData({ speaker });
+    updateSceneData(selectedImageIndex, { speaker });
   };
 
   const handleDialogueChange = (dialogue: string) => {
-    updateEditData({ dialogue });
+    updateSceneData(selectedImageIndex, { dialogue });
   };
 
   // Additional handlers for new features
@@ -105,16 +109,19 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
             <ImageThumbnailsSection 
               isOrderAdjustmentMode={isOrderAdjustmentMode}
               imageOrder={imageOrder}
+              selectedImageIndex={selectedImageIndex}
               onReorderImages={reorderImages}
+              onSelectImage={setSelectedImageIndex}
             />
 
             {/* Scene Content Section */}
             <SceneContentSection
               isEditing={isEditing}
-              speaker={editData.speaker}
-              dialogue={editData.dialogue}
+              selectedImageIndex={selectedImageIndex}
+              currentScene={editData.scenes[selectedImageIndex]}
               onSpeakerChange={handleSpeakerChange}
               onDialogueChange={handleDialogueChange}
+              onNavigateImage={navigateImage}
             />
 
             {/* Image Management Buttons - Only visible when editing */}

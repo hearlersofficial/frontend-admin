@@ -1,9 +1,13 @@
 import { create } from 'zustand';
 import { Episode } from '~/components/character/types/Episode';
 
-interface EpisodeEditData {
+interface SceneData {
   speaker: string;
   dialogue: string;
+}
+
+interface EpisodeEditData {
+  scenes: SceneData[];
   tempStatus: string;
 }
 
@@ -28,6 +32,7 @@ interface EpisodeStore {
   // Image order state
   isOrderAdjustmentMode: boolean;
   imageOrder: number[];
+  selectedImageIndex: number;
   
   // Actions
   setEpisodes: (episodes: Episode[]) => void;
@@ -38,11 +43,14 @@ interface EpisodeStore {
   cancelEditing: () => void;
   updateEditedEpisode: (updates: Partial<Episode>) => void;
   updateEditData: (updates: Partial<EpisodeEditData>) => void;
+  updateSceneData: (sceneIndex: number, updates: Partial<SceneData>) => void;
   handleStatusChange: (newStatus: string) => void;
   confirmStatusChange: () => void;
   cancelStatusChange: () => void;
   toggleOrderAdjustmentMode: () => void;
   reorderImages: (newOrder: number[]) => void;
+  setSelectedImageIndex: (index: number) => void;
+  navigateImage: (direction: 'prev' | 'next') => void;
 }
 
 export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
@@ -53,8 +61,12 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   isEditing: false,
   editedEpisode: null,
   editData: {
-    speaker: 'jihoo',
-    dialogue: '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.',
+    scenes: Array.from({ length: 15 }, (_, i) => ({
+      speaker: i % 2 === 0 ? 'jihoo' : 'dahye',
+      dialogue: i % 2 === 0 
+        ? '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.' 
+        : '안녕하세요! 오늘은 어떤 일로 찾아오셨나요?'
+    })),
     tempStatus: '임시',
   },
   showWarningModal: false,
@@ -62,6 +74,7 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   warningType: null,
   isOrderAdjustmentMode: false,
   imageOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+  selectedImageIndex: 0,
 
   // Actions
   setEpisodes: (episodes) => set({ episodes }),
@@ -71,8 +84,12 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
     currentEpisode: episode,
     editedEpisode: { ...episode },
     editData: {
-      speaker: 'jihoo',
-      dialogue: '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.',
+      scenes: Array.from({ length: 15 }, (_, i) => ({
+        speaker: i % 2 === 0 ? 'jihoo' : 'dahye',
+        dialogue: i % 2 === 0 
+          ? '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.' 
+          : '안녕하세요! 오늘은 어떤 일로 찾아오셨나요?'
+      })),
       tempStatus: episode.status,
     }
   }),
@@ -131,8 +148,12 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
       isEditing: false,
       editedEpisode: { ...currentEpisode },
       editData: {
-        speaker: 'jihoo',
-        dialogue: '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.',
+        scenes: Array.from({ length: 15 }, (_, i) => ({
+          speaker: i % 2 === 0 ? 'jihoo' : 'dahye',
+          dialogue: i % 2 === 0 
+            ? '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.' 
+            : '안녕하세요! 오늘은 어떤 일로 찾아오셨나요?'
+        })),
         tempStatus: currentEpisode.status,
       }
     });
@@ -145,6 +166,14 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   updateEditData: (updates) => set((state) => ({
     editData: { ...state.editData, ...updates }
   })),
+  
+  updateSceneData: (sceneIndex, updates) => set((state) => {
+    const newScenes = [...state.editData.scenes];
+    newScenes[sceneIndex] = { ...newScenes[sceneIndex], ...updates };
+    return {
+      editData: { ...state.editData, scenes: newScenes }
+    };
+  }),
   
   handleStatusChange: (newStatus) => {
     const { editData } = get();
@@ -199,4 +228,22 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   reorderImages: (newOrder) => set({
     imageOrder: newOrder
   }),
+  
+  setSelectedImageIndex: (index) => set({
+    selectedImageIndex: index
+  }),
+  
+  navigateImage: (direction) => {
+    const { imageOrder, selectedImageIndex } = get();
+    const currentIndex = imageOrder.indexOf(selectedImageIndex);
+    let newIndex;
+    
+    if (direction === 'prev') {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : imageOrder.length - 1;
+    } else {
+      newIndex = currentIndex < imageOrder.length - 1 ? currentIndex + 1 : 0;
+    }
+    
+    set({ selectedImageIndex: imageOrder[newIndex] });
+  },
 })); 

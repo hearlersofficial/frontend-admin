@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -6,7 +5,9 @@ import { CSS } from '@dnd-kit/utilities';
 interface ImageThumbnailsSectionProps {
   isOrderAdjustmentMode?: boolean;
   imageOrder?: number[];
+  selectedImageIndex?: number;
   onReorderImages?: (newOrder: number[]) => void;
+  onSelectImage?: (index: number) => void;
 }
 
 const ImageThumbnail = ({ 
@@ -47,9 +48,10 @@ const ImageThumbnail = ({
 const ImageThumbnailsSection = ({ 
   isOrderAdjustmentMode = false, 
   imageOrder = Array.from({ length: 15 }, (_, i) => i), 
-  onReorderImages 
+  selectedImageIndex = 0,
+  onReorderImages,
+  onSelectImage 
 }: ImageThumbnailsSectionProps) => {
-  const [selectedImage, setSelectedImage] = useState(0);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -70,8 +72,8 @@ const ImageThumbnailsSection = ({
           key={id}
           id={id}
           index={index}
-          isSelected={selectedImage === id}
-          onSelect={setSelectedImage}
+          isSelected={selectedImageIndex === id}
+          onSelect={onSelectImage || (() => {})}
           isDraggable={isOrderAdjustmentMode}
         />
       ))}
