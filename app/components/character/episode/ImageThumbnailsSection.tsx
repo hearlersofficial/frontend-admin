@@ -40,7 +40,7 @@ const ImageThumbnail = ({
       onClick={() => !isDraggable && onSelect(id)}
     >
       <div className="flex items-center justify-center">{index + 1}</div>
-      <div className="mx-[7.5px] w-[75px] h-[75px] rounded-lg bg-gray-300 animate-pulse" />
+      <div className="mx-[7.5px] w-[75px] h-[75px] rounded-lg bg-gray-300" />
     </div>
   );
 };
@@ -66,7 +66,7 @@ const ImageThumbnailsSection = ({
   };
 
   const content = (
-    <div className="flex items-center space-x-2 overflow-x-auto">
+    <div className="flex items-center overflow-x-auto">
       {imageOrder.map((id, index) => (
         <ImageThumbnail
           key={id}

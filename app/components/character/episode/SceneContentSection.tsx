@@ -35,7 +35,7 @@ const SceneContentSection = ({
           {'<<'}
         </Button>
         <div className="flex-grow flex flex-col items-center">
-          <div className="w-full h-80 rounded-lg bg-gray-300 animate-pulse flex items-center justify-center">
+          <div className="w-full h-80 rounded-lg bg-gray-300 flex items-center justify-center">
             <span className="text-gray-500 text-lg">Scene {selectedImageIndex + 1}</span>
           </div>
         </div>
@@ -63,8 +63,8 @@ const SceneContentSection = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="dahye">다혜</SelectItem>
-              <SelectItem value="rian">리안</SelectItem>
-              <SelectItem value="jerry">제리</SelectItem>
+              <SelectItem value="rian">리한</SelectItem>
+              <SelectItem value="jerry">체리</SelectItem>
               <SelectItem value="yoon">윤</SelectItem>
               <SelectItem value="jihoo">지문</SelectItem>
             </SelectContent>

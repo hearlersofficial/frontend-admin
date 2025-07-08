@@ -12,9 +12,9 @@ const CharacterPage = () => {
 
   const characters = [
     { id: "dahye", name: "다혜", avatar: "/images/dahye-avatar.png", tag: "#해결" },
-    { id: "rian", name: "리안", avatar: "/images/rian-avatar.png", tag: "#성장" },
-    { id: "jerry", name: "제리", avatar: "/images/jerry-avatar.png", tag: "#탐색" },
-    { id: "yoon", name: "윤", avatar: "/images/yoon-avatar.png", tag: "#안정" },
+    { id: "rehan", name: "리한", avatar: "/images/rian-avatar.png", tag: "#해결" },
+    { id: "cherry", name: "체리", avatar: "/images/jerry-avatar.png", tag: "#공감" },
+    { id: "yoon", name: "윤", avatar: "/images/yoon-avatar.png", tag: "#공감" },
   ];
 
   const dummyEpisodes = Array.from({ length: 15 }, (_, i) => ({
