@@ -1,6 +1,12 @@
+import { useEffect, useState } from 'react';
+
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
+
+import { useSaveVersion } from '~/hooks/mutations';
+import { useFetcher } from '@remix-run/react';
+import { usePromptStore } from '~/store/usePromptStore';
 
 interface SavePromptModalProps {
   isOpen: boolean;
@@ -8,16 +14,36 @@ interface SavePromptModalProps {
 }
 
 const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+
+  const fetcher = useFetcher<typeof import('~/routes/resources.playground').loader>();
+
+  const { mutate: saveVersion } = useSaveVersion({
+    onSuccess: () => {
+      setIsOpen(false);
+      fetcher.load('/resources/playground');
+    },
+    onError: () => {},
+  });
+
+  useEffect(() => {
+    if (fetcher.data?.temporaryVersion) {
+      usePromptStore.getState().setTemporaryVersion(fetcher.data.temporaryVersion);
+    }
+  }, [fetcher.data]);
+
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} maxWidth="3xl">
       <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="title">
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="name">
           프롬프트 제목
         </label>
         <input
-          id="title"
+          id="name"
           type="text"
-          onChange={() => {}}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           className="w-full rounded border p-2"
           placeholder="제목을 입력하세요..."
         />
@@ -43,12 +69,13 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
       </div>
 
       <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="memo">
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="description">
           메모
         </label>
         <textarea
-          id="memo"
-          onChange={() => {}}
+          id="description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           className="row-4 w-full rounded border p-2"
           rows={4}
           placeholder="메모를 입력하세요..."
@@ -56,7 +83,11 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
       </div>
 
       <DialogFooter>
-        <Button className="mx-auto block rounded-xl bg-[#736A84] text-base font-semibold" size="lg">
+        <Button
+          onClick={() => saveVersion({ name, description })}
+          className="mx-auto block rounded-xl bg-[#736A84] text-base font-semibold"
+          size="lg"
+        >
           프롬프트 기록 추가
         </Button>
       </DialogFooter>

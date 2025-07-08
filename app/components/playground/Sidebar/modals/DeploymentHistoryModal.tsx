@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 import { Button } from '~/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
@@ -7,19 +8,19 @@ import Pagination from '~/components/Pagination';
 import PromptModal from '../../Prompt/modals/PromptModal';
 
 import { usePagination } from '~/hooks/usePagination';
-import { Prompt } from '~/types/prompt';
+import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 
 interface DeploymentHistoryModalProps {
-  prompts: Prompt[];
+  prompts: PromptVersionResponseDto[];
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
 const DeploymentHistoryModal = ({ prompts, isOpen, setIsOpen }: DeploymentHistoryModalProps) => {
-  const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(prompts, 6);
 
-  const handleDetailView = (prompt: Prompt) => {
+  const handleDetailView = (prompt: PromptVersionResponseDto) => {
     setSelectedPrompt(prompt);
     // setIsOpen(false);
   };
@@ -39,9 +40,11 @@ const DeploymentHistoryModal = ({ prompts, isOpen, setIsOpen }: DeploymentHistor
           <TableBody>
             {displayedItems.map((prompt) => (
               <TableRow key={prompt.id} className="border-b border-[#E0E0E0] hover:bg-[#F9F9F9]">
-                <TableCell className="px-4 py-2 text-[#666]">{prompt.time}</TableCell>
-                <TableCell className="px-4 py-2 text-[#333]">{prompt.title}</TableCell>
-                <TableCell className="truncate px-4 py-2 text-[#666]">{prompt.memo}</TableCell>
+                <TableCell className="px-4 py-2 text-[#666]">
+                  {dayjs(prompt.createdAt).format('YY.MM.DD HH:mm')}
+                </TableCell>
+                <TableCell className="px-4 py-2 text-[#333]">{prompt.name}</TableCell>
+                <TableCell className="truncate px-4 py-2 text-[#666]">{prompt.description}</TableCell>
                 <TableCell className="flex gap-2 px-4 py-2">
                   <Button
                     size="sm"

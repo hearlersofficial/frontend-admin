@@ -1,18 +1,20 @@
 import TechniqueCard from './TechniqueCard';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-
-import { CounselTechnique } from '~/types/counselTechnique';
+import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+import { usePromptStore } from '~/store/usePromptStore';
 
 interface TechniqueContainerProps {
-  mode: "ADDANDDELETE" | "EDIT" | "SELECT";
-  techniques: CounselTechnique[];
+  mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
+  techniques: CounselTechniqueResponseDto[];
   selected: string;
   setSelected: (id: string) => void;
-  setTechniques: (techniques: CounselTechnique[]) => void;
+  setTechniques: (techniques: CounselTechniqueResponseDto[]) => void;
 }
 
 const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechniques }: TechniqueContainerProps) => {
+  const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (active.id !== over?.id) {
@@ -25,21 +27,22 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
     }
   };
 
-  if (mode !== "EDIT") {
+  if (mode !== 'EDIT') {
     return (
       <div className="flex flex-wrap gap-3">
         {techniques.map((technique) => {
           const isSelected = selected === technique.id;
 
           return (
-            <TechniqueCard 
-              key={technique.id} 
-              mode={mode} 
-              technique={technique} 
-              isSelected={isSelected} 
+            <TechniqueCard
+              key={technique.id}
+              mode={mode}
+              technique={technique}
+              isSelected={isSelected}
               setSelected={setSelected}
+              setSelectedCounselTechnique={setSelectedCounselTechnique}
               setTechniques={setTechniques}
-              techniques={techniques} 
+              techniques={techniques}
             />
           );
         })}
@@ -48,20 +51,18 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
   }
 
   return (
-    <DndContext
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={techniques.map((technique) => technique.id)} strategy={horizontalListSortingStrategy}>
+    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={techniques.map((technique) => technique.id!)} strategy={horizontalListSortingStrategy}>
         <div className="flex flex-wrap gap-3">
           {techniques.map((technique) => {
             return (
-              <TechniqueCard 
-                mode={mode} 
-                key={technique.id} 
-                technique={technique} 
-                isSelected={false} 
+              <TechniqueCard
+                mode={mode}
+                key={technique.id}
+                technique={technique}
+                isSelected={false}
                 setSelected={setSelected}
+                setSelectedCounselTechnique={setSelectedCounselTechnique}
                 setTechniques={setTechniques}
                 techniques={techniques}
               />

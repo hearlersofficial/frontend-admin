@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import dayjs from 'dayjs';
 
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
@@ -9,23 +10,23 @@ import PromptModal from './PromptModal';
 import { Star } from 'lucide-react';
 
 import { usePagination } from '~/hooks/usePagination';
-import { Prompt } from '~/types/prompt';
+import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 
 interface LoadPromptModalProps {
-  prompts: Prompt[];
+  prompts: PromptVersionResponseDto[];
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
 const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) => {
-  const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [showFavsOnly, setShowFavsOnly] = useState(false);
 
-  const filteredPrompts = showFavsOnly ? prompts.filter((p) => p.fav) : prompts;
+  const filteredPrompts = showFavsOnly ? prompts.filter((p) => p.bookmarked) : prompts;
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(filteredPrompts, 6);
 
-  const handleDetailView = (prompt: Prompt) => {
+  const handleDetailView = (prompt: PromptVersionResponseDto) => {
     setSelectedPrompt(prompt);
     // setIsOpen(false);
   };
@@ -53,11 +54,13 @@ const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) =
                   </TableCell>
                 )}
                 <TableCell className="w-4 px-2">
-                  {prompt.fav && <Star className="h-4 w-4 fill-current text-[#F0D467]" />}
+                  {prompt.bookmarked && <Star className="h-4 w-4 fill-current text-[#F0D467]" />}
                 </TableCell>
-                <TableCell className="px-4 py-2 text-[#333]">{prompt.title}</TableCell>
-                <TableCell className="px-4 py-2 text-[#666]">{prompt.time}</TableCell>
-                <TableCell className="truncate px-4 py-2 text-[#666]">{prompt.memo}</TableCell>
+                <TableCell className="px-4 py-2 text-[#333]">{prompt.name}</TableCell>
+                <TableCell className="px-4 py-2 text-[#666]">
+                  {dayjs(prompt.createdAt).format('YY.MM.DD HH:mm')}
+                </TableCell>
+                <TableCell className="truncate px-4 py-2 text-[#666]">{prompt.description}</TableCell>
                 <TableCell className="px-4 py-2 text-right">
                   <Button
                     size="sm"
@@ -95,11 +98,7 @@ const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) =
                 </Button>
               )}
             </div>
-            {!isDeleteMode ? (
-              <Button className="rounded-full bg-[#736A84] px-20 text-base font-semibold" size="lg">
-                불러오기
-              </Button>
-            ) : (
+            {isDeleteMode && (
               <Button
                 onClick={() => setIsDeleteMode(false)}
                 className="rounded-full bg-[#D39393] px-20 text-base font-semibold"
