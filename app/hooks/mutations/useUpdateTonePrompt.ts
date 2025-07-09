@@ -2,9 +2,9 @@ import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { type AxiosResponse } from 'axios';
 
 import {
-  UpdateTonePromptRequestDto,
   UpdateTonePromptData,
   UpdateTonePromptError,
+  UpdateTonePromptRequestDto,
 } from '~/__generated__/data-contracts';
 import { api } from '~/api';
 

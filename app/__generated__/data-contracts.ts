@@ -10,18 +10,14 @@
  * ---------------------------------------------------------------
  */
 
-/** 임시 버전 저장 요청 DTO */
-export interface SaveTemporaryVersionRequestDto {
-  /**
-   * 프롬프트 버전 이름
-   * @example "2024년 7월 프롬프트 버전"
-   */
-  name: string;
-  /**
-   * 프롬프트 버전 설명
-   * @example "2024년 7월 배포 예정 버전입니다."
-   */
-  description: string;
+/** 톤 업데이트 요청 */
+export interface UpdateToneRequest {
+  /** 톤 ID */
+  toneId: string;
+  /** 톤 이름 */
+  name?: string | null;
+  /** 톤 설명 */
+  description?: string | null;
 }
 
 /** 에러 응답 DTO */
@@ -119,6 +115,58 @@ export interface Error {
    * @example "2024-07-01 14:30:45"
    */
   timestamp?: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessUpdateToneResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 톤 업데이트 응답 */
+  data?: UpdateToneResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 */
+export interface Tone {
+  /** 톤 ID */
+  id?: string;
+  /** 톤 이름 */
+  name?: string;
+  /** 톤 설명 */
+  description?: string;
+  /** 톤 생성 시간 */
+  createdAt?: string;
+  /** 톤 수정 시간 */
+  updatedAt?: string;
+  /** 톤 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 톤 업데이트 응답 */
+export interface UpdateToneResponse {
+  /** 톤 */
+  tone?: Tone;
+}
+
+/** 임시 버전 저장 요청 DTO */
+export interface SaveTemporaryVersionRequestDto {
+  /**
+   * 프롬프트 버전 이름
+   * @example "2024년 7월 프롬프트 버전"
+   */
+  name: string;
+  /**
+   * 프롬프트 버전 설명
+   * @example "2024년 7월 배포 예정 버전입니다."
+   */
+  description: string;
 }
 
 /** 상담사별 프롬프트 응답 DTO */
@@ -517,6 +565,183 @@ export interface UpdateCounselTechniqueResponseDto {
   counselTechnique?: CounselTechniqueResponseDto;
 }
 
+/** 상담사 업데이트 요청 */
+export interface UpdateCounselorRequest {
+  /** 상담사 ID */
+  counselorId: string;
+  /** 톤 ID */
+  toneId?: string | null;
+  /** 상담사 이름 */
+  name?: string | null;
+  /** 상담사 설명 */
+  description?: string | null;
+  /** 상담사 프로필 이미지 */
+  profileImage?: string | null;
+  /** 상담사 성별 */
+  gender?:
+    | 'COUNSELOR_GENDER_UNSPECIFIED'
+    | 'COUNSELOR_GENDER_MALE'
+    | 'COUNSELOR_GENDER_FEMALE'
+    | 'COUNSELOR_GENDER_NONE'
+    | 'UNRECOGNIZED'
+    | null;
+}
+
+/** 상담사 */
+export interface Counselor {
+  /** 상담사 ID */
+  id?: string;
+  /** 톤 ID */
+  toneId?: string;
+  /** 상담사 이름 */
+  name?: string;
+  /** 상담사 설명 */
+  description?: string;
+  /** 상담사 프로필 이미지 */
+  profileImage?: string;
+  /** 상담사 성별 */
+  gender?:
+    | 'COUNSELOR_GENDER_UNSPECIFIED'
+    | 'COUNSELOR_GENDER_MALE'
+    | 'COUNSELOR_GENDER_FEMALE'
+    | 'COUNSELOR_GENDER_NONE'
+    | 'UNRECOGNIZED';
+  /** 상담사 생성 시간 */
+  createdAt?: string;
+  /** 상담사 수정 시간 */
+  updatedAt?: string;
+  /** 상담사 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessUpdateCounselorResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 업데이트 응답 */
+  data?: UpdateCounselorResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담사 업데이트 응답 */
+export interface UpdateCounselorResponse {
+  /** 상담사 */
+  counselor?: Counselor;
+}
+
+/** 에피소드 컷신 저장 요청 */
+export type SaveEpisodeCutSceneRequest = {
+  /** 컷신 ID (수정 시 필요) */
+  id?: string | null;
+  /** 컷신 발화자 */
+  speaker: 'SPEAKER_UNSPECIFIED' | 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'UNRECOGNIZED';
+  /** 컷신 내용 */
+  content: string;
+  /**
+   * 컷신 순서 인덱스
+   * @format int32
+   */
+  orderIndex: number;
+  /** 컷신 이미지 URL */
+  image: string;
+};
+
+/** 에피소드 업데이트 요청 */
+export interface UpdateEpisodeRequest {
+  /** 에피소드 ID */
+  episodeId: string;
+  /** 에피소드 제목 */
+  title?: string | null;
+  /**
+   * 에피소드 해금을 위한 라포 수치
+   * @format int32
+   */
+  requiredRapportThreshold?: number | null;
+  /** 임시 여부 */
+  isTemporary?: boolean | null;
+  /** 에피소드 컷신 목록 */
+  cutScenes?: SaveEpisodeCutSceneRequest[] | null;
+}
+
+/** 에피소드 */
+export interface Episode {
+  /** 에피소드 ID */
+  id?: string;
+  /** 상담사 ID */
+  counselorId?: string;
+  /** 에피소드 제목 */
+  title?: string;
+  /**
+   * 에피소드 해금을 위한 라포 수치
+   * @format int32
+   */
+  requiredRapportThreshold?: number;
+  /** 임시 여부 */
+  isTemporary?: boolean;
+  /** 에피소드 컷신 목록 */
+  cutScenes?: EpisodeCutScene[];
+  /** 에피소드 생성 시간 */
+  createdAt?: string;
+  /** 에피소드 수정 시간 */
+  updatedAt?: string;
+  /** 에피소드 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 에피소드 컷신 */
+export interface EpisodeCutScene {
+  /** 컷신 ID */
+  id?: string;
+  /** 에피소드 ID */
+  episodeId?: string;
+  /** 컷신 발화자 */
+  speaker?: 'SPEAKER_UNSPECIFIED' | 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'UNRECOGNIZED';
+  /** 컷신 내용 */
+  content?: string;
+  /**
+   * 컷신 순서 인덱스
+   * @format int32
+   */
+  orderIndex?: number;
+  /** 컷신 이미지 URL */
+  image?: string;
+  /** 컷신 생성 시간 */
+  createdAt?: string;
+  /** 컷신 수정 시간 */
+  updatedAt?: string;
+  /** 컷신 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessUpdateEpisodeResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 에피소드 업데이트 응답 */
+  data?: UpdateEpisodeResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 에피소드 업데이트 응답 */
+export interface UpdateEpisodeResponse {
+  /** 에피소드 */
+  episode?: Episode;
+}
+
 /** 성공 응답 DTO */
 export interface SuccessTokenResponseDto {
   /**
@@ -549,6 +774,36 @@ export interface TokenResponseDto {
    * @format date-time
    */
   refreshTokenExpiresAt?: string;
+}
+
+/** 톤 생성 요청 */
+export interface CreateToneRequest {
+  /** 톤 이름 */
+  name: string;
+  /** 톤 설명 */
+  description: string;
+}
+
+/** 톤 생성 응답 */
+export interface CreateToneResponse {
+  /** 톤 */
+  tone?: Tone;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessCreateToneResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 톤 생성 응답 */
+  data?: CreateToneResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
 }
 
 /** 프롬프트 버전 활성화 응답 DTO */
@@ -661,7 +916,172 @@ export interface SuccessSaveCounselTechniqueSequenceResponseDto {
   timestamp?: string;
 }
 
-/** 톤 목록 조회 응답 */
+/** 상담사 생성 요청 */
+export interface CreateCounselorRequest {
+  /** 톤 ID */
+  toneId: string;
+  /** 상담사 이름 */
+  name: string;
+  /** 상담사 설명 */
+  description: string;
+  /** 상담사 프로필 이미지 */
+  profileImage: string;
+  /** 상담사 성별 */
+  gender:
+    | 'COUNSELOR_GENDER_UNSPECIFIED'
+    | 'COUNSELOR_GENDER_MALE'
+    | 'COUNSELOR_GENDER_FEMALE'
+    | 'COUNSELOR_GENDER_NONE'
+    | 'UNRECOGNIZED';
+}
+
+/** 상담사 생성 응답 */
+export interface CreateCounselorResponse {
+  /** 상담사 */
+  counselor?: Counselor;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessCreateCounselorResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 생성 응답 */
+  data?: CreateCounselorResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담사 이미지 URL 생성 요청 */
+export interface GenerateCounselorImageUrlRequest {
+  /** 이미지 확장자 */
+  extension:
+    | 'EXTENSION_UNSPECIFIED'
+    | 'EXTENSION_JPG'
+    | 'EXTENSION_PNG'
+    | 'EXTENSION_GIF'
+    | 'EXTENSION_WEBP'
+    | 'UNRECOGNIZED';
+}
+
+/** 상담사 이미지 URL 생성 응답 */
+export interface GenerateCounselorImageUrlResponse {
+  /** Presigned URL 응답 */
+  presignedUrl?: PresignedUrlResponse;
+}
+
+/** Presigned URL 응답 */
+export interface PresignedUrlResponse {
+  /**
+   * Presigned URL
+   * @example "https://example.com/presigned-url"
+   */
+  uploadUrl?: string;
+  /**
+   * Presigned URL로 업로드한 파일의 공개 URL
+   * @example "https://example.com/public-url"
+   */
+  publicUrl?: string;
+  /**
+   * Presigned URL 만료 시간
+   * @example "2023-10-01T12:00:00Z"
+   */
+  expiresAt?: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessGenerateCounselorImageUrlResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 이미지 URL 생성 응답 */
+  data?: GenerateCounselorImageUrlResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 에피소드 생성 요청 */
+export interface CreateEpisodeRequest {
+  /** 에피소드 제목 */
+  title: string;
+  /**
+   * 에피소드 해금을 위한 라포 수치
+   * @format int32
+   */
+  requiredRapportThreshold: number;
+  /** 임시 여부 */
+  isTemporary: boolean;
+  /** 에피소드 컷신 목록 */
+  cutScenes: SaveEpisodeCutSceneRequest[];
+}
+
+/** 에피소드 생성 응답 */
+export interface CreateEpisodeResponse {
+  /** 에피소드 */
+  episode?: Episode;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessCreateEpisodeResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 에피소드 생성 응답 */
+  data?: CreateEpisodeResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 컷신 이미지 URL 생성 요청 */
+export interface GenerateCutSceneImageUrlRequest {
+  /** 이미지 확장자 */
+  extension:
+    | 'EXTENSION_UNSPECIFIED'
+    | 'EXTENSION_JPG'
+    | 'EXTENSION_PNG'
+    | 'EXTENSION_GIF'
+    | 'EXTENSION_WEBP'
+    | 'UNRECOGNIZED';
+}
+
+/** 컷신 이미지 URL 생성 응답 */
+export interface GenerateCutSceneImageUrlResponse {
+  /** Presigned URL 응답 */
+  presignedUrl?: PresignedUrlResponse;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessGenerateCutSceneImageUrlResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 컷신 이미지 URL 생성 응답 */
+  data?: GenerateCutSceneImageUrlResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 조회 응답 */
 export interface FindTonesResponse {
   /** 톤 목록 */
   tones?: Tone[];
@@ -674,7 +1094,7 @@ export interface SuccessFindTonesResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 목록 조회 응답 */
+  /** 톤 조회 응답 */
   data?: FindTonesResponse;
   /**
    * 응답 시간
@@ -683,115 +1103,21 @@ export interface SuccessFindTonesResponse {
   timestamp?: string;
 }
 
-/** 톤 */
-export interface Tone {
-  /** 톤 ID */
-  id?: string;
-  /**
-   * 톤 이름
-   * @example "공감"
-   */
-  name?: string;
-  /** 톤 설명 */
-  description?: string;
-  /** 톤 생성 시간 */
-  createdAt?: string;
-  /** 톤 수정 시간 */
-  updatedAt?: string;
-  /** 톤 삭제 시간 */
-  deletedAt?: string | null;
-}
-
 /** 톤 ID로 조회 응답 */
-export interface FindToneResponse {
+export interface FindToneByIdResponse {
   /** 톤 */
   tone?: Tone;
 }
 
 /** 성공 응답 DTO */
-export interface SuccessFindToneResponse {
+export interface SuccessFindToneByIdResponse {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
   /** 톤 ID로 조회 응답 */
-  data?: FindToneResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담사 */
-export interface Counselor {
-  /** 상담사 ID */
-  id?: string;
-  /** 톤 ID */
-  toneId?: string;
-  /** 상담사 이름 */
-  name?: string;
-  /** 상담사 설명 */
-  description?: string;
-  /** 상담사 성별 */
-  gender?:
-    | 'COUNSELOR_GENDER_UNSPECIFIED'
-    | 'COUNSELOR_GENDER_MALE'
-    | 'COUNSELOR_GENDER_FEMALE'
-    | 'COUNSELOR_GENDER_NONE'
-    | 'UNRECOGNIZED';
-  /** 상담사 소개 메시지 */
-  introMessage?: string;
-  /** 상담사 응답 옵션 1 */
-  responseOption1?: string;
-  /** 상담사 응답 옵션 2 */
-  responseOption2?: string;
-  /** 상담사 생성 시간 */
-  createdAt?: string;
-  /** 상담사 수정 시간 */
-  updatedAt?: string;
-  /** 상담사 삭제 시간 */
-  deletedAt?: string | null;
-}
-
-/** 상담사 조회 응답 */
-export interface FindCounselorsResponse {
-  /** 상담사 목록 */
-  counselors?: Counselor[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselorsResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담사 조회 응답 */
-  data?: FindCounselorsResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담사 단일 조회 응답 */
-export interface FindCounselorResponse {
-  /** 상담사 */
-  counselor?: Counselor;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselorResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담사 단일 조회 응답 */
-  data?: FindCounselorResponse;
+  data?: FindToneByIdResponse;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -981,6 +1307,94 @@ export interface SuccessFindPersonaPromptByIdResponseDto {
   timestamp?: string;
 }
 
+/** 상담사 조회 응답 */
+export interface FindCounselorsResponse {
+  /** 상담사 목록 */
+  counselors?: Counselor[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselorsResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 조회 응답 */
+  data?: FindCounselorsResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담사 ID로 조회 응답 */
+export interface FindCounselorByIdResponse {
+  /** 상담사 */
+  counselor?: Counselor;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselorByIdResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 ID로 조회 응답 */
+  data?: FindCounselorByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 에피소드 ID로 조회 응답 */
+export interface FindEpisodeByIdResponse {
+  /** 에피소드 */
+  episode?: Episode;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindEpisodeByIdResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 에피소드 ID로 조회 응답 */
+  data?: FindEpisodeByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 에피소드 조회 응답 */
+export interface FindEpisodesResponse {
+  /** 에피소드 목록 */
+  episodes?: Episode[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindEpisodesResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 에피소드 조회 응답 */
+  data?: FindEpisodesResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
 /** 상담 기법 목록 조회 응답 DTO */
 export interface FindOrderedCounselTechniquesResponseDto {
   /** 상담 기법 목록 */
@@ -1025,6 +1439,14 @@ export interface SuccessFindCounselTechniqueByIdResponseDto {
   timestamp?: string;
 }
 
+export type GetToneData = SuccessFindToneByIdResponse;
+
+export type GetToneError = Error;
+
+export type UpdateToneData = SuccessUpdateToneResponse;
+
+export type UpdateToneError = Error;
+
 export type GetTemporaryVersionData = SuccessFindTemporaryVersionResponseDto;
 
 export type GetTemporaryVersionError = Error;
@@ -1049,13 +1471,38 @@ export type UpdateCounselTechniqueData = SuccessUpdateCounselTechniqueResponseDt
 
 export type UpdateCounselTechniqueError = Error;
 
-export type RefreshTokenData = any;
+export type GetCounselorData = SuccessFindCounselorByIdResponse;
+
+export type GetCounselorError = Error;
+
+export type UpdateCounselorData = SuccessUpdateCounselorResponse;
+
+export type UpdateCounselorError = Error;
+
+export type UpdateEpisodeData = SuccessUpdateEpisodeResponse;
+
+export type UpdateEpisodeError = Error;
+
+export type RefreshTokenData = SuccessTokenResponseDto;
 
 export type RefreshTokenError = Error;
 
 export type CreateUserData = SuccessTokenResponseDto;
 
 export type CreateUserError = Error;
+
+export interface GetTonesParams {
+  /** 톤 이름 (선택) */
+  name?: string | null;
+}
+
+export type GetTonesData = SuccessFindTonesResponse;
+
+export type GetTonesError = Error;
+
+export type CreateToneData = SuccessCreateToneResponse;
+
+export type CreateToneError = Error;
 
 export type ActivatePromptVersionData = SuccessActivatePromptVersionResponseDto;
 
@@ -1069,27 +1516,8 @@ export type SaveCounselTechniqueSequenceData = SuccessSaveCounselTechniqueSequen
 
 export type SaveCounselTechniqueSequenceError = Error;
 
-export interface GetTonesParams {
-  /**
-   * 톤 이름 (선택)
-   * @example "공감"
-   */
-  name?: string | null;
-}
-
-export type GetTonesData = SuccessFindTonesResponse;
-
-export type GetTonesError = Error;
-
-export type GetToneData = SuccessFindToneResponse;
-
-export type GetToneError = Error;
-
 export interface GetCounselorsParams {
-  /**
-   * 톤 ID (선택)
-   * @example "tone_123456"
-   */
+  /** 톤 ID (선택) */
   toneId?: string | null;
 }
 
@@ -1097,9 +1525,26 @@ export type GetCounselorsData = SuccessFindCounselorsResponse;
 
 export type GetCounselorsError = Error;
 
-export type GetCounselorData = SuccessFindCounselorResponse;
+export type CreateCounselorData = SuccessCreateCounselorResponse;
 
-export type GetCounselorError = Error;
+export type CreateCounselorError = Error;
+
+export type GenerateCounselorImageUrlData = SuccessGenerateCounselorImageUrlResponse;
+
+export type GenerateCounselorImageUrlError = Error;
+
+export type CreateEpisodeData = SuccessCreateEpisodeResponse;
+
+export type CreateEpisodeError = Error;
+
+export type GenerateCutSceneImageUrlData = SuccessGenerateCutSceneImageUrlResponse;
+
+export type GenerateCutSceneImageUrlError = Error;
+
+export interface KakaoParams {
+  /** 로그인 후 리다이렉트할 클라이언트 URL */
+  'redirect-url': string;
+}
 
 export type KakaoError = Error;
 
@@ -1145,6 +1590,14 @@ export type GetPromptActivateHistoriesError = Error;
 export type GetPersonaPromptByIdData = SuccessFindPersonaPromptByIdResponseDto;
 
 export type GetPersonaPromptByIdError = Error;
+
+export type GetEpisodeData = SuccessFindEpisodeByIdResponse;
+
+export type GetEpisodeError = Error;
+
+export type GetEpisodesData = SuccessFindEpisodesResponse;
+
+export type GetEpisodesError = Error;
 
 export interface GetOrderedCounselTechniquesParams {
   'first-counsel-technique-id': string;

@@ -3,7 +3,7 @@ import { Button } from "~/components/ui/button";
 import EpisodeDetailModal from "./EpisodeDetailModal";
 import { useEpisodeStore } from "~/stores/episodeStore";
 import { Episode } from "../types/Episode";
-import Pagination from "~/components/Pagination";
+import EpisodePagination from "./EpisodePagination";
 
 interface EpisodeListProps {
   episodes: Episode[];
@@ -99,7 +99,7 @@ const EpisodeList = ({ episodes, characterName }: EpisodeListProps) => {
         
         <div className="flex-grow">
           <div className="flex justify-center">
-            <Pagination
+            <EpisodePagination
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
