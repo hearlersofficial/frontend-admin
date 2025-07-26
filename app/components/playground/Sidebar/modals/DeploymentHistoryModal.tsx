@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { useQueries, useQuery } from '@tanstack/react-query';
 
 import { Button } from '~/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
@@ -7,18 +8,30 @@ import { Modal } from '~/components/Modal';
 import Pagination from '~/components/Pagination';
 import PromptModal from '../../Prompt/modals/PromptModal';
 
+import { queries } from '~/queries';
 import { usePagination } from '~/hooks/usePagination';
 import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 
 interface DeploymentHistoryModalProps {
-  prompts: PromptVersionResponseDto[];
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
-const DeploymentHistoryModal = ({ prompts, isOpen, setIsOpen }: DeploymentHistoryModalProps) => {
+const DeploymentHistoryModal = ({ isOpen, setIsOpen }: DeploymentHistoryModalProps) => {
+  const { data: activateHistories = [] } = useQuery({ ...queries.v1.getPromptActivateHistories({}), enabled: isOpen });
+
+  const promptVersionResults = useQueries({
+    queries: activateHistories.map((history) => {
+      return {
+        ...queries.v1.getPromptVersionById(history.promptVersionId!),
+        enabled: !!history.promptVersionId,
+      };
+    }),
+  });
+  const promptVersions = promptVersionResults.map((q) => q.data).filter(Boolean) as PromptVersionResponseDto[];
+
   const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
-  const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(prompts, 6);
+  const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(promptVersions, 6);
 
   const handleDetailView = (prompt: PromptVersionResponseDto) => {
     setSelectedPrompt(prompt);
