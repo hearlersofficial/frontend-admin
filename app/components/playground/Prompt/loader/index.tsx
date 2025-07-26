@@ -15,7 +15,7 @@ const PromptLoader = () => {
     <div className="flex w-full items-center justify-center gap-2">
       <h4 className="whitespace-pre-line text-sm font-semibold text-[#68676A]">{'기록\n불러오기'}</h4>
 
-      {promptsVersions.map((item) => {
+      {promptsVersions.slice(0, 6).map((item) => {
         return (
           <button
             key={item.id}
