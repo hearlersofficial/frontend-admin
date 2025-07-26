@@ -22,7 +22,7 @@ const PromptLoader = () => {
             onClick={() => {}}
             className="h-12 w-20 break-keep rounded-md border-2 border-[#A99FAA] p-1 text-center"
           >
-            <div className="text-xs text-[#A99FAA]">{item.name}</div>
+            <div className="line-clamp-2 w-full text-xs text-[#A99FAA]">{item.name}</div>
           </button>
         );
       })}
