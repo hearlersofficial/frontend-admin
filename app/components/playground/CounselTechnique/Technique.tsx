@@ -8,6 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 import { queries } from '~/queries';
 import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 import { useSaveCounselTechniqueSequence } from '~/hooks/mutations';
+import { Plus } from 'lucide-react';
+import { useModal } from '~/hooks/useModal';
+import AddTechniqueModal from './modals/AddTechniqueModal';
 
 const Technique = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
@@ -26,6 +29,8 @@ const Technique = () => {
   const [selected, setSelected] = useState<string>('');
   const [mode, setMode] = useState<'ADDANDDELETE' | 'EDIT' | 'SELECT'>('SELECT');
   const [techniques, setTechniques] = useState<CounselTechniqueResponseDto[]>([]);
+
+  const { isOpen, setIsOpen, openModal } = useModal(false);
 
   useEffect(() => {
     if (counselTechniques.length) {
@@ -87,13 +92,27 @@ const Technique = () => {
 
       <div className="mb-4 mt-2 h-[1px] bg-[#ECE9F1]" />
 
-      <TechniqueContainer
-        mode={mode}
-        techniques={techniques}
-        selected={selected}
-        setSelected={setSelected}
-        setTechniques={setTechniques}
-      />
+      <div className="flex gap-3">
+        <TechniqueContainer
+          mode={mode}
+          techniques={techniques}
+          selected={selected}
+          setSelected={setSelected}
+          setTechniques={setTechniques}
+        />
+
+        {mode === 'ADDANDDELETE' && (
+          <p className="flex h-14 items-center">
+            <button
+              onClick={openModal}
+              className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#A99FAA] text-[#A99FAA]"
+            >
+              <Plus className="h-6 w-6" />
+            </button>
+          </p>
+        )}
+        <AddTechniqueModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      </div>
     </div>
   );
 };
