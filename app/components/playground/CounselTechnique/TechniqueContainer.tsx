@@ -1,8 +1,11 @@
-import TechniqueCard from './TechniqueCard';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+
+import TechniqueCard from './TechniqueCard';
+import { Plus } from 'lucide-react';
+
 import { usePromptStore } from '~/store/usePromptStore';
+import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 
 interface TechniqueContainerProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
@@ -10,9 +13,19 @@ interface TechniqueContainerProps {
   selected: string;
   setSelected: (id: string) => void;
   setTechniques: (techniques: CounselTechniqueResponseDto[]) => void;
+  onAddTechnique?: () => void;
+  onEditName?: (technique: CounselTechniqueResponseDto) => void;
 }
 
-const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechniques }: TechniqueContainerProps) => {
+const TechniqueContainer = ({
+  mode,
+  techniques,
+  selected,
+  setSelected,
+  setTechniques,
+  onAddTechnique,
+  onEditName,
+}: TechniqueContainerProps) => {
   const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -43,9 +56,21 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
               setSelectedCounselTechnique={setSelectedCounselTechnique}
               setTechniques={setTechniques}
               techniques={techniques}
+              onEditName={onEditName}
             />
           );
         })}
+
+        {mode === 'ADDANDDELETE' && onAddTechnique && (
+          <p className="flex h-14 items-center">
+            <button
+              onClick={onAddTechnique}
+              className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#A99FAA] text-[#A99FAA]"
+            >
+              <Plus className="h-6 w-6" />
+            </button>
+          </p>
+        )}
       </div>
     );
   }
@@ -65,6 +90,7 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
                 setSelectedCounselTechnique={setSelectedCounselTechnique}
                 setTechniques={setTechniques}
                 techniques={techniques}
+                onEditName={onEditName}
               />
             );
           })}
@@ -73,4 +99,5 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
     </DndContext>
   );
 };
+
 export default TechniqueContainer;

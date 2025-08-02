@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Modal } from '~/components/Modal';
 import { Button } from '~/components/ui/button';
@@ -11,7 +12,6 @@ import { CreateCounselTechniqueRequestDto } from '~/__generated__/data-contracts
 interface AddTechniqueModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  onSuccess?: () => void;
 }
 
 const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
@@ -26,6 +26,8 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const toneId = selectedCounselor?.toneId;
 
+  const queryClient = useQueryClient();
+
   const { mutate: createCounselTechnique } = useCreateCounselTechnique({
     onSuccess: () => {
       setIsOpen(false);
@@ -36,7 +38,11 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
         instruction: '',
         messageThreshold: 3,
       });
-      // onSuccess?.();
+
+      // 상담기법 추가 성공 시 쿼리 캐시 무효화
+      queryClient.invalidateQueries({
+        queryKey: ['v1', 'getOrderedCounselTechniques'],
+      });
     },
     onError: (error) => {
       console.error('상담기법 생성 실패:', error);
