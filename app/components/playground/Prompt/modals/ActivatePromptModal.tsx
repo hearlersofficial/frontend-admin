@@ -19,8 +19,7 @@ const ActivatePromptModal = ({ isOpen, setIsOpen }: ActivatePromptModalProps) =>
   const [selectedVersion, setSelectedVersion] = useState<PromptVersionResponseDto | null>(null);
 
   const { data: promptVersions = [] } = useQuery(queries.v1.getPromptVersions({}));
-  // const { data: activeVersion } = useQuery(queries.v1.getActiveVersion);
-  // console.log('activeVersion', activeVersion); //TODO: activeVersion 표시
+  const { data: activeVersion } = useQuery(queries.v1.getActiveVersion);
 
   const { mutate: activatePromptVersion } = useActivatePromptVersion({
     onSuccess: () => {
@@ -38,38 +37,54 @@ const ActivatePromptModal = ({ isOpen, setIsOpen }: ActivatePromptModalProps) =>
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} maxWidth="3xl">
-      <div className="space-y-4">
+      <div className="space-y-4 p-3">
         <div className="max-h-96 space-y-2 overflow-y-auto">
           {promptVersions.length === 0 ? (
             <div className="py-8 text-center text-gray-500">사용 가능한 프롬프트 버전이 없습니다.</div>
           ) : (
-            promptVersions.map((version) => (
-              <button
-                key={version.id}
-                type="button"
-                className={`w-full cursor-pointer rounded-lg border p-4 text-left transition-colors ${
-                  selectedVersion?.id === version.id
-                    ? 'border-[#4D317E] bg-[#4D317E]/5'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => setSelectedVersion(version)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="mb-2 font-semibold text-[#4F4F4F]">{version.name}</h3>
-                    <p className="mb-2 text-sm text-gray-600">{version.description}</p>
-                    <p className="text-xs text-gray-500">{dayjs(version.createdAt).format('YYYY년 MM월 DD일 HH:mm')}</p>
-                  </div>
-                  <div className="ml-4">
-                    {selectedVersion?.id === version.id && (
-                      <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#4D317E]">
-                        <div className="h-2 w-2 rounded-full bg-white"></div>
+            promptVersions.map((version) => {
+              const isActive = activeVersion?.promptVersion.id === version.id;
+              const isSelected = selectedVersion?.id === version.id;
+
+              return (
+                <button
+                  key={version.id}
+                  type="button"
+                  className={`w-full cursor-pointer rounded-lg border p-4 text-left transition-colors ${
+                    isSelected
+                      ? 'border-[#4D317E] bg-[#4D317E]/5'
+                      : isActive
+                        ? 'border-[#10B981] bg-[#10B981]/5'
+                        : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  onClick={() => setSelectedVersion(version)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="mb-2 flex items-center gap-2">
+                        <h3 className="font-semibold text-[#4F4F4F]">{version.name}</h3>
+                        {isActive && (
+                          <span className="rounded-full bg-[#10B981] px-2 py-1 text-xs font-medium text-white">
+                            active
+                          </span>
+                        )}
                       </div>
-                    )}
+                      <p className="mb-2 text-sm text-gray-600">{version.description}</p>
+                      <p className="text-xs text-gray-500">
+                        {dayjs(version.createdAt).format('YYYY년 MM월 DD일 HH:mm')}
+                      </p>
+                    </div>
+                    <div className="ml-4">
+                      {isSelected && (
+                        <div className="flex h-4 w-4 items-center justify-center rounded-full bg-[#4D317E]">
+                          <div className="h-2 w-2 rounded-full bg-white"></div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </button>
-            ))
+                </button>
+              );
+            })
           )}
         </div>
       </div>
