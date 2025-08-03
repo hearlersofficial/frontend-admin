@@ -33,6 +33,16 @@ const EditTechniqueModal = ({ isOpen, setIsOpen, technique, onSave }: EditTechni
     setIsOpen(false);
   };
 
+  const handleMessageThresholdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '') {
+      setMessageThreshold(0);
+    } else {
+      const numValue = parseInt(value);
+      setMessageThreshold(numValue);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} maxWidth="xl">
       <div>
@@ -57,8 +67,8 @@ const EditTechniqueModal = ({ isOpen, setIsOpen, technique, onSave }: EditTechni
           type="number"
           min="1"
           max="20"
-          value={messageThreshold}
-          onChange={(e) => setMessageThreshold(parseInt(e.target.value) || 3)}
+          value={messageThreshold || ''}
+          onChange={handleMessageThresholdChange}
           className="w-full rounded border p-2"
         />
       </div>
