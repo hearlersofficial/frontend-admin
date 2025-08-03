@@ -19,6 +19,8 @@ const ActivatePromptModal = ({ isOpen, setIsOpen }: ActivatePromptModalProps) =>
   const [selectedVersion, setSelectedVersion] = useState<PromptVersionResponseDto | null>(null);
 
   const { data: promptVersions = [] } = useQuery(queries.v1.getPromptVersions({}));
+  // const { data: activeVersion } = useQuery(queries.v1.getActiveVersion);
+  // console.log('activeVersion', activeVersion); //TODO: activeVersion 표시
 
   const { mutate: activatePromptVersion } = useActivatePromptVersion({
     onSuccess: () => {
