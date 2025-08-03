@@ -5,8 +5,7 @@ import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 interface TechniqueCardProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
   technique: CounselTechniqueResponseDto;
-  isSelected: boolean;
-  setSelected: (id: string) => void;
+  selectedCounselTechnique: CounselTechniqueResponseDto;
   setSelectedCounselTechnique: (technique: CounselTechniqueResponseDto) => void;
   setTechniques?: (techniques: CounselTechniqueResponseDto[]) => void;
   techniques?: CounselTechniqueResponseDto[];
@@ -16,8 +15,7 @@ interface TechniqueCardProps {
 const TechniqueCard = ({
   mode,
   technique,
-  isSelected,
-  setSelected,
+  selectedCounselTechnique,
   setSelectedCounselTechnique,
   setTechniques,
   techniques,
@@ -58,11 +56,12 @@ const TechniqueCard = ({
       ) : (
         <button
           onClick={() => {
-            setSelected(technique.id!);
             setSelectedCounselTechnique(technique);
           }}
           className={`h-14 w-20 break-keep rounded-lg border-2 px-2 py-1 text-center text-sm font-semibold leading-tight ${
-            isSelected ? 'border-transparent bg-purpleGrad text-white' : 'border-[#A99FAA] text-[#A99FAA]'
+            technique.id == selectedCounselTechnique.id
+              ? 'border-transparent bg-purpleGrad text-white'
+              : 'border-[#A99FAA] text-[#A99FAA]'
           }`}
         >
           <span className="text-xs">{technique.name}</span>

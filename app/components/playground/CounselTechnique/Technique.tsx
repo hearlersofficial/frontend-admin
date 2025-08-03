@@ -10,16 +10,8 @@ import { useTechniqueManagement } from './hooks/useTechniqueManagement';
 import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 
 const Technique = () => {
-  const {
-    techniques,
-    selected,
-    mode,
-    setSelected,
-    setTechniques,
-    handleEditTechnique,
-    handleAddAndDeleteTechnique,
-    handleSaveTechnique,
-  } = useTechniqueManagement();
+  const { techniques, mode, setTechniques, handleEditTechnique, handleAddAndDeleteTechnique, handleSaveTechnique } =
+    useTechniqueManagement();
 
   const { isOpen: isAddOpen, setIsOpen: setIsAddOpen, openModal: openAddModal } = useModal(false);
   const { isOpen: isEditOpen, setIsOpen: setIsEditOpen, openModal: openEditModal } = useModal(false);
@@ -63,8 +55,6 @@ const Technique = () => {
       <TechniqueContainer
         mode={mode}
         techniques={techniques}
-        selected={selected}
-        setSelected={setSelected}
         setTechniques={setTechniques}
         onEditName={handleEditName}
         onAddTechnique={handleAddTechnique}

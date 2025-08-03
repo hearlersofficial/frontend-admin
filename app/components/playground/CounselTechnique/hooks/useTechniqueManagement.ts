@@ -21,7 +21,6 @@ export const useTechniqueManagement = () => {
     ...queries.v1.getOrderedCounselTechniques({ 'first-counsel-technique-id': firstCounselTechniqueId! }),
   });
 
-  const [selected, setSelected] = useState<string>('');
   const [mode, setMode] = useState<'ADDANDDELETE' | 'EDIT' | 'SELECT'>('SELECT');
   const [techniques, setTechniques] = useState<CounselTechniqueResponseDto[]>([]);
 
@@ -30,7 +29,6 @@ export const useTechniqueManagement = () => {
   useEffect(() => {
     if (counselTechniques.length) {
       setTechniques(counselTechniques);
-      setSelected(counselTechniques[0].id ?? '');
       setSelectedCounselTechnique(counselTechniques[0]);
     }
   }, [counselTechniques, setSelectedCounselTechnique]);
@@ -59,7 +57,12 @@ export const useTechniqueManagement = () => {
   });
 
   const { mutate: updateCounselTechnique } = useUpdateCounselTechnique({
-    onSuccess: () => {
+    onSuccess: (res) => {
+      const updatedTechniques = res.data.data?.counselTechnique;
+
+      setTechniques(updatedTechniques);
+      setSelectedCounselTechnique(updatedTechniques[0]);
+
       queryClient.invalidateQueries({
         queryKey: ['v1', 'getOrderedCounselTechniques'],
       });
@@ -111,11 +114,9 @@ export const useTechniqueManagement = () => {
 
   return {
     techniques,
-    selected,
     mode,
     toneId,
 
-    setSelected,
     setTechniques,
     setMode,
 

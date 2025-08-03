@@ -10,8 +10,6 @@ import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 interface TechniqueContainerProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
   techniques: CounselTechniqueResponseDto[];
-  selected: string;
-  setSelected: (id: string) => void;
   setTechniques: (techniques: CounselTechniqueResponseDto[]) => void;
   onAddTechnique?: () => void;
   onEditName?: (technique: CounselTechniqueResponseDto) => void;
@@ -20,12 +18,11 @@ interface TechniqueContainerProps {
 const TechniqueContainer = ({
   mode,
   techniques,
-  selected,
-  setSelected,
   setTechniques,
   onAddTechnique,
   onEditName,
 }: TechniqueContainerProps) => {
+  const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique) || techniques[0];
   const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -44,15 +41,12 @@ const TechniqueContainer = ({
     return (
       <div className="flex flex-wrap gap-3">
         {techniques.map((technique) => {
-          const isSelected = selected === technique.id;
-
           return (
             <TechniqueCard
               key={technique.id}
               mode={mode}
               technique={technique}
-              isSelected={isSelected}
-              setSelected={setSelected}
+              selectedCounselTechnique={selectedCounselTechnique}
               setSelectedCounselTechnique={setSelectedCounselTechnique}
               setTechniques={setTechniques}
               techniques={techniques}
@@ -85,8 +79,7 @@ const TechniqueContainer = ({
                 mode={mode}
                 key={technique.id}
                 technique={technique}
-                isSelected={false}
-                setSelected={setSelected}
+                selectedCounselTechnique={selectedCounselTechnique}
                 setSelectedCounselTechnique={setSelectedCounselTechnique}
                 setTechniques={setTechniques}
                 techniques={techniques}

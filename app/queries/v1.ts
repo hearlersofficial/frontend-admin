@@ -54,7 +54,7 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getActiveVersion: {
     queryKey: null,
-    queryFn: () => api.V1.getActiveVersion().then((res) => res.data),
+    queryFn: () => api.V1.getActiveVersion().then((res) => res.data.data),
   },
   getPromptActivateHistories: (query: GetPromptActivateHistoriesParams) => ({
     queryKey: [query],
