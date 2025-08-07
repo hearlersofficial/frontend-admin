@@ -1,6 +1,6 @@
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { useEpisodeStore } from "~/stores/episodeStore";
+import { useEpisodeDetail, useEpisodeImages } from "./hooks";
 import StatusWarningModal from "./StatusWarningModal";
 import EpisodeInfoSection from "./EpisodeInfoSection";
 import ImageThumbnailsSection from "./ImageThumbnailsSection";
@@ -8,58 +8,39 @@ import SceneContentSection from "./SceneContentSection";
 
 interface EpisodeDetailModalProps {
   characterName?: string;
+  counselorId: string;
 }
 
-const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
-  const {
-    isModalOpen,
-    currentEpisode,
-    editedEpisode,
-    isEditing,
-    editData,
-    showWarningModal,
-    warningType,
-    isOrderAdjustmentMode,
-    imageOrder,
-    selectedImageIndex,
-    closeModal,
-    startEditing,
-    saveChanges,
-    cancelEditing,
-    updateEditedEpisode,
-    updateEditData,
-    updateSceneData,
-    handleStatusChange,
-    confirmStatusChange,
-    cancelStatusChange,
-    toggleOrderAdjustmentMode,
-    reorderImages,
-    setSelectedImageIndex,
-    navigateImage,
-  } = useEpisodeStore();
+// 캐릭터 헤더 컴포넌트 분리 - 모드 정보 추가
+const CharacterHeader = ({ 
+  characterName, 
+  isNewEpisode 
+}: { 
+  characterName?: string;
+  isNewEpisode: boolean;
+}) => {
+  if (!characterName) return null;
+  
+  return (
+    <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <div className="w-12 h-12 rounded-full bg-gray-200" />
+          <div>
+            <span className="font-medium">{characterName}</span>
+            {isNewEpisode && (
+              <div className="text-sm text-gray-500">새 에피소드</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-  if (!currentEpisode) return null;
-
-  const handleTitleChange = (title: string) => {
-    updateEditedEpisode({ title });
-  };
-
-  const handleLevelChange = (level: number) => {
-    updateEditedEpisode({ level });
-  };
-
-  const handleSpeakerChange = (speaker: string) => {
-    updateSceneData(selectedImageIndex, { speaker });
-  };
-
-  const handleDialogueChange = (dialogue: string) => {
-    updateSceneData(selectedImageIndex, { dialogue });
-  };
-
-  // Additional handlers for new features
-  const handleOrderAdjustment = () => {
-    toggleOrderAdjustmentMode();
-  };
+// 이미지 관리 버튼들 컴포넌트 분리
+const ImageManagementButtons = ({ isEditing }: { isEditing: boolean }) => {
+  if (!isEditing) return null;
 
   const handlePageDelete = () => {
     console.log('페이지 삭제 기능');
@@ -77,92 +58,159 @@ const EpisodeDetailModal = ({ characterName }: EpisodeDetailModalProps) => {
   };
 
   return (
+    <div className="flex justify-between items-center mb-6">
+      <div className="flex space-x-2">
+        <Button variant="outline" onClick={handlePageDelete}>
+          페이지 삭제
+        </Button>
+        <Button variant="outline" onClick={handleExistingImages}>
+          기존 이미지
+        </Button>
+        <Button variant="outline" onClick={handlePCUpload}>
+          PC에서 추가
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+// 액션 버튼들 컴포넌트 분리
+const ActionButtons = ({ 
+  isEditing, 
+  isNewEpisode,
+  isCreating,
+  onStartEditing, 
+  onSave, 
+  onCancel 
+}: {
+  isEditing: boolean;
+  isNewEpisode: boolean;
+  isCreating?: boolean;
+  onStartEditing: () => void;
+  onSave: () => void;
+  onCancel: () => void;
+}) => (
+  <div className="flex justify-center space-x-3">
+    {!isEditing ? (
+      <Button size="lg" className="px-8" onClick={onStartEditing}>
+        수정
+      </Button>
+    ) : (
+      <>
+        <Button size="lg" className="px-8" onClick={onSave} disabled={isCreating}>
+          {isNewEpisode ? (isCreating ? '생성 중...' : '생성') : '저장'}
+        </Button>
+        <Button size="lg" variant="outline" className="px-8" onClick={onCancel} disabled={isCreating}>
+          취소
+        </Button>
+      </>
+    )}
+  </div>
+);
+
+const EpisodeDetailModal = ({ characterName, counselorId }: EpisodeDetailModalProps) => {
+  const {
+    isModalOpen,
+    currentEpisode,
+    editedEpisode,
+    isEditing,
+    editData,
+    showWarningModal,
+    warningType,
+    isDetailLoading,
+    isCreating,
+    isNewEpisode,
+    closeModal,
+    startEditing,
+    saveChanges,
+    cancelEditing,
+    handleStatusChange,
+    confirmStatusChange,
+    cancelStatusChange,
+    onTitleChange,
+    onLevelChange,
+    onSpeakerChange,
+    onDialogueChange,
+    onAddScene,
+  } = useEpisodeDetail(counselorId);
+
+  const {
+    isOrderAdjustmentMode,
+    imageOrder,
+    selectedImageIndex,
+    toggleOrderAdjustmentMode,
+    reorderImages,
+    setSelectedImageIndex,
+    navigateImage,
+  } = useEpisodeImages();
+
+  if (!currentEpisode) return null;
+
+  // 실제 씬 개수에 맞춰 imageOrder 조정
+  const sceneCount = editData.scenes.length;
+  const adjustedImageOrder = Array.from({ length: sceneCount }, (_, i) => i);
+  const adjustedSelectedIndex = Math.min(selectedImageIndex, sceneCount - 1);
+
+  return (
     <>
       <Dialog open={isModalOpen} onOpenChange={closeModal}>
         <DialogContent className="w-full h-full max-w-[1420px] max-h-[700px] p-0">
           <div className="w-full h-full p-6 overflow-y-auto">
-            {/* Character and Episode Info Row */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                {characterName && (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-12 h-12 rounded-full bg-gray-200" />
-                    <span className="font-medium">{characterName}</span>
-                  </div>
-                )}
+            <CharacterHeader characterName={characterName} isNewEpisode={isNewEpisode} />
+
+            {isDetailLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="text-lg">에피소드 상세 정보를 불러오는 중...</div>
               </div>
-            </div>
+            ) : (
+              <>
+                <EpisodeInfoSection
+                  episode={editedEpisode || currentEpisode}
+                  isEditing={isEditing}
+                  status={editData.tempStatus}
+                  onTitleChange={onTitleChange}
+                  onLevelChange={onLevelChange}
+                  onStatusChange={handleStatusChange}
+                  onOrderAdjustment={toggleOrderAdjustmentMode}
+                  isOrderAdjustmentMode={isOrderAdjustmentMode}
+                />
 
-            {/* Episode Information Section */}
-            <EpisodeInfoSection
-              episode={editedEpisode || currentEpisode}
-              isEditing={isEditing}
-              status={editData.tempStatus}
-              onTitleChange={handleTitleChange}
-              onLevelChange={handleLevelChange}
-              onStatusChange={handleStatusChange}
-              onOrderAdjustment={handleOrderAdjustment}
-              isOrderAdjustmentMode={isOrderAdjustmentMode}
-            />
+                <ImageThumbnailsSection 
+                  isOrderAdjustmentMode={isOrderAdjustmentMode}
+                  imageOrder={adjustedImageOrder}
+                  selectedImageIndex={adjustedSelectedIndex}
+                  isEditing={isEditing}
+                  sceneCount={sceneCount}
+                  onReorderImages={reorderImages}
+                  onSelectImage={setSelectedImageIndex}
+                  onAddScene={onAddScene}
+                />
 
-            {/* Image Thumbnails Section */}
-            <ImageThumbnailsSection 
-              isOrderAdjustmentMode={isOrderAdjustmentMode}
-              imageOrder={imageOrder}
-              selectedImageIndex={selectedImageIndex}
-              onReorderImages={reorderImages}
-              onSelectImage={setSelectedImageIndex}
-            />
+                <SceneContentSection
+                  isEditing={isEditing}
+                  selectedImageIndex={adjustedSelectedIndex}
+                  currentScene={editData.scenes[adjustedSelectedIndex] || { speaker: 'jihoo', dialogue: '' }}
+                  onSpeakerChange={(speaker) => onSpeakerChange(speaker, adjustedSelectedIndex)}
+                  onDialogueChange={(dialogue) => onDialogueChange(dialogue, adjustedSelectedIndex)}
+                  onNavigateImage={navigateImage}
+                />
 
-            {/* Scene Content Section */}
-            <SceneContentSection
-              isEditing={isEditing}
-              selectedImageIndex={selectedImageIndex}
-              currentScene={editData.scenes[selectedImageIndex]}
-              onSpeakerChange={handleSpeakerChange}
-              onDialogueChange={handleDialogueChange}
-              onNavigateImage={navigateImage}
-            />
+                <ImageManagementButtons isEditing={isEditing} />
 
-            {/* Image Management Buttons - Only visible when editing */}
-            {isEditing && (
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex space-x-2">
-                  <Button variant="outline" onClick={handlePageDelete}>
-                    페이지 삭제
-                  </Button>
-                  <Button variant="outline" onClick={handleExistingImages}>
-                    기존 이미지
-                  </Button>
-                  <Button variant="outline" onClick={handlePCUpload}>
-                    PC에서 추가
-                  </Button>
-                </div>
-              </div>
+                <ActionButtons
+                  isEditing={isEditing}
+                  isNewEpisode={isNewEpisode}
+                  isCreating={isCreating}
+                  onStartEditing={startEditing}
+                  onSave={saveChanges}
+                  onCancel={cancelEditing}
+                />
+              </>
             )}
-
-            {/* Action Buttons */}
-            <div className="flex justify-center space-x-3">
-              {!isEditing ? (
-                <Button size="lg" className="px-8" onClick={startEditing}>
-                  수정
-                </Button>
-              ) : (
-                <>
-                  <Button size="lg" className="px-8" onClick={saveChanges}>
-                    저장
-                  </Button>
-                  <Button size="lg" variant="outline" className="px-8" onClick={cancelEditing}>
-                    취소
-                  </Button>
-                </>
-              )}
-            </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Status Warning Modal */}
       <StatusWarningModal
         isOpen={showWarningModal}
         onClose={() => {}}

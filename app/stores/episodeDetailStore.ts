@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Episode } from '~/components/character/types/Episode';
+import { Episode } from '~/components/character/types';
 
 interface SceneData {
   speaker: string;
@@ -11,32 +11,24 @@ interface EpisodeEditData {
   tempStatus: string;
 }
 
-interface EpisodeStore {
-  // Episodes data
-  episodes: Episode[];
-  
-  // Modal state
+interface EpisodeDetailStore {
+  // Modal 상태
   isModalOpen: boolean;
   currentEpisode: Episode | null;
   
-  // Edit state
+  // 편집 상태
   isEditing: boolean;
   editedEpisode: Episode | null;
   editData: EpisodeEditData;
   
-  // Warning modal state
+  // Warning modal 상태
   showWarningModal: boolean;
   pendingStatusChange: string | null;
   warningType: 'deploy' | 'undeploy' | null;
   
-  // Image order state
-  isOrderAdjustmentMode: boolean;
-  imageOrder: number[];
-  selectedImageIndex: number;
-  
-  // Actions
-  setEpisodes: (episodes: Episode[]) => void;
+  // 액션
   openModal: (episode: Episode) => void;
+  openNewEpisode: () => void;
   closeModal: () => void;
   startEditing: () => void;
   saveChanges: () => void;
@@ -44,55 +36,64 @@ interface EpisodeStore {
   updateEditedEpisode: (updates: Partial<Episode>) => void;
   updateEditData: (updates: Partial<EpisodeEditData>) => void;
   updateSceneData: (sceneIndex: number, updates: Partial<SceneData>) => void;
+  addScene: () => void;
   handleStatusChange: (newStatus: string) => void;
   confirmStatusChange: () => void;
   cancelStatusChange: () => void;
-  toggleOrderAdjustmentMode: () => void;
-  reorderImages: (newOrder: number[]) => void;
-  setSelectedImageIndex: (index: number) => void;
-  navigateImage: (direction: 'prev' | 'next') => void;
 }
 
-export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
-  // Initial state
-  episodes: [],
+const createEmptyScene = (): SceneData => ({
+  speaker: 'jihoo',
+  dialogue: '',
+});
+
+const createNewEpisode = (): Episode => ({
+  id: '', // 빈 ID로 새 에피소드임을 표시
+  title: '새 에피소드 1',
+  level: 1,
+  createdAt: '',
+  status: '임시',
+  imageUrl: '',
+});
+
+export const useEpisodeDetailStore = create<EpisodeDetailStore>((set, get) => ({
+  // 초기 상태
   isModalOpen: false,
   currentEpisode: null,
   isEditing: false,
   editedEpisode: null,
   editData: {
-    scenes: Array.from({ length: 15 }, (_, i) => ({
-      speaker: i % 2 === 0 ? 'jihoo' : 'dahye',
-      dialogue: i % 2 === 0 
-        ? '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.' 
-        : '안녕하세요! 오늘은 어떤 일로 찾아오셨나요?'
-    })),
+    scenes: [],
     tempStatus: '임시',
   },
   showWarningModal: false,
   pendingStatusChange: null,
   warningType: null,
-  isOrderAdjustmentMode: false,
-  imageOrder: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-  selectedImageIndex: 0,
 
-  // Actions
-  setEpisodes: (episodes) => set({ episodes }),
-  
+  // 액션
   openModal: (episode) => set({ 
     isModalOpen: true, 
     currentEpisode: episode,
     editedEpisode: { ...episode },
     editData: {
-      scenes: Array.from({ length: 15 }, (_, i) => ({
-        speaker: i % 2 === 0 ? 'jihoo' : 'dahye',
-        dialogue: i % 2 === 0 
-          ? '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.' 
-          : '안녕하세요! 오늘은 어떤 일로 찾아오셨나요?'
-      })),
+      scenes: [], // API에서 로드될 때까지 빈 배열
       tempStatus: episode.status,
     }
   }),
+
+  openNewEpisode: () => {
+    const newEpisode = createNewEpisode();
+    set({ 
+      isModalOpen: true, 
+      currentEpisode: newEpisode,
+      isEditing: true, // 바로 편집 모드로 시작
+      editedEpisode: { ...newEpisode },
+      editData: {
+        scenes: [createEmptyScene()], // 새 에피소드는 빈 씬 하나로 시작
+        tempStatus: '임시',
+      }
+    });
+  },
   
   closeModal: () => set({ 
     isModalOpen: false, 
@@ -119,44 +120,59 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   },
   
   saveChanges: () => {
-    const { editedEpisode, editData, episodes } = get();
+    const { editedEpisode, editData } = get();
     if (!editedEpisode) return;
 
-    // TODO: API call to save changes
-    console.log('Saving changes:', {
+    // TODO: API call to save changes or create new episode
+    const isNewEpisode = !editedEpisode.id;
+    console.log(`${isNewEpisode ? 'Creating' : 'Updating'} episode:`, {
       episode: editedEpisode,
       ...editData
     });
 
-    // Update episodes list
-    const updatedEpisodes = episodes.map(ep => 
-      ep.id === editedEpisode.id ? { ...editedEpisode, status: editData.tempStatus } : ep
-    );
-
-    set({ 
-      episodes: updatedEpisodes,
-      currentEpisode: { ...editedEpisode, status: editData.tempStatus },
-      isEditing: false 
-    });
+    if (isNewEpisode) {
+      // 새 에피소드 생성 후 모달 닫기
+      set({ 
+        isModalOpen: false,
+        currentEpisode: null,
+        isEditing: false,
+        editedEpisode: null,
+      });
+    } else {
+      // 기존 에피소드 수정 후 편집 모드만 해제
+      set({ 
+        currentEpisode: { ...editedEpisode, status: editData.tempStatus },
+        isEditing: false 
+      });
+    }
   },
   
   cancelEditing: () => {
     const { currentEpisode } = get();
     if (!currentEpisode) return;
     
-    set({ 
-      isEditing: false,
-      editedEpisode: { ...currentEpisode },
-      editData: {
-        scenes: Array.from({ length: 15 }, (_, i) => ({
-          speaker: i % 2 === 0 ? 'jihoo' : 'dahye',
-          dialogue: i % 2 === 0 
-            ? '방 안은 지저분하고 말끔하다.\n가지런히 정돈되어있는 전문 서적들과 벽에 걸려 있는 각종 수료증서가 신뢰감을 더해주는 느낌이다.' 
-            : '안녕하세요! 오늘은 어떤 일로 찾아오셨나요?'
-        })),
-        tempStatus: currentEpisode.status,
-      }
-    });
+    // 새 에피소드인 경우 모달을 닫음
+    if (!currentEpisode.id) {
+      set({ 
+        isModalOpen: false,
+        currentEpisode: null,
+        isEditing: false,
+        editedEpisode: null,
+        showWarningModal: false,
+        pendingStatusChange: null,
+        warningType: null,
+      });
+    } else {
+      // 기존 에피소드인 경우 편집 모드만 해제
+      set({ 
+        isEditing: false,
+        editedEpisode: { ...currentEpisode },
+        editData: {
+          ...get().editData, // 기존 씬 데이터 유지
+          tempStatus: currentEpisode.status,
+        }
+      });
+    }
   },
   
   updateEditedEpisode: (updates) => set((state) => ({
@@ -169,11 +185,20 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
   
   updateSceneData: (sceneIndex, updates) => set((state) => {
     const newScenes = [...state.editData.scenes];
-    newScenes[sceneIndex] = { ...newScenes[sceneIndex], ...updates };
+    if (sceneIndex < newScenes.length) {
+      newScenes[sceneIndex] = { ...newScenes[sceneIndex], ...updates };
+    }
     return {
       editData: { ...state.editData, scenes: newScenes }
     };
   }),
+
+  addScene: () => set((state) => ({
+    editData: {
+      ...state.editData,
+      scenes: [...state.editData.scenes, createEmptyScene()]
+    }
+  })),
   
   handleStatusChange: (newStatus) => {
     const { editData } = get();
@@ -220,30 +245,4 @@ export const useEpisodeStore = create<EpisodeStore>((set, get) => ({
     pendingStatusChange: null,
     warningType: null,
   }),
-  
-  toggleOrderAdjustmentMode: () => set((state) => ({
-    isOrderAdjustmentMode: !state.isOrderAdjustmentMode
-  })),
-  
-  reorderImages: (newOrder) => set({
-    imageOrder: newOrder
-  }),
-  
-  setSelectedImageIndex: (index) => set({
-    selectedImageIndex: index
-  }),
-  
-  navigateImage: (direction) => {
-    const { imageOrder, selectedImageIndex } = get();
-    const currentIndex = imageOrder.indexOf(selectedImageIndex);
-    let newIndex;
-    
-    if (direction === 'prev') {
-      newIndex = currentIndex > 0 ? currentIndex - 1 : imageOrder.length - 1;
-    } else {
-      newIndex = currentIndex < imageOrder.length - 1 ? currentIndex + 1 : 0;
-    }
-    
-    set({ selectedImageIndex: imageOrder[newIndex] });
-  },
 })); 
