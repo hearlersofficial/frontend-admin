@@ -9,8 +9,8 @@ const fetchWithCredentials: typeof fetch = (input, init) => {
 
 // const baseURL = 'https://api.dev.hearlers.com';
 
-const isBrowser = typeof window !== 'undefined';
-const baseURL = isBrowser
+const isLocal = import.meta.env.VITE_ENVIRONMENT === 'local';
+const baseURL = isLocal
   ? '/api' // 브라우저 -> vite 프록시 경유
   : 'https://api.dev.hearlers.com'; // 서버
 
