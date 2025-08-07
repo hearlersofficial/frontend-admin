@@ -14,7 +14,7 @@ const baseURL = isLocal
   ? '/api' // 브라우저 -> vite 프록시 경유
   : 'https://api.dev.hearlers.com'; // 서버
 
-const baseConfig = { baseURL, fetch: fetchWithCredentials };
+const baseConfig = { baseURL, fetch: fetchWithCredentials, withCredentials: true };
 
 export const api = {
   V1: new V1(baseConfig),
