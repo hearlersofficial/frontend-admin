@@ -8,7 +8,7 @@
     "dev": "remix vite:dev",
     "dev:dev": "remix vite:dev --mode dev",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-    "start": "remix-serve ./build/server/index.js",
+    "start": "vite preview",
     "typecheck": "tsc",
     "sta": "sta generate -p https://api.dev.hearlers.com/v3/api-docs -o app/__generated__ --modular --axios --extract-request-params --extract-request-body --extract-response-body --extract-response-error"
   },

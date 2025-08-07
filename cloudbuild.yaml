@@ -1,0 +1,23 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+    id: 'npm-install'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+    id: 'remix-build'
+    waitFor: ['npm-install']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'storage'
+      - 'rsync'
+      - '-d' # 버킷에 있지만 로컬 빌드 결과물에 없는 파일 삭제
+      - '-r' # 재귀적으로 모든 파일 복사
+      - 'build/client/' # 소스 디렉토리
+      - 'gs://hearlers-admin-dev' # 대상 버킷
+    id: 'deploy-to-gcs'
+    waitFor: ['remix-build']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
