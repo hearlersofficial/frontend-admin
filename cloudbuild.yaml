@@ -12,8 +12,8 @@ steps:
     args:
       - 'storage'
       - 'rsync'
-      - '-d' # 버킷에 있지만 로컬 빌드 결과물에 없는 파일 삭제
-      - '-r' # 재귀적으로 모든 파일 복사
+      - '--recursive'
+      - '--delete-unmatched-destination-objects'
       - 'build/client/' # 소스 디렉토리
       - 'gs://hearlers-admin-dev' # 대상 버킷
     id: 'deploy-to-gcs'
