@@ -19,13 +19,9 @@ export const links: LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const env = {
-    ENVIRONMENT: typeof process !== 'undefined' ? process.env.ENVIRONMENT || '' : '',
-    BASE_URL:
-      typeof process !== 'undefined' ? process.env.BASE_URL || 'http://localhost:3000' : 'http://localhost:3000',
-    API_URL:
-      typeof process !== 'undefined'
-        ? process.env.API_URL || 'https://api.dev.hearlers.com'
-        : 'https://api.dev.hearlers.com',
+    ENVIRONMENT: import.meta.env.VITE_ENVIRONMENT || 'dev',
+    BASE_URL: import.meta.env.VITE_BASE_URL || 'http://localhost:3000',
+    API_URL: import.meta.env.VITE_API_URL || 'https://api.dev.hearlers.com',
   };
 
   return (

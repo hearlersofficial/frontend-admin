@@ -5,9 +5,9 @@ steps:
       - '-c'
       - |
         cat <<EOF > .env
-        ENVIRONMENT=${_ENVIRONMENT}
-        BASE_URL=${_BASE_URL}
-        API_URL=${_API_URL}
+        VITE_ENVIRONMENT=${_ENVIRONMENT:-dev}
+        VITE_BASE_URL=${_BASE_URL}
+        VITE_API_URL=${_API_URL}
         EOF
 
   - name: 'gcr.io/cloud-builders/npm'
