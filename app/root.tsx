@@ -1,18 +1,8 @@
-import { json, Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteLoaderData } from '@remix-run/react';
-import type { LinksFunction, LoaderFunction } from '@remix-run/node';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import type { LinksFunction } from '@remix-run/node';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import './tailwind.css';
-
-export const loader: LoaderFunction = async () => {
-  return json({
-    ENV: {
-      ENVIRONMENT: process.env.ENVIRONMENT,
-      BASE_URL: process.env.BASE_URL,
-      API_URL: process.env.API_URL,
-    },
-  });
-};
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -28,7 +18,6 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const data = useRouteLoaderData<typeof loader>('root');
   return (
     <html lang="en">
       <head>
@@ -42,7 +31,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(data.ENV || {})};`,
+            __html: `window.ENV = ${JSON.stringify({
+              ENVIRONMENT: typeof process !== 'undefined' ? process.env.ENVIRONMENT : '',
+              BASE_URL: typeof process !== 'undefined' ? process.env.BASE_URL : '',
+              API_URL: typeof process !== 'undefined' ? process.env.API_URL : '',
+            })};`,
           }}
         />
         <Scripts />
