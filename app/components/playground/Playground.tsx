@@ -1,25 +1,26 @@
 import { useEffect } from 'react';
-import { useFetcher } from '@remix-run/react';
+import { useQuery } from '@tanstack/react-query';
 
 import Technique from './CounselTechnique/Technique';
 import Prompt from './Prompt';
 import Sidebar from './Sidebar';
 
 import { usePromptStore } from '~/store/usePromptStore';
+import { queries } from '~/queries';
 
 const Playground = () => {
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
-  const fetcher = useFetcher<typeof import('~/routes/resources.playground').loader>();
+  const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
+
+  const { data: temporaryVersionData } = useQuery({
+    ...queries.v1.getTemporaryVersion,
+  });
 
   useEffect(() => {
-    fetcher.load('/resources/playground');
-  }, []);
-
-  useEffect(() => {
-    if (fetcher.data?.temporaryVersion) {
-      usePromptStore.getState().setTemporaryVersion(fetcher.data.temporaryVersion);
+    if (temporaryVersionData?.data?.data?.promptVersion) {
+      setTemporaryVersion(temporaryVersionData.data.data.promptVersion);
     }
-  }, [fetcher.data]);
+  }, [temporaryVersionData, setTemporaryVersion]);
 
   return (
     <div className="flex pr-20">

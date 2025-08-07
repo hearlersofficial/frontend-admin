@@ -1,13 +1,17 @@
-import { useRouteLoaderData } from '@remix-run/react';
 import { UserIcon } from 'lucide-react';
 
 import { TabsList, TabsTrigger } from '~/components/ui/tabs';
-import { RootLoaderData } from '~/types/root';
+import '~/types/global';
 
 const Header = () => {
-  const data = useRouteLoaderData<RootLoaderData>('root');
-  const apiURL = data?.ENV.API_URL;
-  const redirectURL = encodeURIComponent(data?.ENV.BASE_URL || '');
+  const apiURL =
+    typeof window !== 'undefined'
+      ? window.ENV?.API_URL || 'https://api.dev.hearlers.com'
+      : 'https://api.dev.hearlers.com';
+  const baseURL =
+    typeof window !== 'undefined' ? window.ENV?.BASE_URL || 'http://localhost:3000' : 'http://localhost:3000';
+
+  const redirectURL = encodeURIComponent(baseURL || '');
 
   const loginURL = `${apiURL}/v1/auth/login/kakao?redirect-url=${redirectURL}`;
 

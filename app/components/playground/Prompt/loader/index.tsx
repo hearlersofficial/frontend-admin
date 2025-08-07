@@ -15,14 +15,14 @@ const PromptLoader = () => {
     <div className="flex w-full items-center justify-center gap-2">
       <h4 className="whitespace-pre-line text-sm font-semibold text-[#68676A]">{'기록\n불러오기'}</h4>
 
-      {promptsVersions.map((item) => {
+      {promptsVersions.slice(0, 6).map((item) => {
         return (
           <button
             key={item.id}
             onClick={() => {}}
             className="h-12 w-20 break-keep rounded-md border-2 border-[#A99FAA] p-1 text-center"
           >
-            <div className="text-xs text-[#A99FAA]">{item.name}</div>
+            <div className="line-clamp-2 w-full text-xs text-[#A99FAA]">{item.name}</div>
           </button>
         );
       })}
