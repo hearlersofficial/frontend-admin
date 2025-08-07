@@ -58,7 +58,8 @@ export const useTechniqueManagement = () => {
 
   const { mutate: updateCounselTechnique } = useUpdateCounselTechnique({
     onSuccess: (res) => {
-      const updatedTechniques = res.data.data?.counselTechnique;
+      const updatedTechniques = res.data?.data?.counselTechnique;
+      if (!updatedTechniques || updatedTechniques.length === 0) return;
 
       setTechniques(updatedTechniques);
       setSelectedCounselTechnique(updatedTechniques[0]);

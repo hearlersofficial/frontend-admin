@@ -10,9 +10,9 @@ export const usePromptMutations = () => {
 
   const { mutate: updateCounselTechnique } = useUpdateCounselTechnique({
     onSuccess: (res) => {
-      const newTechnique = res.data?.data?.counselTechnique;
-      if (newTechnique) {
-        setSelectedCounselTechnique(newTechnique);
+      const newTechniques = res.data?.data?.counselTechnique;
+      if (newTechniques && newTechniques.length > 0) {
+        setSelectedCounselTechnique(newTechniques[0]);
       }
     },
   });
