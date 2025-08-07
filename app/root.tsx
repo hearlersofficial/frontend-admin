@@ -18,6 +18,16 @@ export const links: LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const env = {
+    ENVIRONMENT: typeof process !== 'undefined' ? process.env.ENVIRONMENT || '' : '',
+    BASE_URL:
+      typeof process !== 'undefined' ? process.env.BASE_URL || 'http://localhost:3000' : 'http://localhost:3000',
+    API_URL:
+      typeof process !== 'undefined'
+        ? process.env.API_URL || 'https://api.dev.hearlers.com'
+        : 'https://api.dev.hearlers.com',
+  };
+
   return (
     <html lang="en">
       <head>
@@ -31,11 +41,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify({
-              ENVIRONMENT: typeof process !== 'undefined' ? process.env.ENVIRONMENT : '',
-              BASE_URL: typeof process !== 'undefined' ? process.env.BASE_URL : '',
-              API_URL: typeof process !== 'undefined' ? process.env.API_URL : '',
-            })};`,
+            __html: `
+              window.ENV = ${JSON.stringify(env)};
+            `,
           }}
         />
         <Scripts />
