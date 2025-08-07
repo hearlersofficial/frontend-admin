@@ -43,7 +43,7 @@ const ActivatePromptModal = ({ isOpen, setIsOpen }: ActivatePromptModalProps) =>
             <div className="py-8 text-center text-gray-500">사용 가능한 프롬프트 버전이 없습니다.</div>
           ) : (
             promptVersions.map((version) => {
-              const isActive = activeVersion?.promptVersion.id === version.id;
+              const isActive = activeVersion?.promptVersion?.id === version.id;
               const isSelected = selectedVersion?.id === version.id;
 
               return (
