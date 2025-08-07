@@ -1,11 +1,15 @@
-import { useEffect } from 'react';
-import { useLoaderData } from '@remix-run/react';
+import { useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import { Counselor } from '~/__generated__/data-contracts';
 import { usePromptStore } from '~/store/usePromptStore';
+import { queries } from '~/queries';
 
 const CounselorList = () => {
-  const { counselors } = useLoaderData<{ counselors: Counselor[] }>();
+  const { data: counselorsData } = useQuery({
+    ...queries.v1.getCounselors({}),
+  });
+
+  const counselors = useMemo(() => counselorsData?.data?.data?.counselors ?? [], [counselorsData]);
 
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const setSelectedCounselor = usePromptStore((s) => s.setSelectedCounselor);
