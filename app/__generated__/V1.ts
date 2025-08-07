@@ -80,6 +80,8 @@ import {
   GetEpisodesError,
   GetMessagesData,
   GetMessagesError,
+  GetMyUserData,
+  GetMyUserError,
   GetOrderedCounselTechniquesData,
   GetOrderedCounselTechniquesError,
   GetOrderedCounselTechniquesParams,
@@ -111,6 +113,8 @@ import {
   GetTonesData,
   GetTonesError,
   GetTonesParams,
+  GetUserData,
+  GetUserError,
   KakaoCallbackError,
   KakaoCallbackParams,
   KakaoError,
@@ -140,6 +144,9 @@ import {
   UpdateEpisodeData,
   UpdateEpisodeError,
   UpdateEpisodeRequest,
+  UpdateMyUserData,
+  UpdateMyUserError,
+  UpdateMyUserRequest,
   UpdatePersonaPromptData,
   UpdatePersonaPromptError,
   UpdatePersonaPromptRequestDto,
@@ -149,10 +156,48 @@ import {
   UpdateTonePromptError,
   UpdateTonePromptRequestDto,
   UpdateToneRequest,
-} from './data-contracts';
-import { ContentType, HttpClient, RequestParams } from './http-client';
+} from "./data-contracts";
+import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class V1<
+  SecurityDataType = unknown,
+> extends HttpClient<SecurityDataType> {
+  /**
+   * @description 현재 로그인한 사용자의 정보를 조회합니다.
+   *
+   * @tags 앱/유저
+   * @name GetMyUser
+   * @summary 내 정보 조회
+   * @request GET:/v1/users/me
+   * @secure
+   */
+  getMyUser = (params: RequestParams = {}) =>
+    this.request<GetMyUserData, GetMyUserError>({
+      path: `/v1/users/me`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 현재 로그인한 사용자의 프로필 정보를 업데이트합니다.
+   *
+   * @tags 앱/유저
+   * @name UpdateMyUser
+   * @summary 내 프로필 업데이트
+   * @request PUT:/v1/users/me
+   * @secure
+   */
+  updateMyUser = (data: UpdateMyUserRequest, params: RequestParams = {}) =>
+    this.request<UpdateMyUserData, UpdateMyUserError>({
+      path: `/v1/users/me`,
+      method: "PUT",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
   /**
    * @description 톤을 단건 조회합니다.
    *
@@ -165,9 +210,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getTone1 = (toneId: string, params: RequestParams = {}) =>
     this.request<GetTone1Data, GetTone1Error>({
       path: `/v1/admin/tones/${toneId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -179,14 +224,18 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/tones/{tone-id}
    * @secure
    */
-  updateTone = (toneId: string, data: UpdateToneRequest, params: RequestParams = {}) =>
+  updateTone = (
+    toneId: string,
+    data: UpdateToneRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateToneData, UpdateToneError>({
       path: `/v1/admin/tones/${toneId}`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -201,9 +250,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getTemporaryVersion = (params: RequestParams = {}) =>
     this.request<GetTemporaryVersionData, GetTemporaryVersionError>({
       path: `/v1/admin/prompt-versions/temporary-version`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -215,14 +264,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/prompt-versions/temporary-version
    * @secure
    */
-  saveVersion = (data: SaveTemporaryVersionRequestDto, params: RequestParams = {}) =>
+  saveVersion = (
+    data: SaveTemporaryVersionRequestDto,
+    params: RequestParams = {},
+  ) =>
     this.request<SaveVersionData, SaveVersionError>({
       path: `/v1/admin/prompt-versions/temporary-version`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -237,9 +289,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   loadPromptVersion = (promptVersionId: string, params: RequestParams = {}) =>
     this.request<LoadPromptVersionData, LoadPromptVersionError>({
       path: `/v1/admin/prompt-versions/temporary-version/${promptVersionId}`,
-      method: 'PUT',
+      method: "PUT",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -251,14 +303,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/prompt-versions/temporary-version/tone-prompts
    * @secure
    */
-  updateTonePrompt = (data: UpdateTonePromptRequestDto, params: RequestParams = {}) =>
+  updateTonePrompt = (
+    data: UpdateTonePromptRequestDto,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateTonePromptData, UpdateTonePromptError>({
       path: `/v1/admin/prompt-versions/temporary-version/tone-prompts`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -270,14 +325,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/prompt-versions/temporary-version/persona-prompts
    * @secure
    */
-  updatePersonaPrompt = (data: UpdatePersonaPromptRequestDto, params: RequestParams = {}) =>
+  updatePersonaPrompt = (
+    data: UpdatePersonaPromptRequestDto,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdatePersonaPromptData, UpdatePersonaPromptError>({
       path: `/v1/admin/prompt-versions/temporary-version/persona-prompts`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -292,15 +350,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   updateCounselTechnique = (
     counselTechniqueId: string,
     data: UpdateCounselTechniqueRequestDto,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<UpdateCounselTechniqueData, UpdateCounselTechniqueError>({
       path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques/${counselTechniqueId}`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -315,9 +373,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getCounselor2 = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetCounselor2Data, GetCounselor2Error>({
       path: `/v1/admin/counselors/${counselorId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -329,14 +387,18 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/counselors/{counselor-id}
    * @secure
    */
-  updateCounselor = (counselorId: string, data: UpdateCounselorRequest, params: RequestParams = {}) =>
+  updateCounselor = (
+    counselorId: string,
+    data: UpdateCounselorRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateCounselorData, UpdateCounselorError>({
       path: `/v1/admin/counselors/${counselorId}`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -348,12 +410,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/counselors/{counselor-id}/episodes/{episode-id}
    * @secure
    */
-  getEpisode1 = (episodeId: string, counselorId: string, params: RequestParams = {}) =>
+  getEpisode1 = (
+    episodeId: string,
+    counselorId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetEpisode1Data, GetEpisode1Error>({
       path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -365,14 +431,19 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/counselors/{counselor-id}/episodes/{episode-id}
    * @secure
    */
-  updateEpisode = (episodeId: string, counselorId: string, data: UpdateEpisodeRequest, params: RequestParams = {}) =>
+  updateEpisode = (
+    episodeId: string,
+    counselorId: string,
+    data: UpdateEpisodeRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateEpisodeData, UpdateEpisodeError>({
       path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -384,12 +455,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/counselors/{counselor-id}/bubbles/{bubble-id}
    * @secure
    */
-  getCounselor3 = (bubbleId: string, counselorId: string, params: RequestParams = {}) =>
+  getCounselor3 = (
+    bubbleId: string,
+    counselorId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetCounselor3Data, GetCounselor3Error>({
       path: `/v1/admin/counselors/${counselorId}/bubbles/${bubbleId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -401,14 +476,19 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request PUT:/v1/admin/counselors/{counselor-id}/bubbles/{bubble-id}
    * @secure
    */
-  updateBubble = (bubbleId: string, counselorId: string, data: UpdateBubbleRequest, params: RequestParams = {}) =>
+  updateBubble = (
+    bubbleId: string,
+    counselorId: string,
+    data: UpdateBubbleRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateBubbleData, UpdateBubbleError>({
       path: `/v1/admin/counselors/${counselorId}/bubbles/${bubbleId}`,
-      method: 'PUT',
+      method: "PUT",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -423,9 +503,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getCounsels = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetCounselsData, GetCounselsError>({
       path: `/v1/counselors/${counselorId}/counsels`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -437,14 +517,18 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/counselors/{counselor-id}/counsels
    * @secure
    */
-  createCounsel = (counselorId: string, data: CreateCounselRequest, params: RequestParams = {}) =>
+  createCounsel = (
+    counselorId: string,
+    data: CreateCounselRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateCounselData, CreateCounselError>({
       path: `/v1/counselors/${counselorId}/counsels`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -456,12 +540,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/counselors/{counselor-id}/counsels/{counsel-id}/messages
    * @secure
    */
-  getMessages = (counselorId: string, counselId: string, params: RequestParams = {}) =>
+  getMessages = (
+    counselorId: string,
+    counselId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetMessagesData, GetMessagesError>({
       path: `/v1/counselors/${counselorId}/counsels/${counselId}/messages`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -473,14 +561,19 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/counselors/{counselor-id}/counsels/{counsel-id}/messages
    * @secure
    */
-  createMessage = (counselorId: string, counselId: string, data: CreateMessageRequest, params: RequestParams = {}) =>
+  createMessage = (
+    counselorId: string,
+    counselId: string,
+    data: CreateMessageRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateMessageData, CreateMessageError>({
       path: `/v1/counselors/${counselorId}/counsels/${counselId}/messages`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -497,15 +590,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
     counselId: string,
     messageId: string,
     data: ReactMessageRequest,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<ReactMessageData, ReactMessageError>({
       path: `/v1/counselors/${counselorId}/counsels/${counselId}/messages/${messageId}/react`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -520,9 +613,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   refreshToken = (params: RequestParams = {}) =>
     this.request<RefreshTokenData, RefreshTokenError>({
       path: `/v1/auth/refresh`,
-      method: 'POST',
+      method: "POST",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -536,8 +629,8 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   createUser = (params: RequestParams = {}) =>
     this.request<CreateUserData, CreateUserError>({
       path: `/v1/auth/initiate`,
-      method: 'POST',
-      format: 'json',
+      method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -552,10 +645,10 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getTones1 = (query: GetTones1Params, params: RequestParams = {}) =>
     this.request<GetTones1Data, GetTones1Error>({
       path: `/v1/admin/tones`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -570,11 +663,11 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   createTone = (data: CreateToneRequest, params: RequestParams = {}) =>
     this.request<CreateToneData, CreateToneError>({
       path: `/v1/admin/tones`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -586,12 +679,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/admin/prompt-versions/{prompt-version-id}/activate
    * @secure
    */
-  activatePromptVersion = (promptVersionId: string, params: RequestParams = {}) =>
+  activatePromptVersion = (
+    promptVersionId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<ActivatePromptVersionData, ActivatePromptVersionError>({
       path: `/v1/admin/prompt-versions/${promptVersionId}/activate`,
-      method: 'POST',
+      method: "POST",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -603,14 +699,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/admin/prompt-versions/temporary-version/counsel-techniques
    * @secure
    */
-  createCounselTechnique = (data: CreateCounselTechniqueRequestDto, params: RequestParams = {}) =>
+  createCounselTechnique = (
+    data: CreateCounselTechniqueRequestDto,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateCounselTechniqueData, CreateCounselTechniqueError>({
       path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -622,14 +721,20 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/admin/prompt-versions/temporary-version/counsel-techniques/all/sequences
    * @secure
    */
-  saveCounselTechniqueSequence = (data: SaveCounselTechniqueSequenceRequestDto, params: RequestParams = {}) =>
-    this.request<SaveCounselTechniqueSequenceData, SaveCounselTechniqueSequenceError>({
+  saveCounselTechniqueSequence = (
+    data: SaveCounselTechniqueSequenceRequestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SaveCounselTechniqueSequenceData,
+      SaveCounselTechniqueSequenceError
+    >({
       path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques/all/sequences`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -644,10 +749,10 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getCounselors1 = (query: GetCounselors1Params, params: RequestParams = {}) =>
     this.request<GetCounselors1Data, GetCounselors1Error>({
       path: `/v1/admin/counselors`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -659,14 +764,17 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/admin/counselors
    * @secure
    */
-  createCounselor = (data: CreateCounselorRequest, params: RequestParams = {}) =>
+  createCounselor = (
+    data: CreateCounselorRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateCounselorData, CreateCounselorError>({
       path: `/v1/admin/counselors`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -681,17 +789,19 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   generateCounselorImageUrl = (
     counselorId: string,
     data: GenerateCounselorImageUrlRequest,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
-    this.request<GenerateCounselorImageUrlData, GenerateCounselorImageUrlError>({
-      path: `/v1/admin/counselors/${counselorId}/image-url`,
-      method: 'POST',
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: 'json',
-      ...params,
-    });
+    this.request<GenerateCounselorImageUrlData, GenerateCounselorImageUrlError>(
+      {
+        path: `/v1/admin/counselors/${counselorId}/image-url`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      },
+    );
   /**
    * @description 에피소드를 복수 조회합니다.
    *
@@ -704,9 +814,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getEpisodes1 = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetEpisodes1Data, GetEpisodes1Error>({
       path: `/v1/admin/counselors/${counselorId}/episodes`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -718,14 +828,18 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/admin/counselors/{counselor-id}/episodes
    * @secure
    */
-  createEpisode = (counselorId: string, data: CreateEpisodeRequest, params: RequestParams = {}) =>
+  createEpisode = (
+    counselorId: string,
+    data: CreateEpisodeRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateEpisodeData, CreateEpisodeError>({
       path: `/v1/admin/counselors/${counselorId}/episodes`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -741,15 +855,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
     episodeId: string,
     counselorId: string,
     data: GenerateCutSceneImageUrlRequest,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GenerateCutSceneImageUrlData, GenerateCutSceneImageUrlError>({
       path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}/image-url`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -764,9 +878,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getBubbles1 = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetBubbles1Data, GetBubbles1Error>({
       path: `/v1/admin/counselors/${counselorId}/bubbles`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -778,14 +892,18 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request POST:/v1/admin/counselors/{counselor-id}/bubbles
    * @secure
    */
-  createBubble = (counselorId: string, data: CreateBubbleRequest, params: RequestParams = {}) =>
+  createBubble = (
+    counselorId: string,
+    data: CreateBubbleRequest,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateBubbleData, CreateBubbleError>({
       path: `/v1/admin/counselors/${counselorId}/bubbles`,
-      method: 'POST',
+      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -800,10 +918,10 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getTones = (query: GetTonesParams, params: RequestParams = {}) =>
     this.request<GetTonesData, GetTonesError>({
       path: `/v1/tones`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -818,9 +936,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getTone = (toneId: string, params: RequestParams = {}) =>
     this.request<GetToneData, GetToneError>({
       path: `/v1/tones/${toneId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -835,10 +953,10 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getCounselors = (query: GetCounselorsParams, params: RequestParams = {}) =>
     this.request<GetCounselorsData, GetCounselorsError>({
       path: `/v1/counselors`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -853,9 +971,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getCounselor = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetCounselorData, GetCounselorError>({
       path: `/v1/counselors/${counselorId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -867,12 +985,18 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/counselors/{counselor-id}/relationships
    * @secure
    */
-  getCounselorUserRelationships = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetCounselorUserRelationshipsData, GetCounselorUserRelationshipsError>({
+  getCounselorUserRelationships = (
+    counselorId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetCounselorUserRelationshipsData,
+      GetCounselorUserRelationshipsError
+    >({
       path: `/v1/counselors/${counselorId}/relationships`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -887,9 +1011,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getEpisodes = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetEpisodesData, GetEpisodesError>({
       path: `/v1/counselors/${counselorId}/episodes`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -901,12 +1025,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/counselors/{counselor-id}/episodes/{episode-id}
    * @secure
    */
-  getEpisode = (episodeId: string, counselorId: string, params: RequestParams = {}) =>
+  getEpisode = (
+    episodeId: string,
+    counselorId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetEpisodeData, GetEpisodeError>({
       path: `/v1/counselors/${counselorId}/episodes/${episodeId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -918,12 +1046,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/counselors/{counselor-id}/counsels/{counsel-id}
    * @secure
    */
-  getCounsel = (counselorId: string, counselId: string, params: RequestParams = {}) =>
+  getCounsel = (
+    counselorId: string,
+    counselId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetCounselData, GetCounselError>({
       path: `/v1/counselors/${counselorId}/counsels/${counselId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -938,9 +1070,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getBubbles = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetBubblesData, GetBubblesError>({
       path: `/v1/counselors/${counselorId}/bubbles`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -952,12 +1084,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/counselors/{counselor-id}/bubbles/{bubble-id}
    * @secure
    */
-  getCounselor1 = (bubbleId: string, counselorId: string, params: RequestParams = {}) =>
+  getCounselor1 = (
+    bubbleId: string,
+    counselorId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetCounselor1Data, GetCounselor1Error>({
       path: `/v1/counselors/${counselorId}/bubbles/${bubbleId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -972,9 +1108,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getRandomBubble = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetRandomBubbleData, GetRandomBubbleError>({
       path: `/v1/counselors/${counselorId}/bubbles/random`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -989,7 +1125,7 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   kakao = (query: KakaoParams, params: RequestParams = {}) =>
     this.request<any, KakaoError>({
       path: `/v1/auth/login/kakao`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
       ...params,
@@ -1005,8 +1141,25 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   kakaoCallback = (query: KakaoCallbackParams, params: RequestParams = {}) =>
     this.request<any, KakaoCallbackError>({
       path: `/v1/auth/callback/kakao`,
-      method: 'GET',
+      method: "GET",
       query: query,
+      ...params,
+    });
+  /**
+   * @description 유저를 단건 조회합니다.
+   *
+   * @tags 어드민/유저
+   * @name GetUser
+   * @summary 유저 단건 조회
+   * @request GET:/v1/admin/users/{user-id}
+   * @secure
+   */
+  getUser = (userId: string, params: RequestParams = {}) =>
+    this.request<GetUserData, GetUserError>({
+      path: `/v1/admin/users/${userId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
       ...params,
     });
   /**
@@ -1021,9 +1174,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getTonePromptById = (tonePromptId: string, params: RequestParams = {}) =>
     this.request<GetTonePromptByIdData, GetTonePromptByIdError>({
       path: `/v1/admin/tone-prompts/${tonePromptId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1035,13 +1188,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/prompt-versions
    * @secure
    */
-  getPromptVersions = (query: GetPromptVersionsParams, params: RequestParams = {}) =>
+  getPromptVersions = (
+    query: GetPromptVersionsParams,
+    params: RequestParams = {},
+  ) =>
     this.request<GetPromptVersionsData, GetPromptVersionsError>({
       path: `/v1/admin/prompt-versions`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1053,12 +1209,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/prompt-versions/{prompt-version-id}
    * @secure
    */
-  getPromptVersionById = (promptVersionId: string, params: RequestParams = {}) =>
+  getPromptVersionById = (
+    promptVersionId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetPromptVersionByIdData, GetPromptVersionByIdError>({
       path: `/v1/admin/prompt-versions/${promptVersionId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1066,16 +1225,16 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    *
    * @tags 어드민/상담 프롬프트
    * @name GetActiveVersion
-   * @summary 현재 활성화된 프롬프트 버전 조회 (TBD)
+   * @summary 현재 활성화된 프롬프트 버전 조회
    * @request GET:/v1/admin/prompt-versions/active-version
    * @secure
    */
   getActiveVersion = (params: RequestParams = {}) =>
     this.request<GetActiveVersionData, GetActiveVersionError>({
       path: `/v1/admin/prompt-versions/active-version`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1087,13 +1246,19 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/prompt-activate-histories
    * @secure
    */
-  getPromptActivateHistories = (query: GetPromptActivateHistoriesParams, params: RequestParams = {}) =>
-    this.request<GetPromptActivateHistoriesData, GetPromptActivateHistoriesError>({
+  getPromptActivateHistories = (
+    query: GetPromptActivateHistoriesParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetPromptActivateHistoriesData,
+      GetPromptActivateHistoriesError
+    >({
       path: `/v1/admin/prompt-activate-histories`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1105,12 +1270,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/persona-prompts/{persona-prompt-id}
    * @secure
    */
-  getPersonaPromptById = (personaPromptId: string, params: RequestParams = {}) =>
+  getPersonaPromptById = (
+    personaPromptId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetPersonaPromptByIdData, GetPersonaPromptByIdError>({
       path: `/v1/admin/persona-prompts/${personaPromptId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1125,9 +1293,9 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
   getRandomBubble1 = (counselorId: string, params: RequestParams = {}) =>
     this.request<GetRandomBubble1Data, GetRandomBubble1Error>({
       path: `/v1/admin/counselors/${counselorId}/bubbles/random`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1139,13 +1307,19 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/counsel-techniques
    * @secure
    */
-  getOrderedCounselTechniques = (query: GetOrderedCounselTechniquesParams, params: RequestParams = {}) =>
-    this.request<GetOrderedCounselTechniquesData, GetOrderedCounselTechniquesError>({
+  getOrderedCounselTechniques = (
+    query: GetOrderedCounselTechniquesParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetOrderedCounselTechniquesData,
+      GetOrderedCounselTechniquesError
+    >({
       path: `/v1/admin/counsel-techniques`,
-      method: 'GET',
+      method: "GET",
       query: query,
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
   /**
@@ -1157,12 +1331,15 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
    * @request GET:/v1/admin/counsel-techniques/{counsel-technique-id}
    * @secure
    */
-  getCounselTechniqueById = (counselTechniqueId: string, params: RequestParams = {}) =>
+  getCounselTechniqueById = (
+    counselTechniqueId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<GetCounselTechniqueByIdData, GetCounselTechniqueByIdError>({
       path: `/v1/admin/counsel-techniques/${counselTechniqueId}`,
-      method: 'GET',
+      method: "GET",
       secure: true,
-      format: 'json',
+      format: "json",
       ...params,
     });
 }
