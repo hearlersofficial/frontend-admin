@@ -1,4 +1,15 @@
 steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cat <<EOF > .env
+        ENVIRONMENT=${_ENVIRONMENT}
+        BASE_URL=${_BASE_URL}
+        API_URL=${_API_URL}
+        EOF
+
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
     id: 'npm-install'
