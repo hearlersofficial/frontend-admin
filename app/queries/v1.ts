@@ -66,11 +66,11 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getEpisode: (episodeId: string, counselorId: string) => ({
     queryKey: [episodeId, counselorId],
-    queryFn: () => api.V1.getEpisode(episodeId, counselorId),
+    queryFn: () => api.V1.getEpisode1(episodeId, counselorId),
   }),
   getEpisodes: (counselorId: string) => ({
     queryKey: [counselorId],
-    queryFn: () => api.V1.getEpisodes(counselorId),
+    queryFn: () => api.V1.getEpisodes1(counselorId),
   }),
   getOrderedCounselTechniques: (query: GetOrderedCounselTechniquesParams) => ({
     queryKey: [query],
