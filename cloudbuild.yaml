@@ -1,0 +1,34 @@
+steps:
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        cat <<EOF > .env
+        VITE_ENVIRONMENT=${_ENVIRONMENT:-dev}
+        VITE_BASE_URL=${_BASE_URL}
+        VITE_API_URL=${_API_URL}
+        EOF
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+    id: 'npm-install'
+
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+    id: 'remix-build'
+    waitFor: ['npm-install']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args:
+      - 'storage'
+      - 'rsync'
+      - '--recursive'
+      - '--delete-unmatched-destination-objects'
+      - 'build/client/' # 소스 디렉토리
+      - 'gs://hearlers-admin-dev' # 대상 버킷
+    id: 'deploy-to-gcs'
+    waitFor: ['remix-build']
+
+options:
+  logging: CLOUD_LOGGING_ONLY
