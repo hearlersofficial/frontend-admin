@@ -10,6 +10,7 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+
   return (
     <Tabs defaultValue="playground" className="min-h-screen bg-[#F2F2F7]">
       <Header />

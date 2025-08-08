@@ -53,7 +53,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  // 리로드시 새 인스턴스 생성을 방지하기 위해 remember or useState 사용예정
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
