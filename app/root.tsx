@@ -2,7 +2,7 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/reac
 import type { LinksFunction } from '@remix-run/node';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import './tailwind.css';ㅔ
+import './tailwind.css';
 
 export const links: LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
