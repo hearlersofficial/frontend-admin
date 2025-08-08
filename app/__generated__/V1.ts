@@ -1225,7 +1225,7 @@ export class V1<
    *
    * @tags 어드민/상담 프롬프트
    * @name GetActiveVersion
-   * @summary 현재 활성화된 프롬프트 버전 조회 (TBD)
+   * @summary 현재 활성화된 프롬프트 버전 조회
    * @request GET:/v1/admin/prompt-versions/active-version
    * @secure
    */

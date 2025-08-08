@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
 
 import { useSaveVersion } from '~/hooks/mutations';
-import { useFetcher } from '@remix-run/react';
 import { usePromptStore } from '~/store/usePromptStore';
+import { queries } from '~/queries';
 
 interface SavePromptModalProps {
   isOpen: boolean;
@@ -17,21 +18,29 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
 
-  const fetcher = useFetcher<typeof import('~/routes/resources.playground').loader>();
+  const queryClient = useQueryClient();
+  const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
+
+  const { data: temporaryVersionData } = useQuery({
+    ...queries.v1.getTemporaryVersion,
+  });
 
   const { mutate: saveVersion } = useSaveVersion({
     onSuccess: () => {
       setIsOpen(false);
-      fetcher.load('/resources/playground');
+
+      queryClient.invalidateQueries({
+        queryKey: queries.v1.getTemporaryVersion.queryKey,
+      });
     },
     onError: () => {},
   });
 
   useEffect(() => {
-    if (fetcher.data?.temporaryVersion) {
-      usePromptStore.getState().setTemporaryVersion(fetcher.data.temporaryVersion);
+    if (temporaryVersionData?.data?.data?.promptVersion) {
+      setTemporaryVersion(temporaryVersionData.data.data.promptVersion);
     }
-  }, [fetcher.data]);
+  }, [temporaryVersionData, setTemporaryVersion]);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} maxWidth="3xl">

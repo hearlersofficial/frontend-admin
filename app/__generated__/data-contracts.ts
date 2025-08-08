@@ -668,8 +668,8 @@ export interface SuccessUpdateCounselTechniqueResponseDto {
 
 /** 상담 기법 업데이트 응답 DTO */
 export interface UpdateCounselTechniqueResponseDto {
-  /** 상담 기법 응답 DTO */
-  counselTechnique?: CounselTechniqueResponseDto;
+  /** 상담 기법 목록 */
+  counselTechnique?: CounselTechniqueResponseDto[];
 }
 
 /** 상담사 업데이트 요청 */
@@ -1883,15 +1883,21 @@ export interface SuccessFindTemporaryVersionResponseDto {
   timestamp?: string;
 }
 
+/** 활성 버전 조회 응답 DTO */
+export interface FindActiveVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
+}
+
 /** 성공 응답 DTO */
-export interface SuccessVoid {
+export interface SuccessFindActiveVersionResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 응답 데이터 */
-  data?: object;
+  /** 활성 버전 조회 응답 DTO */
+  data?: FindActiveVersionResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -2273,7 +2279,7 @@ export type GetPromptVersionByIdData = SuccessFindPromptVersionByIdResponseDto;
 
 export type GetPromptVersionByIdError = Error;
 
-export type GetActiveVersionData = SuccessVoid;
+export type GetActiveVersionData = SuccessFindActiveVersionResponseDto;
 
 export type GetActiveVersionError = Error;
 

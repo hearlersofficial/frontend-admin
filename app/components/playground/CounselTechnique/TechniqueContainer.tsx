@@ -1,18 +1,28 @@
-import TechniqueCard from './TechniqueCard';
 import { DndContext, closestCenter, DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
-import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+
+import TechniqueCard from './TechniqueCard';
+import { Plus } from 'lucide-react';
+
 import { usePromptStore } from '~/store/usePromptStore';
+import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 
 interface TechniqueContainerProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
   techniques: CounselTechniqueResponseDto[];
-  selected: string;
-  setSelected: (id: string) => void;
   setTechniques: (techniques: CounselTechniqueResponseDto[]) => void;
+  onAddTechnique?: () => void;
+  onEditName?: (technique: CounselTechniqueResponseDto) => void;
 }
 
-const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechniques }: TechniqueContainerProps) => {
+const TechniqueContainer = ({
+  mode,
+  techniques,
+  setTechniques,
+  onAddTechnique,
+  onEditName,
+}: TechniqueContainerProps) => {
+  const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique) || techniques[0];
   const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -31,21 +41,30 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
     return (
       <div className="flex flex-wrap gap-3">
         {techniques.map((technique) => {
-          const isSelected = selected === technique.id;
-
           return (
             <TechniqueCard
               key={technique.id}
               mode={mode}
               technique={technique}
-              isSelected={isSelected}
-              setSelected={setSelected}
+              selectedCounselTechnique={selectedCounselTechnique}
               setSelectedCounselTechnique={setSelectedCounselTechnique}
               setTechniques={setTechniques}
               techniques={techniques}
+              onEditName={onEditName}
             />
           );
         })}
+
+        {mode === 'ADDANDDELETE' && onAddTechnique && (
+          <p className="flex h-14 items-center">
+            <button
+              onClick={onAddTechnique}
+              className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-[#A99FAA] text-[#A99FAA]"
+            >
+              <Plus className="h-6 w-6" />
+            </button>
+          </p>
+        )}
       </div>
     );
   }
@@ -60,11 +79,11 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
                 mode={mode}
                 key={technique.id}
                 technique={technique}
-                isSelected={false}
-                setSelected={setSelected}
+                selectedCounselTechnique={selectedCounselTechnique}
                 setSelectedCounselTechnique={setSelectedCounselTechnique}
                 setTechniques={setTechniques}
                 techniques={techniques}
+                onEditName={onEditName}
               />
             );
           })}
@@ -73,4 +92,5 @@ const TechniqueContainer = ({ mode, techniques, selected, setSelected, setTechni
     </DndContext>
   );
 };
+
 export default TechniqueContainer;
