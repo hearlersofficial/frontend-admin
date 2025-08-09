@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEpisodes } from "~/hooks/queries";
-import { useEpisodeDetail as useEpisodeDetailAPI } from "~/hooks/queries/useEpisodeDetail";
-import { useCreateEpisode } from "~/hooks/mutations";
-import { useEpisodeDetailStore } from "~/stores/episodeDetailStore";
-import { useEpisodeImageStore } from "~/stores/episodeImageStore";
+import { useEpisodes } from '~/hooks/queries';
+import { useEpisodeDetail as useEpisodeDetailAPI } from '~/hooks/queries/useEpisodeDetail';
+import { useCreateEpisode } from '~/hooks/mutations';
+import { useEpisodeDetailStore } from '~/stores/episodeDetailStore';
+import { useEpisodeImageStore } from '~/stores/episodeImageStore';
 import { filterEpisodes, paginateItems, mapAPIEpisodesToUIEpisodes } from './utils';
-import { Episode } from '../types';
 import { queries } from '~/queries';
 
 // Episode 목록 관리 훅 (React Query 중심으로 단순화)
@@ -14,24 +13,18 @@ export const useEpisodeList = (counselorId: string) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDraftOnly, setIsDraftOnly] = useState(false);
   const itemsPerPage = 5;
-  
+
   // React Query가 counselorId 변경 시 자동으로 새 데이터 페치
   const { data: apiEpisodes = [], isLoading, error } = useEpisodes(counselorId);
 
   // API 데이터를 UI 형태로 변환
-  const episodes = useMemo(() => 
-    mapAPIEpisodesToUIEpisodes(apiEpisodes), 
-    [apiEpisodes]
-  );
+  const episodes = useMemo(() => mapAPIEpisodesToUIEpisodes(apiEpisodes), [apiEpisodes]);
 
   // 필터링 및 페이지네이션
-  const filteredEpisodes = useMemo(() => 
-    filterEpisodes(episodes, isDraftOnly), 
-    [episodes, isDraftOnly]
-  );
+  const filteredEpisodes = useMemo(() => filterEpisodes(episodes, isDraftOnly), [episodes, isDraftOnly]);
 
-  const { paginatedItems: paginatedEpisodes, totalPages } = useMemo(() => 
-    paginateItems(filteredEpisodes, currentPage, itemsPerPage),
+  const { paginatedItems: paginatedEpisodes, totalPages } = useMemo(
+    () => paginateItems(filteredEpisodes, currentPage, itemsPerPage),
     [filteredEpisodes, currentPage, itemsPerPage]
   );
 
@@ -48,14 +41,14 @@ export const useEpisodeList = (counselorId: string) => {
     isDraftOnly,
     setIsDraftOnly,
     isLoading,
-    error
+    error,
   };
 };
 
 // Episode 상세 모달 관리 훅 - API 데이터와 통합
 export const useEpisodeDetail = (counselorId?: string) => {
   const queryClient = useQueryClient();
-  
+
   const {
     isModalOpen,
     currentEpisode,
@@ -91,7 +84,7 @@ export const useEpisodeDetail = (counselorId?: string) => {
           queryKey: queries.v1.getEpisodes(counselorId).queryKey,
         });
       }
-      
+
       // 모달 닫기
       closeModal();
     },
@@ -112,14 +105,16 @@ export const useEpisodeDetail = (counselorId?: string) => {
   useEffect(() => {
     if (apiEpisodeDetail && currentEpisode && !isEditing && !isNewEpisode) {
       // API의 cutScenes를 orderIndex 순서로 정렬 후 scenes로 변환
-      const sortedCutScenes = apiEpisodeDetail.cutScenes?.sort((a, b) => 
-        (a.orderIndex || 0) - (b.orderIndex || 0)
-      ) || [];
-      
-      const scenes = sortedCutScenes.map(cutScene => ({
-        speaker: cutScene.speaker === 'SPEAKER_COUNSELOR' ? 'jihoo' : 
-                cutScene.speaker === 'SPEAKER_USER' ? 'dahye' : 
-                cutScene.speaker || '',
+      const sortedCutScenes =
+        apiEpisodeDetail.cutScenes?.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0)) || [];
+
+      const scenes = sortedCutScenes.map((cutScene) => ({
+        speaker:
+          cutScene.speaker === 'SPEAKER_COUNSELOR'
+            ? 'jihoo'
+            : cutScene.speaker === 'SPEAKER_USER'
+              ? 'dahye'
+              : cutScene.speaker || '',
         dialogue: cutScene.content || '',
       }));
 
@@ -144,9 +139,11 @@ export const useEpisodeDetail = (counselorId?: string) => {
 
       // editData.scenes를 cutScenes 형태로 변환
       const cutScenes = editData.scenes.map((scene, index) => ({
-        speaker: (scene.speaker === 'jihoo' ? 'SPEAKER_COUNSELOR' : 
-                 scene.speaker === 'dahye' ? 'SPEAKER_USER' : 
-                 'SPEAKER_UNSPECIFIED') as 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'SPEAKER_UNSPECIFIED',
+        speaker: (scene.speaker === 'jihoo'
+          ? 'SPEAKER_COUNSELOR'
+          : scene.speaker === 'dahye'
+            ? 'SPEAKER_USER'
+            : 'SPEAKER_UNSPECIFIED') as 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'SPEAKER_UNSPECIFIED',
         content: scene.dialogue,
         orderIndex: index + 1, // 서버는 1부터 시작
         image: '', // TODO: 이미지 기능 구현 시 실제 이미지 URL로 변경
@@ -171,10 +168,8 @@ export const useEpisodeDetail = (counselorId?: string) => {
   const handlers = {
     onTitleChange: (title: string) => updateEditedEpisode({ title }),
     onLevelChange: (level: number) => updateEditedEpisode({ level }),
-    onSpeakerChange: (speaker: string, selectedIndex: number) => 
-      updateSceneData(selectedIndex, { speaker }),
-    onDialogueChange: (dialogue: string, selectedIndex: number) => 
-      updateSceneData(selectedIndex, { dialogue }),
+    onSpeakerChange: (speaker: string, selectedIndex: number) => updateSceneData(selectedIndex, { speaker }),
+    onDialogueChange: (dialogue: string, selectedIndex: number) => updateSceneData(selectedIndex, { dialogue }),
     onAddScene: addScene,
   };
 
@@ -190,7 +185,7 @@ export const useEpisodeDetail = (counselorId?: string) => {
     isDetailLoading: !isNewEpisode ? isDetailLoading : false,
     isCreating,
     isNewEpisode,
-    
+
     // 액션
     openModal,
     openNewEpisode,
@@ -201,7 +196,7 @@ export const useEpisodeDetail = (counselorId?: string) => {
     handleStatusChange,
     confirmStatusChange,
     cancelStatusChange,
-    
+
     // 핸들러
     ...handlers,
   };
@@ -228,4 +223,4 @@ export const useEpisodeImages = () => {
     setSelectedImageIndex,
     navigateImage,
   };
-}; 
+};

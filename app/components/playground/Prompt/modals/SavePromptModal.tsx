@@ -8,6 +8,7 @@ import { Modal } from '~/components/Modal';
 import { useSaveVersion } from '~/hooks/mutations';
 import { usePromptStore } from '~/store/usePromptStore';
 import { queries } from '~/queries';
+import { AIModel } from '~/types/aiModel';
 
 interface SavePromptModalProps {
   isOpen: boolean;
@@ -17,6 +18,8 @@ interface SavePromptModalProps {
 const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [aiModel, setAiModel] = useState<AIModel>('GPT_4O_MINI');
 
   const queryClient = useQueryClient();
   const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
@@ -62,18 +65,30 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
         <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="fav">
           즐겨찾기
         </label>
-        <select id="fav" onChange={() => {}} className="w-full rounded border p-2">
+        <select
+          id="fav"
+          value={isBookmarked ? 'on' : 'off'}
+          onChange={(e) => setIsBookmarked(e.target.value === 'on')}
+          className="w-full rounded border p-2"
+        >
           <option value="on">ON</option>
           <option value="off">OFF</option>
         </select>
       </div>
 
       <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="gpt">
-          권장 AI 모델
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="aiModel">
+          사용 AI 모델
         </label>
-        <select id="gpt" onChange={() => {}} className="w-full rounded border p-2">
-          <option value="4o">GPT 4o preview_0428</option>
+        <select
+          id="aiModel"
+          value={aiModel}
+          onChange={(e) => setAiModel(e.target.value as AIModel)}
+          className="w-full rounded border p-2"
+        >
+          <option value="GPT_4O">GPT 4o</option>
+          <option value="GPT_4O_MINI">GPT 4o mini</option>
+          <option value="GPT_3_5_TURBO">GPT 3.5</option>
         </select>
       </div>
 
@@ -93,7 +108,7 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
 
       <DialogFooter>
         <Button
-          onClick={() => saveVersion({ name, description })}
+          onClick={() => saveVersion({ name, description, isBookmarked, aiModel })}
           className="mx-auto block rounded-xl bg-[#736A84] text-base font-semibold"
           size="lg"
         >
