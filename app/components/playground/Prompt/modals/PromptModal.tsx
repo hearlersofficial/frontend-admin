@@ -71,6 +71,19 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
         </select>
       </div>
       <div>
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="aiModel">
+          AI 모델
+        </label>
+        <input
+          id="aiModel"
+          type="text"
+          readOnly
+          value={prompt.aiModel}
+          className="w-full rounded border p-2"
+          disabled
+        />
+      </div>
+      <div>
         <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="memo">
           메모
         </label>
