@@ -61,7 +61,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
         </label>
         <select
           id="fav"
-          value={prompt.bookmarked ? 'on' : 'off'}
+          value={prompt.isBookmarked ? 'on' : 'off'}
           onChange={() => {}}
           className="w-full rounded border p-2"
           disabled

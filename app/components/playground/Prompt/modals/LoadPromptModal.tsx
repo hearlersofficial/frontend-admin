@@ -23,7 +23,7 @@ const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) =
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [showFavsOnly, setShowFavsOnly] = useState(false);
 
-  const filteredPrompts = showFavsOnly ? prompts.filter((p) => p.bookmarked) : prompts;
+  const filteredPrompts = showFavsOnly ? prompts.filter((p) => p.isBookmarked) : prompts;
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(filteredPrompts, 6);
 
   const handleDetailView = (prompt: PromptVersionResponseDto) => {
@@ -54,7 +54,7 @@ const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) =
                   </TableCell>
                 )}
                 <TableCell className="w-4 px-2">
-                  {prompt.bookmarked && <Star className="h-4 w-4 fill-current text-[#F0D467]" />}
+                  {prompt.isBookmarked && <Star className="h-4 w-4 fill-current text-[#F0D467]" />}
                 </TableCell>
                 <TableCell className="px-4 py-2 text-[#333]">{prompt.name}</TableCell>
                 <TableCell className="px-4 py-2 text-[#666]">

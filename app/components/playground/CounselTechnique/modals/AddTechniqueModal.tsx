@@ -22,6 +22,7 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
     context: '',
     instruction: '',
     messageThreshold: 3,
+    temperature: 0.5,
   });
 
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
@@ -164,15 +165,30 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
 
       <div>
         <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="messageThreshold">
-          문장수
+          메시지 임계값 (초과 시 다음 테크닉으로 넘어갈 지 평가 시작)
         </label>
         <input
           id="messageThreshold"
           type="number"
           min="1"
-          max="10"
+          max="20"
           value={formData.messageThreshold}
-          onChange={(e) => handleInputChange('messageThreshold', parseInt(e.target.value) || 3)}
+          onChange={(e) => handleInputChange('messageThreshold', parseInt(e.target.value) || 5)}
+          className="w-full rounded border p-2"
+        />
+      </div>
+
+      <div>
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="temperature">
+          temperature (0.0 ~ 1.0)
+        </label>
+        <input
+          id="temperature"
+          type="number"
+          min="0"
+          max="1"
+          value={formData.temperature}
+          onChange={(e) => handleInputChange('temperature', parseFloat(e.target.value) || 0.5)}
           className="w-full rounded border p-2"
         />
       </div>

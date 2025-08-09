@@ -44,8 +44,6 @@ import {
   GenerateCutSceneImageUrlRequest,
   GetActiveVersionData,
   GetActiveVersionError,
-  GetBubbles1Data,
-  GetBubbles1Error,
   GetBubblesData,
   GetBubblesError,
   GetCounselData,
@@ -54,34 +52,19 @@ import {
   GetCounselTechniqueByIdError,
   GetCounselor1Data,
   GetCounselor1Error,
-  GetCounselor2Data,
-  GetCounselor2Error,
-  GetCounselor3Data,
-  GetCounselor3Error,
   GetCounselorData,
   GetCounselorError,
-  GetCounselorUserRelationshipsData,
-  GetCounselorUserRelationshipsError,
-  GetCounselors1Data,
-  GetCounselors1Error,
-  GetCounselors1Params,
   GetCounselorsData,
   GetCounselorsError,
   GetCounselorsParams,
   GetCounselsData,
   GetCounselsError,
-  GetEpisode1Data,
-  GetEpisode1Error,
   GetEpisodeData,
   GetEpisodeError,
-  GetEpisodes1Data,
-  GetEpisodes1Error,
   GetEpisodesData,
   GetEpisodesError,
   GetMessagesData,
   GetMessagesError,
-  GetMyUserData,
-  GetMyUserError,
   GetOrderedCounselTechniquesData,
   GetOrderedCounselTechniquesError,
   GetOrderedCounselTechniquesParams,
@@ -95,21 +78,14 @@ import {
   GetPromptVersionsData,
   GetPromptVersionsError,
   GetPromptVersionsParams,
-  GetRandomBubble1Data,
-  GetRandomBubble1Error,
   GetRandomBubbleData,
   GetRandomBubbleError,
   GetTemporaryVersionData,
   GetTemporaryVersionError,
-  GetTone1Data,
-  GetTone1Error,
   GetToneData,
   GetToneError,
   GetTonePromptByIdData,
   GetTonePromptByIdError,
-  GetTones1Data,
-  GetTones1Error,
-  GetTones1Params,
   GetTonesData,
   GetTonesError,
   GetTonesParams,
@@ -144,9 +120,6 @@ import {
   UpdateEpisodeData,
   UpdateEpisodeError,
   UpdateEpisodeRequest,
-  UpdateMyUserData,
-  UpdateMyUserError,
-  UpdateMyUserRequest,
   UpdatePersonaPromptData,
   UpdatePersonaPromptError,
   UpdatePersonaPromptRequestDto,
@@ -163,52 +136,16 @@ export class V1<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
-   * @description 현재 로그인한 사용자의 정보를 조회합니다.
-   *
-   * @tags 앱/유저
-   * @name GetMyUser
-   * @summary 내 정보 조회
-   * @request GET:/v1/users/me
-   * @secure
-   */
-  getMyUser = (params: RequestParams = {}) =>
-    this.request<GetMyUserData, GetMyUserError>({
-      path: `/v1/users/me`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 현재 로그인한 사용자의 프로필 정보를 업데이트합니다.
-   *
-   * @tags 앱/유저
-   * @name UpdateMyUser
-   * @summary 내 프로필 업데이트
-   * @request PUT:/v1/users/me
-   * @secure
-   */
-  updateMyUser = (data: UpdateMyUserRequest, params: RequestParams = {}) =>
-    this.request<UpdateMyUserData, UpdateMyUserError>({
-      path: `/v1/users/me`,
-      method: "PUT",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
    * @description 톤을 단건 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetTone1
+   * @name GetTone
    * @summary 톤 단건 조회
    * @request GET:/v1/admin/tones/{tone-id}
    * @secure
    */
-  getTone1 = (toneId: string, params: RequestParams = {}) =>
-    this.request<GetTone1Data, GetTone1Error>({
+  getTone = (toneId: string, params: RequestParams = {}) =>
+    this.request<GetToneData, GetToneError>({
       path: `/v1/admin/tones/${toneId}`,
       method: "GET",
       secure: true,
@@ -365,13 +302,13 @@ export class V1<
    * @description 상담사를 단건 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetCounselor2
+   * @name GetCounselor
    * @summary 상담사 단건 조회
    * @request GET:/v1/admin/counselors/{counselor-id}
    * @secure
    */
-  getCounselor2 = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetCounselor2Data, GetCounselor2Error>({
+  getCounselor = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetCounselorData, GetCounselorError>({
       path: `/v1/admin/counselors/${counselorId}`,
       method: "GET",
       secure: true,
@@ -405,17 +342,17 @@ export class V1<
    * @description 에피소드를 단건 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetEpisode1
+   * @name GetEpisode
    * @summary 에피소드 단건 조회
    * @request GET:/v1/admin/counselors/{counselor-id}/episodes/{episode-id}
    * @secure
    */
-  getEpisode1 = (
+  getEpisode = (
     episodeId: string,
     counselorId: string,
     params: RequestParams = {},
   ) =>
-    this.request<GetEpisode1Data, GetEpisode1Error>({
+    this.request<GetEpisodeData, GetEpisodeError>({
       path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}`,
       method: "GET",
       secure: true,
@@ -450,17 +387,17 @@ export class V1<
    * @description 버블을 단건 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetCounselor3
+   * @name GetCounselor1
    * @summary 버블 단건 조회
    * @request GET:/v1/admin/counselors/{counselor-id}/bubbles/{bubble-id}
    * @secure
    */
-  getCounselor3 = (
+  getCounselor1 = (
     bubbleId: string,
     counselorId: string,
     params: RequestParams = {},
   ) =>
-    this.request<GetCounselor3Data, GetCounselor3Error>({
+    this.request<GetCounselor1Data, GetCounselor1Error>({
       path: `/v1/admin/counselors/${counselorId}/bubbles/${bubbleId}`,
       method: "GET",
       secure: true,
@@ -485,116 +422,6 @@ export class V1<
     this.request<UpdateBubbleData, UpdateBubbleError>({
       path: `/v1/admin/counselors/${counselorId}/bubbles/${bubbleId}`,
       method: "PUT",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담사 ID 또는 'all'을 입력하여 상담 목록을 조회합니다.
-   *
-   * @tags 앱/상담
-   * @name GetCounsels
-   * @summary 상담 목록 조회
-   * @request GET:/v1/counselors/{counselor-id}/counsels
-   * @secure
-   */
-  getCounsels = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetCounselsData, GetCounselsError>({
-      path: `/v1/counselors/${counselorId}/counsels`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 새로운 상담을 생성합니다.
-   *
-   * @tags 앱/상담
-   * @name CreateCounsel
-   * @summary 상담 생성
-   * @request POST:/v1/counselors/{counselor-id}/counsels
-   * @secure
-   */
-  createCounsel = (
-    counselorId: string,
-    data: CreateCounselRequest,
-    params: RequestParams = {},
-  ) =>
-    this.request<CreateCounselData, CreateCounselError>({
-      path: `/v1/counselors/${counselorId}/counsels`,
-      method: "POST",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담의 메시지 목록을 조회합니다.
-   *
-   * @tags 앱/상담
-   * @name GetMessages
-   * @summary 메시지 목록 조회
-   * @request GET:/v1/counselors/{counselor-id}/counsels/{counsel-id}/messages
-   * @secure
-   */
-  getMessages = (
-    counselorId: string,
-    counselId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetMessagesData, GetMessagesError>({
-      path: `/v1/counselors/${counselorId}/counsels/${counselId}/messages`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담에 새로운 메시지를 생성합니다.
-   *
-   * @tags 앱/상담
-   * @name CreateMessage
-   * @summary 메시지 생성
-   * @request POST:/v1/counselors/{counselor-id}/counsels/{counsel-id}/messages
-   * @secure
-   */
-  createMessage = (
-    counselorId: string,
-    counselId: string,
-    data: CreateMessageRequest,
-    params: RequestParams = {},
-  ) =>
-    this.request<CreateMessageData, CreateMessageError>({
-      path: `/v1/counselors/${counselorId}/counsels/${counselId}/messages`,
-      method: "POST",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 메시지에 반응을 추가합니다.
-   *
-   * @tags 앱/상담
-   * @name ReactMessage
-   * @summary 메시지 반응
-   * @request POST:/v1/counselors/{counselor-id}/counsels/{counsel-id}/messages/{message-id}/react
-   * @secure
-   */
-  reactMessage = (
-    counselorId: string,
-    counselId: string,
-    messageId: string,
-    data: ReactMessageRequest,
-    params: RequestParams = {},
-  ) =>
-    this.request<ReactMessageData, ReactMessageError>({
-      path: `/v1/counselors/${counselorId}/counsels/${counselId}/messages/${messageId}/react`,
-      method: "POST",
       body: data,
       secure: true,
       type: ContentType.Json,
@@ -637,13 +464,13 @@ export class V1<
    * @description 톤을 복수 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetTones1
+   * @name GetTones
    * @summary 톤 복수 조회
    * @request GET:/v1/admin/tones
    * @secure
    */
-  getTones1 = (query: GetTones1Params, params: RequestParams = {}) =>
-    this.request<GetTones1Data, GetTones1Error>({
+  getTones = (query: GetTonesParams, params: RequestParams = {}) =>
+    this.request<GetTonesData, GetTonesError>({
       path: `/v1/admin/tones`,
       method: "GET",
       query: query,
@@ -741,13 +568,13 @@ export class V1<
    * @description 상담사를 복수 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetCounselors1
+   * @name GetCounselors
    * @summary 상담사 복수 조회
    * @request GET:/v1/admin/counselors
    * @secure
    */
-  getCounselors1 = (query: GetCounselors1Params, params: RequestParams = {}) =>
-    this.request<GetCounselors1Data, GetCounselors1Error>({
+  getCounselors = (query: GetCounselorsParams, params: RequestParams = {}) =>
+    this.request<GetCounselorsData, GetCounselorsError>({
       path: `/v1/admin/counselors`,
       method: "GET",
       query: query,
@@ -806,13 +633,13 @@ export class V1<
    * @description 에피소드를 복수 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetEpisodes1
+   * @name GetEpisodes
    * @summary 에피소드 복수 조회
    * @request GET:/v1/admin/counselors/{counselor-id}/episodes
    * @secure
    */
-  getEpisodes1 = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetEpisodes1Data, GetEpisodes1Error>({
+  getEpisodes = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetEpisodesData, GetEpisodesError>({
       path: `/v1/admin/counselors/${counselorId}/episodes`,
       method: "GET",
       secure: true,
@@ -867,16 +694,126 @@ export class V1<
       ...params,
     });
   /**
+   * @description 상담사 ID 또는 'all'을 입력하여 상담 목록을 조회합니다.
+   *
+   * @tags 어드민/상담
+   * @name GetCounsels
+   * @summary 상담 목록 조회
+   * @request GET:/v1/admin/counselors/{counselor-id}/counsels
+   * @secure
+   */
+  getCounsels = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetCounselsData, GetCounselsError>({
+      path: `/v1/admin/counselors/${counselorId}/counsels`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 새로운 상담을 생성합니다.
+   *
+   * @tags 어드민/상담
+   * @name CreateCounsel
+   * @summary 상담 생성
+   * @request POST:/v1/admin/counselors/{counselor-id}/counsels
+   * @secure
+   */
+  createCounsel = (
+    counselorId: string,
+    data: CreateCounselRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<CreateCounselData, CreateCounselError>({
+      path: `/v1/admin/counselors/${counselorId}/counsels`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 상담의 메시지 목록을 조회합니다.
+   *
+   * @tags 어드민/상담
+   * @name GetMessages
+   * @summary 메시지 목록 조회
+   * @request GET:/v1/admin/counselors/{counselor-id}/counsels/{counsel-id}/messages
+   * @secure
+   */
+  getMessages = (
+    counselorId: string,
+    counselId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<GetMessagesData, GetMessagesError>({
+      path: `/v1/admin/counselors/${counselorId}/counsels/${counselId}/messages`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 상담에 새로운 메시지를 생성합니다.
+   *
+   * @tags 어드민/상담
+   * @name CreateMessage
+   * @summary 메시지 생성
+   * @request POST:/v1/admin/counselors/{counselor-id}/counsels/{counsel-id}/messages
+   * @secure
+   */
+  createMessage = (
+    counselorId: string,
+    counselId: string,
+    data: CreateMessageRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<CreateMessageData, CreateMessageError>({
+      path: `/v1/admin/counselors/${counselorId}/counsels/${counselId}/messages`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 메시지에 반응을 추가합니다.
+   *
+   * @tags 어드민/상담
+   * @name ReactMessage
+   * @summary 메시지 반응
+   * @request POST:/v1/admin/counselors/{counselor-id}/counsels/{counsel-id}/messages/{message-id}/react
+   * @secure
+   */
+  reactMessage = (
+    counselorId: string,
+    counselId: string,
+    messageId: string,
+    data: ReactMessageRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<ReactMessageData, ReactMessageError>({
+      path: `/v1/admin/counselors/${counselorId}/counsels/${counselId}/messages/${messageId}/react`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
    * @description 버블을 복수 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetBubbles1
+   * @name GetBubbles
    * @summary 버블 복수 조회
    * @request GET:/v1/admin/counselors/{counselor-id}/bubbles
    * @secure
    */
-  getBubbles1 = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetBubbles1Data, GetBubbles1Error>({
+  getBubbles = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetBubblesData, GetBubblesError>({
       path: `/v1/admin/counselors/${counselorId}/bubbles`,
       method: "GET",
       secure: true,
@@ -903,213 +840,6 @@ export class V1<
       body: data,
       secure: true,
       type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 톤을 복수 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetTones
-   * @summary 톤 복수 조회
-   * @request GET:/v1/tones
-   * @secure
-   */
-  getTones = (query: GetTonesParams, params: RequestParams = {}) =>
-    this.request<GetTonesData, GetTonesError>({
-      path: `/v1/tones`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 톤을 단건 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetTone
-   * @summary 톤 단건 조회
-   * @request GET:/v1/tones/{tone-id}
-   * @secure
-   */
-  getTone = (toneId: string, params: RequestParams = {}) =>
-    this.request<GetToneData, GetToneError>({
-      path: `/v1/tones/${toneId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담사를 복수 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetCounselors
-   * @summary 상담사 복수 조회
-   * @request GET:/v1/counselors
-   * @secure
-   */
-  getCounselors = (query: GetCounselorsParams, params: RequestParams = {}) =>
-    this.request<GetCounselorsData, GetCounselorsError>({
-      path: `/v1/counselors`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담사를 단건 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetCounselor
-   * @summary 상담사 단건 조회
-   * @request GET:/v1/counselors/{counselor-id}
-   * @secure
-   */
-  getCounselor = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetCounselorData, GetCounselorError>({
-      path: `/v1/counselors/${counselorId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담사와 유저의 관계를 조회합니다.
-   *
-   * @tags 앱/상담
-   * @name GetCounselorUserRelationships
-   * @summary 상담사와 유저의 관계 조회
-   * @request GET:/v1/counselors/{counselor-id}/relationships
-   * @secure
-   */
-  getCounselorUserRelationships = (
-    counselorId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      GetCounselorUserRelationshipsData,
-      GetCounselorUserRelationshipsError
-    >({
-      path: `/v1/counselors/${counselorId}/relationships`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 에피소드를 복수 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetEpisodes
-   * @summary 에피소드 복수 조회
-   * @request GET:/v1/counselors/{counselor-id}/episodes
-   * @secure
-   */
-  getEpisodes = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetEpisodesData, GetEpisodesError>({
-      path: `/v1/counselors/${counselorId}/episodes`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 에피소드를 단건 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetEpisode
-   * @summary 에피소드 단건 조회
-   * @request GET:/v1/counselors/{counselor-id}/episodes/{episode-id}
-   * @secure
-   */
-  getEpisode = (
-    episodeId: string,
-    counselorId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetEpisodeData, GetEpisodeError>({
-      path: `/v1/counselors/${counselorId}/episodes/${episodeId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담을 단건 조회합니다.
-   *
-   * @tags 앱/상담
-   * @name GetCounsel
-   * @summary 상담 단건 조회
-   * @request GET:/v1/counselors/{counselor-id}/counsels/{counsel-id}
-   * @secure
-   */
-  getCounsel = (
-    counselorId: string,
-    counselId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetCounselData, GetCounselError>({
-      path: `/v1/counselors/${counselorId}/counsels/${counselId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 버블을 복수 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetBubbles
-   * @summary 버블 복수 조회
-   * @request GET:/v1/counselors/{counselor-id}/bubbles
-   * @secure
-   */
-  getBubbles = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetBubblesData, GetBubblesError>({
-      path: `/v1/counselors/${counselorId}/bubbles`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 버블을 단건 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetCounselor1
-   * @summary 버블 단건 조회
-   * @request GET:/v1/counselors/{counselor-id}/bubbles/{bubble-id}
-   * @secure
-   */
-  getCounselor1 = (
-    bubbleId: string,
-    counselorId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetCounselor1Data, GetCounselor1Error>({
-      path: `/v1/counselors/${counselorId}/bubbles/${bubbleId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 버블을 랜덤으로 조회합니다.
-   *
-   * @tags 앱/상담사
-   * @name GetRandomBubble
-   * @summary 버블 랜덤 조회
-   * @request GET:/v1/counselors/{counselor-id}/bubbles/random
-   * @secure
-   */
-  getRandomBubble = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetRandomBubbleData, GetRandomBubbleError>({
-      path: `/v1/counselors/${counselorId}/bubbles/random`,
-      method: "GET",
-      secure: true,
       format: "json",
       ...params,
     });
@@ -1282,16 +1012,37 @@ export class V1<
       ...params,
     });
   /**
+   * @description 상담을 단건 조회합니다.
+   *
+   * @tags 어드민/상담
+   * @name GetCounsel
+   * @summary 상담 단건 조회
+   * @request GET:/v1/admin/counselors/{counselor-id}/counsels/{counsel-id}
+   * @secure
+   */
+  getCounsel = (
+    counselorId: string,
+    counselId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<GetCounselData, GetCounselError>({
+      path: `/v1/admin/counselors/${counselorId}/counsels/${counselId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
    * @description 버블을 랜덤으로 조회합니다.
    *
    * @tags 어드민/상담사
-   * @name GetRandomBubble1
+   * @name GetRandomBubble
    * @summary 버블 랜덤 조회
    * @request GET:/v1/admin/counselors/{counselor-id}/bubbles/random
    * @secure
    */
-  getRandomBubble1 = (counselorId: string, params: RequestParams = {}) =>
-    this.request<GetRandomBubble1Data, GetRandomBubble1Error>({
+  getRandomBubble = (counselorId: string, params: RequestParams = {}) =>
+    this.request<GetRandomBubbleData, GetRandomBubbleError>({
       path: `/v1/admin/counselors/${counselorId}/bubbles/random`,
       method: "GET",
       secure: true,
