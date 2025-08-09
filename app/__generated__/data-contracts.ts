@@ -279,6 +279,16 @@ export interface SaveTemporaryVersionRequestDto {
    * @example "2024년 7월 배포 예정 버전입니다."
    */
   description: string;
+  /** 북마크 여부 */
+  isBookmarked: boolean;
+  /** AI 모델 */
+  aiModel:
+    | "AI_MODEL_UNSPECIFIED"
+    | "GPT_3_5_TURBO"
+    | "GPT_4"
+    | "GPT_4O"
+    | "GPT_4O_MINI"
+    | "UNRECOGNIZED";
 }
 
 /** 상담사별 프롬프트 응답 DTO */
@@ -327,6 +337,29 @@ export interface PromptVersionResponseDto {
    * @example "2024년 6월 배포 버전입니다."
    */
   description?: string;
+  /**
+   * 활성화 여부
+   * @example true
+   */
+  isActive?: boolean;
+  /**
+   * 임시 버전 여부
+   * @example false
+   */
+  isTemporary?: boolean;
+  /**
+   * 북마크 여부
+   * @example false
+   */
+  isBookmarked?: boolean;
+  /** AI 모델 */
+  aiModel?:
+    | "AI_MODEL_UNSPECIFIED"
+    | "GPT_3_5_TURBO"
+    | "GPT_4"
+    | "GPT_4O"
+    | "GPT_4O_MINI"
+    | "UNRECOGNIZED";
   /** 상담사별 프롬프트 목록 */
   counselorScopedPrompts?: CounselorScopedPromptResponseDto[];
   /** 톤별 프롬프트 목록 */
@@ -346,9 +379,6 @@ export interface PromptVersionResponseDto {
    * @example "null"
    */
   deletedAt?: string;
-  active?: boolean;
-  temporary?: boolean;
-  bookmarked?: boolean;
 }
 
 /** 임시 버전 저장 응답 DTO */
@@ -592,6 +622,11 @@ export interface UpdateCounselTechniqueRequestDto {
    * @example 5
    */
   messageThreshold?: number;
+  /**
+   * AI 모델 temperature 값
+   * @format double
+   */
+  temperature?: number;
 }
 
 /** 상담 기법 응답 DTO */
@@ -628,10 +663,20 @@ export interface CounselTechniqueResponseDto {
    */
   messageThreshold?: number;
   /**
+   * 임시 기법 여부
+   * @example false
+   */
+  isTemporary?: boolean;
+  /**
    * 다음 상담 기법 ID
    * @example "ct_789012"
    */
   nextCounselTechniqueId?: string;
+  /**
+   * AI 모델 temperature 값
+   * @format double
+   */
+  temperature?: number;
   /**
    * 생성 시간
    * @example "2024-06-01T12:34:56.000Z"
@@ -647,7 +692,6 @@ export interface CounselTechniqueResponseDto {
    * @example "null"
    */
   deletedAt?: string;
-  temporary?: boolean;
 }
 
 /** 성공 응답 DTO */
@@ -1190,6 +1234,11 @@ export interface CreateCounselTechniqueRequestDto {
    * @example 3
    */
   messageThreshold: number;
+  /**
+   * AI 모델 temperature 값
+   * @format double
+   */
+  temperature: number;
 }
 
 /** 상담 기법 생성 응답 DTO */

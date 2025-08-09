@@ -70,7 +70,7 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
 
       <div>
         <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="gpt">
-          권장 GPT 모델
+          권장 AI 모델
         </label>
         <select id="gpt" onChange={() => {}} className="w-full rounded border p-2">
           <option value="4o">GPT 4o preview_0428</option>
