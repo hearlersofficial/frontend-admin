@@ -66,11 +66,11 @@ const v1QueryKeys = createQueryKeys('v1', {
   }),
   getEpisode: (episodeId: string, counselorId: string) => ({
     queryKey: [episodeId, counselorId],
-    queryFn: () => api.V1.getEpisode1(episodeId, counselorId),
+    queryFn: () => api.V1.getEpisode(episodeId, counselorId),
   }),
   getEpisodes: (counselorId: string) => ({
     queryKey: [counselorId],
-    queryFn: () => api.V1.getEpisodes1(counselorId),
+    queryFn: () => api.V1.getEpisodes(counselorId),
   }),
   getOrderedCounselTechniques: (query: GetOrderedCounselTechniquesParams) => ({
     queryKey: [query],
@@ -79,6 +79,15 @@ const v1QueryKeys = createQueryKeys('v1', {
   getCounselTechniqueById: (counselTechniqueId: string) => ({
     queryKey: [counselTechniqueId],
     queryFn: () => api.V1.getCounselTechniqueById(counselTechniqueId),
+  }),
+  // --- Mobile preview (chat) related queries ---
+  getCounsels: (counselorId: string) => ({
+    queryKey: ['counsels', counselorId],
+    queryFn: () => api.V1.getCounsels(counselorId).then((res) => res.data.data?.counsels ?? []),
+  }),
+  getCounselMessages: (counselorId: string, counselId: string) => ({
+    queryKey: ['counselMessages', counselorId, counselId],
+    queryFn: () => api.V1.getMessages(counselorId, counselId).then((res) => res.data.data?.counselMessages ?? []),
   }),
 });
 

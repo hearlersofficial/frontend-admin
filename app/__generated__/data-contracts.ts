@@ -10,45 +10,14 @@
  * ---------------------------------------------------------------
  */
 
-/** 내 프로필 업데이트 요청 */
-export interface UpdateMyUserRequest {
-  /** 닉네임 */
-  nickname?: string | null;
-  /** 프로필 이미지 URL */
-  profileImage?: string | null;
-  /** 성별 */
-  gender?:
-    | "GENDER_UNSPECIFIED"
-    | "GENDER_MALE"
-    | "GENDER_FEMALE"
-    | "UNRECOGNIZED"
-    | null;
-  /** MBTI */
-  mbti?:
-    | "MBTI_UNSPECIFIED"
-    | "MBTI_ENTP"
-    | "MBTI_ENFP"
-    | "MBTI_ENTJ"
-    | "MBTI_ENFJ"
-    | "MBTI_ESTP"
-    | "MBTI_ESTJ"
-    | "MBTI_ESFP"
-    | "MBTI_ESFJ"
-    | "MBTI_INTJ"
-    | "MBTI_INFJ"
-    | "MBTI_INTP"
-    | "MBTI_INFP"
-    | "MBTI_ISTP"
-    | "MBTI_ISTJ"
-    | "MBTI_ISFP"
-    | "MBTI_ISFJ"
-    | "UNRECOGNIZED"
-    | null;
-  /**
-   * 생년
-   * @format int32
-   */
-  birthYear?: number | null;
+/** 톤 업데이트 요청 */
+export interface UpdateToneRequest {
+  /** 톤 ID */
+  toneId: string;
+  /** 톤 이름 */
+  name?: string | null;
+  /** 톤 설명 */
+  description?: string | null;
 }
 
 /** 에러 응답 DTO */
@@ -146,87 +115,6 @@ export interface Error {
    * @example "2024-07-01 14:30:45"
    */
   timestamp?: string;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessUpdateMyUserResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 내 프로필 업데이트 응답 */
-  data?: UpdateMyUserResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 내 프로필 업데이트 응답 */
-export interface UpdateMyUserResponse {
-  /** 유저 정보 */
-  user?: User;
-}
-
-/** 유저 정보 */
-export interface User {
-  /** 유저 ID */
-  id?: string;
-  /** 닉네임 */
-  nickname?: string;
-  /** 유저 프로필 정보 */
-  userProfile?: UserProfile;
-}
-
-/** 유저 프로필 정보 */
-export interface UserProfile {
-  /** 프로필 이미지 URL */
-  profileImage?: string | null;
-  /** 성별 */
-  gender?:
-    | "GENDER_UNSPECIFIED"
-    | "GENDER_MALE"
-    | "GENDER_FEMALE"
-    | "UNRECOGNIZED"
-    | null;
-  /** MBTI */
-  mbti?:
-    | "MBTI_UNSPECIFIED"
-    | "MBTI_ENTP"
-    | "MBTI_ENFP"
-    | "MBTI_ENTJ"
-    | "MBTI_ENFJ"
-    | "MBTI_ESTP"
-    | "MBTI_ESTJ"
-    | "MBTI_ESFP"
-    | "MBTI_ESFJ"
-    | "MBTI_INTJ"
-    | "MBTI_INFJ"
-    | "MBTI_INTP"
-    | "MBTI_INFP"
-    | "MBTI_ISTP"
-    | "MBTI_ISTJ"
-    | "MBTI_ISFP"
-    | "MBTI_ISFJ"
-    | "UNRECOGNIZED"
-    | null;
-  /**
-   * 생년
-   * @format int32
-   */
-  birthYear?: number | null;
-}
-
-/** 톤 업데이트 요청 */
-export interface UpdateToneRequest {
-  /** 톤 ID */
-  toneId: string;
-  /** 톤 이름 */
-  name?: string | null;
-  /** 톤 설명 */
-  description?: string | null;
 }
 
 /** 성공 응답 DTO */
@@ -947,179 +835,6 @@ export interface UpdateBubbleResponse {
   bubble?: Bubble;
 }
 
-/** 상담 생성 요청 */
-export interface CreateCounselRequest {
-  /** 버블 ID */
-  bubbleId?: string | null;
-  /**
-   * 응답 옵션 번호
-   * @format int32
-   */
-  responseOptionNo?: number | null;
-}
-
-/** 상담 */
-export interface Counsel {
-  /**
-   * 상담 ID
-   * @example "123534543"
-   */
-  id?: string;
-  /**
-   * 상담사 ID
-   * @example "53453454323"
-   */
-  counselorId?: string;
-  /**
-   * 유저 ID
-   * @example "53453454323"
-   */
-  userId?: string;
-  /**
-   * 마지막 메시지
-   * @example "안녕하세요, 상담사님!"
-   */
-  lastMessage?: string | null;
-  /**
-   * 마지막 채팅 날짜
-   * @example "2024-12-29T12:34:56.000Z"
-   */
-  lastChatedAt?: string | null;
-  /**
-   * 프롬프트 버전 ID
-   * @example "5435345345"
-   */
-  promptVersionId?: string;
-  /**
-   * 상담 테크닉 ID
-   * @example "436534342321"
-   */
-  counselTechniqueId?: string;
-  /**
-   * 상담사와 유저의 관계 ID
-   * @example "436534342321"
-   */
-  counselorUserRelationshipId?: string;
-  /** 상담 생성 시간 */
-  createdAt?: string;
-  /** 상담 수정 시간 */
-  updatedAt?: string;
-  /** 상담 삭제 시간 */
-  deletedAt?: string | null;
-}
-
-/** 상담 메세지 */
-export interface CounselMessage {
-  /** 메시지 ID */
-  id?: string;
-  /** 상담 ID */
-  counselId?: string;
-  /** 메시지 내용 */
-  message?: string;
-  /** 메시지 반응 시간 (ISO 8601) */
-  reactedAt?: string | null;
-  /** 메시지 반응 객체 */
-  reaction?:
-    | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
-    | "COUNSEL_MESSAGE_REACTION_LIKE"
-    | "COUNSEL_MESSAGE_REACTION_DISLIKE"
-    | "UNRECOGNIZED"
-    | null;
-  /** 생성 시간 (ISO 8601) */
-  createdAt?: string;
-  /** 수정 시간 (ISO 8601) */
-  updatedAt?: string;
-  /** 삭제 시간 (ISO 8601) */
-  deletedAt?: string | null;
-  userMessage?: boolean;
-}
-
-/** 상담 생성 응답 */
-export interface CreateCounselResponse {
-  /** 상담 */
-  counsel?: Counsel;
-  /** 상담 메시지 목록 */
-  counselMessages?: CounselMessage[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessCreateCounselResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담 생성 응답 */
-  data?: CreateCounselResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 메시지 생성 요청 */
-export interface CreateMessageRequest {
-  /** 메시지 내용 */
-  message: string;
-}
-
-/** 메시지 생성 응답 */
-export interface CreateMessageResponse {
-  /** 상담 메세지 */
-  createdCounselMessage?: CounselMessage;
-  /** 상담 메세지 */
-  counselorResponseMessage?: CounselMessage;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessCreateMessageResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 메시지 생성 응답 */
-  data?: CreateMessageResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 메시지 반응 요청 */
-export interface ReactMessageRequest {
-  /** 메시지 반응 */
-  reaction:
-    | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
-    | "COUNSEL_MESSAGE_REACTION_LIKE"
-    | "COUNSEL_MESSAGE_REACTION_DISLIKE"
-    | "UNRECOGNIZED";
-}
-
-/** 메시지 반응 응답 */
-export interface ReactMessageResponse {
-  /** 상담 메세지 */
-  counselMessage?: CounselMessage;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessReactMessageResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 메시지 반응 응답 */
-  data?: ReactMessageResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
 /** 성공 응답 DTO */
 export interface SuccessTokenResponseDto {
   /**
@@ -1483,6 +1198,186 @@ export interface SuccessGenerateCutSceneImageUrlResponse {
   timestamp?: string;
 }
 
+/** 상담 생성 요청 */
+export interface CreateCounselRequest {
+  /** 버블 ID */
+  bubbleId?: string | null;
+  /**
+   * 응답 옵션 번호
+   * @format int32
+   */
+  responseOptionNo?: number | null;
+  /** 프롬프트 버전 아이디 */
+  promptVersionId?: string | null;
+}
+
+/** 상담 */
+export interface Counsel {
+  /**
+   * 상담 ID
+   * @example "123534543"
+   */
+  id?: string;
+  /**
+   * 상담사 ID
+   * @example "53453454323"
+   */
+  counselorId?: string;
+  /**
+   * 유저 ID
+   * @example "53453454323"
+   */
+  userId?: string;
+  /**
+   * 마지막 메시지
+   * @example "안녕하세요, 상담사님!"
+   */
+  lastMessage?: string | null;
+  /**
+   * 마지막 채팅 날짜
+   * @example "2024-12-29T12:34:56.000Z"
+   */
+  lastChatedAt?: string | null;
+  /**
+   * 프롬프트 버전 ID
+   * @example "5435345345"
+   */
+  promptVersionId?: string;
+  /**
+   * 상담 테크닉 ID
+   * @example "436534342321"
+   */
+  counselTechniqueId?: string;
+  /**
+   * 상담사와 유저의 관계 ID
+   * @example "436534342321"
+   */
+  counselorUserRelationshipId?: string;
+  /** 상담 생성 시간 */
+  createdAt?: string;
+  /** 상담 수정 시간 */
+  updatedAt?: string;
+  /** 상담 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 상담 메세지 */
+export interface CounselMessage {
+  /** 메시지 ID */
+  id?: string;
+  /** 상담 ID */
+  counselId?: string;
+  /** 메시지 내용 */
+  message?: string;
+  /** 메시지 반응 시간 (ISO 8601) */
+  reactedAt?: string | null;
+  /** 메시지 반응 객체 */
+  reaction?:
+    | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
+    | "COUNSEL_MESSAGE_REACTION_LIKE"
+    | "COUNSEL_MESSAGE_REACTION_DISLIKE"
+    | "UNRECOGNIZED"
+    | null;
+  /**
+   * 상담 테크닉 ID
+   * @example "436534342321"
+   */
+  counselTechniqueId?: string;
+  /** 생성 시간 (ISO 8601) */
+  createdAt?: string;
+  /** 수정 시간 (ISO 8601) */
+  updatedAt?: string;
+  /** 삭제 시간 (ISO 8601) */
+  deletedAt?: string | null;
+  userMessage?: boolean;
+}
+
+/** 상담 생성 응답 */
+export interface CreateCounselResponse {
+  /** 상담 */
+  counsel?: Counsel;
+  /** 상담 메시지 목록 */
+  counselMessages?: CounselMessage[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessCreateCounselResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담 생성 응답 */
+  data?: CreateCounselResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 메시지 생성 요청 */
+export interface CreateMessageRequest {
+  /** 메시지 내용 */
+  message: string;
+}
+
+/** 메시지 생성 응답 */
+export interface CreateMessageResponse {
+  /** 상담 메세지 */
+  createdCounselMessage?: CounselMessage;
+  /** 상담 메세지 */
+  counselorResponseMessage?: CounselMessage;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessCreateMessageResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 메시지 생성 응답 */
+  data?: CreateMessageResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 메시지 반응 요청 */
+export interface ReactMessageRequest {
+  /** 메시지 반응 */
+  reaction:
+    | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
+    | "COUNSEL_MESSAGE_REACTION_LIKE"
+    | "COUNSEL_MESSAGE_REACTION_DISLIKE"
+    | "UNRECOGNIZED";
+}
+
+/** 메시지 반응 응답 */
+export interface ReactMessageResponse {
+  /** 상담 메세지 */
+  counselMessage?: CounselMessage;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessReactMessageResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 메시지 반응 응답 */
+  data?: ReactMessageResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
 /** 버블 생성 요청 */
 export interface CreateBubbleRequest {
   /** 버블 질문 */
@@ -1515,26 +1410,81 @@ export interface SuccessCreateBubbleResponse {
   timestamp?: string;
 }
 
-/** 내 정보 조회 응답 */
-export interface FindMyUserResponse {
+/** 유저 ID로 조회 응답 */
+export interface FindUserByIdResponse {
   /** 유저 정보 */
   user?: User;
 }
 
 /** 성공 응답 DTO */
-export interface SuccessFindMyUserResponse {
+export interface SuccessFindUserByIdResponse {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 내 정보 조회 응답 */
-  data?: FindMyUserResponse;
+  /** 유저 ID로 조회 응답 */
+  data?: FindUserByIdResponse;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
    */
   timestamp?: string;
+}
+
+/** 유저 정보 */
+export interface User {
+  /** 유저 ID */
+  id?: string;
+  /** 닉네임 */
+  nickname?: string;
+  /** 유저 프로필 정보 */
+  userProfile?: UserProfile;
+  /** 생성 시간 */
+  createdAt?: string;
+  /** 수정 시간 */
+  updatedAt?: string;
+  /** 삭제 시간 */
+  deletedAt?: string | null;
+}
+
+/** 유저 프로필 정보 */
+export interface UserProfile {
+  /** 프로필 이미지 URL */
+  profileImage?: string | null;
+  /** 성별 */
+  gender?:
+    | "GENDER_UNSPECIFIED"
+    | "GENDER_MALE"
+    | "GENDER_FEMALE"
+    | "UNRECOGNIZED"
+    | null;
+  /** MBTI */
+  mbti?:
+    | "MBTI_UNSPECIFIED"
+    | "MBTI_ENTP"
+    | "MBTI_ENFP"
+    | "MBTI_ENTJ"
+    | "MBTI_ENFJ"
+    | "MBTI_ESTP"
+    | "MBTI_ESTJ"
+    | "MBTI_ESFP"
+    | "MBTI_ESFJ"
+    | "MBTI_INTJ"
+    | "MBTI_INFJ"
+    | "MBTI_INTP"
+    | "MBTI_INFP"
+    | "MBTI_ISTP"
+    | "MBTI_ISTJ"
+    | "MBTI_ISFP"
+    | "MBTI_ISFJ"
+    | "UNRECOGNIZED"
+    | null;
+  /**
+   * 생년
+   * @format int32
+   */
+  birthYear?: number | null;
 }
 
 /** 톤 조회 응답 */
@@ -1574,269 +1524,6 @@ export interface SuccessFindToneByIdResponse {
   message?: string;
   /** 톤 ID로 조회 응답 */
   data?: FindToneByIdResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담사 조회 응답 */
-export interface FindCounselorsResponse {
-  /** 상담사 목록 */
-  counselors?: Counselor[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselorsResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담사 조회 응답 */
-  data?: FindCounselorsResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담사 ID로 조회 응답 */
-export interface FindCounselorByIdResponse {
-  /** 상담사 */
-  counselor?: Counselor;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselorByIdResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담사 ID로 조회 응답 */
-  data?: FindCounselorByIdResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담사와 유저의 관계 */
-export interface CounselorUserRelationship {
-  /** 관계 ID */
-  id?: string;
-  /** 상담사 ID */
-  counselorId?: string;
-  /** 유저 ID */
-  userId?: string;
-  /**
-   * 라포 점수
-   * @format int32
-   */
-  rapport?: number;
-  /** 생성 시간 (ISO 8601) */
-  createdAt?: string;
-  /** 수정 시간 (ISO 8601) */
-  updatedAt?: string;
-  /** 삭제 시간 (ISO 8601) */
-  deletedAt?: string | null;
-}
-
-/** 상담사와 유저 관계 조회 응답 */
-export interface FindCounselorUserRelationshipsResponse {
-  /** 상담사와 유저 관계 목록 */
-  counselorUserRelationships?: CounselorUserRelationship[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselorUserRelationshipsResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담사와 유저 관계 조회 응답 */
-  data?: FindCounselorUserRelationshipsResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 에피소드 조회 응답 */
-export interface FindEpisodesResponse {
-  /** 에피소드 목록 */
-  episodes?: Episode[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindEpisodesResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 에피소드 조회 응답 */
-  data?: FindEpisodesResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 에피소드 ID로 조회 응답 */
-export interface FindEpisodeByIdResponse {
-  /** 에피소드 */
-  episode?: Episode;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindEpisodeByIdResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 에피소드 ID로 조회 응답 */
-  data?: FindEpisodeByIdResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담 목록 조회 응답 */
-export interface FindCounselsResponse {
-  /** 상담 목록 */
-  counsels?: Counsel[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselsResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담 목록 조회 응답 */
-  data?: FindCounselsResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담 단건 조회 응답 */
-export interface FindCounselByIdResponse {
-  /** 상담 */
-  counsel?: Counsel;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindCounselByIdResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담 단건 조회 응답 */
-  data?: FindCounselByIdResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 메시지 목록 조회 응답 */
-export interface FindMessagesResponse {
-  /** 상담 메시지 목록 */
-  counselMessages?: CounselMessage[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindMessagesResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 메시지 목록 조회 응답 */
-  data?: FindMessagesResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 버블 조회 응답 */
-export interface FindBubblesResponse {
-  /** 버블 목록 */
-  bubbles?: Bubble[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindBubblesResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 버블 조회 응답 */
-  data?: FindBubblesResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 버블 ID로 조회 응답 */
-export interface FindBubbleByIdResponse {
-  /** 버블 */
-  bubble?: Bubble;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindBubbleByIdResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 버블 ID로 조회 응답 */
-  data?: FindBubbleByIdResponse;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 유저 ID로 조회 응답 */
-export interface FindUserByIdResponse {
-  /** 유저 정보 */
-  user?: User;
-}
-
-/** 성공 응답 DTO */
-export interface SuccessFindUserByIdResponse {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 유저 ID로 조회 응답 */
-  data?: FindUserByIdResponse;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -2032,6 +1719,204 @@ export interface SuccessFindPersonaPromptByIdResponseDto {
   timestamp?: string;
 }
 
+/** 상담사 조회 응답 */
+export interface FindCounselorsResponse {
+  /** 상담사 목록 */
+  counselors?: Counselor[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselorsResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 조회 응답 */
+  data?: FindCounselorsResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담사 ID로 조회 응답 */
+export interface FindCounselorByIdResponse {
+  /** 상담사 */
+  counselor?: Counselor;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselorByIdResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담사 ID로 조회 응답 */
+  data?: FindCounselorByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 에피소드 조회 응답 */
+export interface FindEpisodesResponse {
+  /** 에피소드 목록 */
+  episodes?: Episode[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindEpisodesResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 에피소드 조회 응답 */
+  data?: FindEpisodesResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 에피소드 ID로 조회 응답 */
+export interface FindEpisodeByIdResponse {
+  /** 에피소드 */
+  episode?: Episode;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindEpisodeByIdResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 에피소드 ID로 조회 응답 */
+  data?: FindEpisodeByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 목록 조회 응답 */
+export interface FindCounselsResponse {
+  /** 상담 목록 */
+  counsels?: Counsel[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselsResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담 목록 조회 응답 */
+  data?: FindCounselsResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 단건 조회 응답 */
+export interface FindCounselByIdResponse {
+  /** 상담 */
+  counsel?: Counsel;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselByIdResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 상담 단건 조회 응답 */
+  data?: FindCounselByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 메시지 목록 조회 응답 */
+export interface FindMessagesResponse {
+  /** 상담 메시지 목록 */
+  counselMessages?: CounselMessage[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindMessagesResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 메시지 목록 조회 응답 */
+  data?: FindMessagesResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 버블 조회 응답 */
+export interface FindBubblesResponse {
+  /** 버블 목록 */
+  bubbles?: Bubble[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindBubblesResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 버블 조회 응답 */
+  data?: FindBubblesResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 버블 ID로 조회 응답 */
+export interface FindBubbleByIdResponse {
+  /** 버블 */
+  bubble?: Bubble;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindBubbleByIdResponse {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 버블 ID로 조회 응답 */
+  data?: FindBubbleByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
 /** 상담 기법 목록 조회 응답 DTO */
 export interface FindOrderedCounselTechniquesResponseDto {
   /** 상담 기법 목록 */
@@ -2076,17 +1961,9 @@ export interface SuccessFindCounselTechniqueByIdResponseDto {
   timestamp?: string;
 }
 
-export type GetMyUserData = SuccessFindMyUserResponse;
+export type GetToneData = SuccessFindToneByIdResponse;
 
-export type GetMyUserError = Error;
-
-export type UpdateMyUserData = SuccessUpdateMyUserResponse;
-
-export type UpdateMyUserError = Error;
-
-export type GetTone1Data = SuccessFindToneByIdResponse;
-
-export type GetTone1Error = Error;
+export type GetToneError = Error;
 
 export type UpdateToneData = SuccessUpdateToneResponse;
 
@@ -2117,29 +1994,95 @@ export type UpdateCounselTechniqueData =
 
 export type UpdateCounselTechniqueError = Error;
 
-export type GetCounselor2Data = SuccessFindCounselorByIdResponse;
+export type GetCounselorData = SuccessFindCounselorByIdResponse;
 
-export type GetCounselor2Error = Error;
+export type GetCounselorError = Error;
 
 export type UpdateCounselorData = SuccessUpdateCounselorResponse;
 
 export type UpdateCounselorError = Error;
 
-export type GetEpisode1Data = SuccessFindEpisodeByIdResponse;
+export type GetEpisodeData = SuccessFindEpisodeByIdResponse;
 
-export type GetEpisode1Error = Error;
+export type GetEpisodeError = Error;
 
 export type UpdateEpisodeData = SuccessUpdateEpisodeResponse;
 
 export type UpdateEpisodeError = Error;
 
-export type GetCounselor3Data = SuccessFindBubbleByIdResponse;
+export type GetCounselor1Data = SuccessFindBubbleByIdResponse;
 
-export type GetCounselor3Error = Error;
+export type GetCounselor1Error = Error;
 
 export type UpdateBubbleData = SuccessUpdateBubbleResponse;
 
 export type UpdateBubbleError = Error;
+
+export type RefreshTokenData = SuccessTokenResponseDto;
+
+export type RefreshTokenError = Error;
+
+export type CreateUserData = SuccessTokenResponseDto;
+
+export type CreateUserError = Error;
+
+export interface GetTonesParams {
+  /** 톤 이름 (선택) */
+  name?: string | null;
+}
+
+export type GetTonesData = SuccessFindTonesResponse;
+
+export type GetTonesError = Error;
+
+export type CreateToneData = SuccessCreateToneResponse;
+
+export type CreateToneError = Error;
+
+export type ActivatePromptVersionData = SuccessActivatePromptVersionResponseDto;
+
+export type ActivatePromptVersionError = Error;
+
+export type CreateCounselTechniqueData =
+  SuccessCreateCounselTechniqueResponseDto;
+
+export type CreateCounselTechniqueError = Error;
+
+export type SaveCounselTechniqueSequenceData =
+  SuccessSaveCounselTechniqueSequenceResponseDto;
+
+export type SaveCounselTechniqueSequenceError = Error;
+
+export interface GetCounselorsParams {
+  /** 톤 ID (선택) */
+  "tone-id"?: string;
+}
+
+export type GetCounselorsData = SuccessFindCounselorsResponse;
+
+export type GetCounselorsError = Error;
+
+export type CreateCounselorData = SuccessCreateCounselorResponse;
+
+export type CreateCounselorError = Error;
+
+export type GenerateCounselorImageUrlData =
+  SuccessGenerateCounselorImageUrlResponse;
+
+export type GenerateCounselorImageUrlError = Error;
+
+export type GetEpisodesData = SuccessFindEpisodesResponse;
+
+export type GetEpisodesError = Error;
+
+export type CreateEpisodeData = SuccessCreateEpisodeResponse;
+
+export type CreateEpisodeError = Error;
+
+export type GenerateCutSceneImageUrlData =
+  SuccessGenerateCutSceneImageUrlResponse;
+
+export type GenerateCutSceneImageUrlError = Error;
 
 export type GetCounselsData = SuccessFindCounselsResponse;
 
@@ -2161,134 +2104,13 @@ export type ReactMessageData = SuccessReactMessageResponse;
 
 export type ReactMessageError = Error;
 
-export type RefreshTokenData = SuccessTokenResponseDto;
-
-export type RefreshTokenError = Error;
-
-export type CreateUserData = SuccessTokenResponseDto;
-
-export type CreateUserError = Error;
-
-export interface GetTones1Params {
-  /** 톤 이름 (선택) */
-  name?: string | null;
-}
-
-export type GetTones1Data = SuccessFindTonesResponse;
-
-export type GetTones1Error = Error;
-
-export type CreateToneData = SuccessCreateToneResponse;
-
-export type CreateToneError = Error;
-
-export type ActivatePromptVersionData = SuccessActivatePromptVersionResponseDto;
-
-export type ActivatePromptVersionError = Error;
-
-export type CreateCounselTechniqueData =
-  SuccessCreateCounselTechniqueResponseDto;
-
-export type CreateCounselTechniqueError = Error;
-
-export type SaveCounselTechniqueSequenceData =
-  SuccessSaveCounselTechniqueSequenceResponseDto;
-
-export type SaveCounselTechniqueSequenceError = Error;
-
-export interface GetCounselors1Params {
-  /** 톤 ID (선택) */
-  "tone-id"?: string;
-}
-
-export type GetCounselors1Data = SuccessFindCounselorsResponse;
-
-export type GetCounselors1Error = Error;
-
-export type CreateCounselorData = SuccessCreateCounselorResponse;
-
-export type CreateCounselorError = Error;
-
-export type GenerateCounselorImageUrlData =
-  SuccessGenerateCounselorImageUrlResponse;
-
-export type GenerateCounselorImageUrlError = Error;
-
-export type GetEpisodes1Data = SuccessFindEpisodesResponse;
-
-export type GetEpisodes1Error = Error;
-
-export type CreateEpisodeData = SuccessCreateEpisodeResponse;
-
-export type CreateEpisodeError = Error;
-
-export type GenerateCutSceneImageUrlData =
-  SuccessGenerateCutSceneImageUrlResponse;
-
-export type GenerateCutSceneImageUrlError = Error;
-
-export type GetBubbles1Data = SuccessFindBubblesResponse;
-
-export type GetBubbles1Error = Error;
-
-export type CreateBubbleData = SuccessCreateBubbleResponse;
-
-export type CreateBubbleError = Error;
-
-export interface GetTonesParams {
-  /** 톤 이름 (선택) */
-  name?: string | null;
-}
-
-export type GetTonesData = SuccessFindTonesResponse;
-
-export type GetTonesError = Error;
-
-export type GetToneData = SuccessFindToneByIdResponse;
-
-export type GetToneError = Error;
-
-export interface GetCounselorsParams {
-  /** 톤 ID (선택) */
-  "tone-id"?: string;
-}
-
-export type GetCounselorsData = SuccessFindCounselorsResponse;
-
-export type GetCounselorsError = Error;
-
-export type GetCounselorData = SuccessFindCounselorByIdResponse;
-
-export type GetCounselorError = Error;
-
-export type GetCounselorUserRelationshipsData =
-  SuccessFindCounselorUserRelationshipsResponse;
-
-export type GetCounselorUserRelationshipsError = Error;
-
-export type GetEpisodesData = SuccessFindEpisodesResponse;
-
-export type GetEpisodesError = Error;
-
-export type GetEpisodeData = SuccessFindEpisodeByIdResponse;
-
-export type GetEpisodeError = Error;
-
-export type GetCounselData = SuccessFindCounselByIdResponse;
-
-export type GetCounselError = Error;
-
 export type GetBubblesData = SuccessFindBubblesResponse;
 
 export type GetBubblesError = Error;
 
-export type GetCounselor1Data = SuccessFindBubbleByIdResponse;
+export type CreateBubbleData = SuccessCreateBubbleResponse;
 
-export type GetCounselor1Error = Error;
-
-export type GetRandomBubbleData = SuccessFindBubbleByIdResponse;
-
-export type GetRandomBubbleError = Error;
+export type CreateBubbleError = Error;
 
 export interface KakaoParams {
   /** 로그인 후 리다이렉트할 클라이언트 URL */
@@ -2345,9 +2167,13 @@ export type GetPersonaPromptByIdData = SuccessFindPersonaPromptByIdResponseDto;
 
 export type GetPersonaPromptByIdError = Error;
 
-export type GetRandomBubble1Data = SuccessFindBubbleByIdResponse;
+export type GetCounselData = SuccessFindCounselByIdResponse;
 
-export type GetRandomBubble1Error = Error;
+export type GetCounselError = Error;
+
+export type GetRandomBubbleData = SuccessFindBubbleByIdResponse;
+
+export type GetRandomBubbleError = Error;
 
 export interface GetOrderedCounselTechniquesParams {
   "first-counsel-technique-id": string;

@@ -1,10 +1,10 @@
-import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent } from "~/components/ui/dialog";
-import { useEpisodeDetail, useEpisodeImages } from "./hooks";
-import StatusWarningModal from "./StatusWarningModal";
-import EpisodeInfoSection from "./EpisodeInfoSection";
-import ImageThumbnailsSection from "./ImageThumbnailsSection";
-import SceneContentSection from "./SceneContentSection";
+import { Button } from '~/components/ui/button';
+import { Dialog, DialogContent } from '~/components/ui/dialog';
+import { useEpisodeDetail, useEpisodeImages } from './hooks';
+import StatusWarningModal from './StatusWarningModal';
+import EpisodeInfoSection from './EpisodeInfoSection';
+import ImageThumbnailsSection from './ImageThumbnailsSection';
+import SceneContentSection from './SceneContentSection';
 
 interface EpisodeDetailModalProps {
   characterName?: string;
@@ -12,25 +12,17 @@ interface EpisodeDetailModalProps {
 }
 
 // 캐릭터 헤더 컴포넌트 분리 - 모드 정보 추가
-const CharacterHeader = ({ 
-  characterName, 
-  isNewEpisode 
-}: { 
-  characterName?: string;
-  isNewEpisode: boolean;
-}) => {
+const CharacterHeader = ({ characterName, isNewEpisode }: { characterName?: string; isNewEpisode: boolean }) => {
   if (!characterName) return null;
-  
+
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="mb-6 flex items-center justify-between">
       <div className="flex items-center space-x-4">
         <div className="flex items-center space-x-2">
-          <div className="w-12 h-12 rounded-full bg-gray-200" />
+          <div className="h-12 w-12 rounded-full bg-gray-200" />
           <div>
             <span className="font-medium">{characterName}</span>
-            {isNewEpisode && (
-              <div className="text-sm text-gray-500">새 에피소드</div>
-            )}
+            {isNewEpisode && <div className="text-sm text-gray-500">새 에피소드</div>}
           </div>
         </div>
       </div>
@@ -58,7 +50,7 @@ const ImageManagementButtons = ({ isEditing }: { isEditing: boolean }) => {
   };
 
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="mb-6 flex items-center justify-between">
       <div className="flex space-x-2">
         <Button variant="outline" onClick={handlePageDelete}>
           페이지 삭제
@@ -75,13 +67,13 @@ const ImageManagementButtons = ({ isEditing }: { isEditing: boolean }) => {
 };
 
 // 액션 버튼들 컴포넌트 분리
-const ActionButtons = ({ 
-  isEditing, 
+const ActionButtons = ({
+  isEditing,
   isNewEpisode,
   isCreating,
-  onStartEditing, 
-  onSave, 
-  onCancel 
+  onStartEditing,
+  onSave,
+  onCancel,
 }: {
   isEditing: boolean;
   isNewEpisode: boolean;
@@ -154,12 +146,12 @@ const EpisodeDetailModal = ({ characterName, counselorId }: EpisodeDetailModalPr
   return (
     <>
       <Dialog open={isModalOpen} onOpenChange={closeModal}>
-        <DialogContent className="w-full h-full max-w-[1420px] max-h-[700px] p-0">
-          <div className="w-full h-full p-6 overflow-y-auto">
+        <DialogContent className="h-full max-h-[700px] w-full max-w-[1420px] p-0">
+          <div className="h-full w-full overflow-y-auto p-6">
             <CharacterHeader characterName={characterName} isNewEpisode={isNewEpisode} />
 
             {isDetailLoading ? (
-              <div className="flex justify-center items-center h-64">
+              <div className="flex h-64 items-center justify-center">
                 <div className="text-lg">에피소드 상세 정보를 불러오는 중...</div>
               </div>
             ) : (
@@ -175,7 +167,7 @@ const EpisodeDetailModal = ({ characterName, counselorId }: EpisodeDetailModalPr
                   isOrderAdjustmentMode={isOrderAdjustmentMode}
                 />
 
-                <ImageThumbnailsSection 
+                <ImageThumbnailsSection
                   isOrderAdjustmentMode={isOrderAdjustmentMode}
                   imageOrder={adjustedImageOrder}
                   selectedImageIndex={adjustedSelectedIndex}
@@ -222,4 +214,4 @@ const EpisodeDetailModal = ({ characterName, counselorId }: EpisodeDetailModalPr
   );
 };
 
-export default EpisodeDetailModal; 
+export default EpisodeDetailModal;

@@ -75,9 +75,14 @@ const TechniqueCard = ({
           삭제
         </button>
       ) : (
-        <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
-          {technique.messageThreshold}문장
-        </span>
+        <>
+          <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
+            {technique.messageThreshold}문장
+          </span>
+          <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
+            {technique.temperature}
+          </span>
+        </>
       )}
     </div>
   );

@@ -7,6 +7,7 @@ import Sidebar from './Sidebar';
 
 import { usePromptStore } from '~/store/usePromptStore';
 import { queries } from '~/queries';
+import MobilePreview from '~/components/playground/MobilePreview';
 
 const Playground = () => {
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
@@ -23,7 +24,7 @@ const Playground = () => {
   }, [temporaryVersionData, setTemporaryVersion]);
 
   return (
-    <div className="flex pr-20">
+    <div className="flex gap-6 pr-6">
       <Sidebar />
 
       <div className="flex flex-1 rounded-xl rounded-tl-none bg-white px-8 py-6">
@@ -32,6 +33,8 @@ const Playground = () => {
           <Prompt key={`prompt-${temporaryVersion?.id}`} />
         </div>
       </div>
+
+      <MobilePreview />
     </div>
   );
 };
