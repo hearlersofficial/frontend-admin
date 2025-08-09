@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import RoomSelector from '~/components/playground/MobilePreview/components/RoomSelector';
+import React from 'react';
 import MessageList from '~/components/playground/MobilePreview/components/MessageList';
 import MessageInput from '~/components/playground/MobilePreview/components/MessageInput';
+import RoomList from '~/components/playground/MobilePreview/components/RoomList';
 import { useMobileChat } from '~/components/playground/MobilePreview/hooks/useMobileChat';
 import CreateCounselModal from '~/components/playground/MobilePreview/modals/CreateCounselModal';
+import PromptVersionInfoModal from '~/components/playground/MobilePreview/modals/PromptVersionInfoModal';
+import CounselTechniqueInfo from '~/components/playground/MobilePreview/modals/CounselTechniqueInfo';
 import { usePromptStore } from '~/store/usePromptStore';
 
 const MobilePreview = () => {
@@ -25,9 +28,24 @@ const MobilePreview = () => {
     handleCreateCounsel,
     handleSendMessage,
     isCreatingCounsel,
+    counselorAvatarUrl,
+    userAvatarUrl,
+    latestCounselTechniqueId,
+    activeCounselPromptVersionId,
   } = useMobileChat();
 
   const canCreate = Boolean(usePromptStore.getState().selectedCounselor?.id);
+  const [viewDepth, setViewDepth] = React.useState<'rooms' | 'chat'>(activeCounselId ? 'chat' : 'rooms');
+  React.useEffect(() => {
+    setViewDepth(activeCounselId ? 'chat' : 'rooms');
+  }, [activeCounselId]);
+  const selectedCounselorId = usePromptStore((s) => s.selectedCounselor?.id);
+  React.useEffect(() => {
+    setViewDepth('rooms');
+  }, [selectedCounselorId]);
+  const [promptInfoId, setPromptInfoId] = React.useState<string | undefined>(undefined);
+  const [isPromptInfoOpen, setIsPromptInfoOpen] = React.useState(false);
+  const [isTechniqueInfoOpen, setIsTechniqueInfoOpen] = React.useState(false);
 
   return (
     <div className="hidden w-[390px] min-w-[390px] xl:flex">
@@ -36,29 +54,44 @@ const MobilePreview = () => {
           <div className="px-5 py-4 text-center text-sm font-semibold text-slate-700">{headerText}</div>
           <div className="mx-4 h-px bg-slate-200" />
 
-          <RoomSelector
-            counselList={counselList}
-            activeCounselId={activeCounselId}
-            setActiveCounselId={setActiveCounselId}
-            canCreate={canCreate}
-            onOpenCreate={() => setIsCreateModalOpen(true)}
-          />
-
-          <MessageList messageList={messageList} isFetching={isFetchingMessages} />
-
-          {activeCounselId ? (
-            <MessageInput
-              value={inputValue}
-              setValue={setInputValue}
-              onSend={handleSendMessage}
-              disabled={isInputDisabled}
-            />
+          {viewDepth === 'rooms' ? (
+            <>
+              <RoomList
+                counselList={counselList}
+                onSelect={(id) => {
+                  setActiveCounselId(id);
+                  setViewDepth('chat');
+                }}
+                onOpenPromptInfo={(pvId) => {
+                  setPromptInfoId(pvId);
+                  setIsPromptInfoOpen(true);
+                }}
+              />
+            </>
           ) : (
-            <div className="mt-auto px-5 pb-5">
-              <div className="rounded-full border border-slate-200 bg-white px-4 py-3 text-center text-sm text-slate-400">
-                상담을 시작하려면 상단의 &quot;새 상담 시작&quot;을 눌러주세요.
+            <>
+              <div className="flex items-center justify-between px-5 py-3">
+                <button className="text-sm text-slate-500" onClick={() => setViewDepth('rooms')}>
+                  ← 목록으로
+                </button>
+                <button className="text-sm text-slate-500" onClick={() => setIsTechniqueInfoOpen(true)}>
+                  현재 테크닉 보기
+                </button>
               </div>
-            </div>
+              <div className="mx-4 h-px bg-slate-200" />
+              <MessageList
+                messageList={messageList}
+                isFetching={isFetchingMessages}
+                counselorAvatarUrl={counselorAvatarUrl}
+                userAvatarUrl={userAvatarUrl}
+              />
+              <MessageInput
+                value={inputValue}
+                setValue={setInputValue}
+                onSend={handleSendMessage}
+                disabled={isInputDisabled}
+              />
+            </>
           )}
         </div>
       </div>
@@ -71,6 +104,16 @@ const MobilePreview = () => {
         setSelectedPromptVersionId={setSelectedPromptVersionId}
         onCreate={handleCreateCounsel}
         canSubmit={!isCreatingCounsel && canCreate}
+      />
+      <PromptVersionInfoModal
+        promptVersionId={promptInfoId ?? activeCounselPromptVersionId}
+        isOpen={isPromptInfoOpen}
+        setIsOpen={setIsPromptInfoOpen}
+      />
+      <CounselTechniqueInfo
+        counselTechniqueId={latestCounselTechniqueId}
+        isOpen={isTechniqueInfoOpen}
+        setIsOpen={setIsTechniqueInfoOpen}
       />
     </div>
   );

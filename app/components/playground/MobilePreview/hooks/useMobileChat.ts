@@ -9,6 +9,7 @@ import {
   CounselMessage,
   CreateCounselRequest,
   PromptVersionResponseDto,
+  User,
 } from '~/__generated__/data-contracts';
 
 export const useMobileChat = () => {
@@ -16,6 +17,10 @@ export const useMobileChat = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
 
   const counselorId = selectedCounselor?.id ?? '';
+  // Reset active counsel on counselor change
+  useEffect(() => {
+    setActiveCounselId(null);
+  }, [counselorId]);
 
   const { data: counselList = [] } = useQuery({
     ...queries.v1.getCounsels(counselorId),
@@ -37,6 +42,30 @@ export const useMobileChat = () => {
   const { data: messageList = [], isFetching: isFetchingMessages } = useQuery({
     ...queries.v1.getCounselMessages(counselorId, activeCounselId ?? ''),
     enabled: Boolean(counselorId && activeCounselId),
+  });
+
+  // Active counsel details and user profile
+  const { data: activeCounselData } = useQuery({
+    queryKey: ['activeCounsel', counselorId, activeCounselId],
+    queryFn: async () => {
+      if (!counselorId || !activeCounselId) return undefined;
+      const res = await api.V1.getCounsel(counselorId, activeCounselId);
+      return res.data.data?.counsel as Counsel | undefined;
+    },
+    enabled: Boolean(counselorId && activeCounselId),
+  });
+
+  const userId = activeCounselData?.userId ?? undefined;
+  const activeCounselPromptVersionId = activeCounselData?.promptVersionId ?? undefined;
+
+  const { data: userData } = useQuery({
+    queryKey: ['counselUser', userId],
+    queryFn: async () => {
+      if (!userId) return undefined;
+      const res = await api.V1.getUser(userId);
+      return res.data.data?.user as User | undefined;
+    },
+    enabled: Boolean(userId),
   });
 
   const createCounselMutation = useMutation({
@@ -93,6 +122,14 @@ export const useMobileChat = () => {
     return `${selectedCounselor.name} 상담방`;
   }, [selectedCounselor, activeCounselId]);
 
+  const counselorAvatarUrl = selectedCounselor?.profileImage ?? undefined;
+  const userAvatarUrl = userData?.userProfile?.profileImage ?? undefined;
+
+  const latestCounselTechniqueId = useMemo(() => {
+    const last = [...(messageList as CounselMessage[])].reverse().find((m) => Boolean(m.counselTechniqueId));
+    return last?.counselTechniqueId;
+  }, [messageList]);
+
   return {
     // data
     counselList,
@@ -113,6 +150,10 @@ export const useMobileChat = () => {
     setIsCreateModalOpen,
     isInputDisabled,
     headerText,
+    counselorAvatarUrl,
+    userAvatarUrl,
+    latestCounselTechniqueId,
+    activeCounselPromptVersionId,
 
     // handlers
     handleCreateCounsel,

@@ -4,9 +4,11 @@ import { CounselMessage } from '~/__generated__/data-contracts';
 interface MessageListProps {
   messageList: CounselMessage[];
   isFetching: boolean;
+  counselorAvatarUrl?: string;
+  userAvatarUrl?: string;
 }
 
-const MessageList = ({ messageList, isFetching }: MessageListProps) => {
+const MessageList = ({ messageList, isFetching, counselorAvatarUrl, userAvatarUrl }: MessageListProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,7 +23,12 @@ const MessageList = ({ messageList, isFetching }: MessageListProps) => {
         const isUser = Boolean(m.userMessage);
         return (
           <div key={m.id} className={`flex ${isUser ? 'justify-end' : ''} gap-2`}>
-            {!isUser && <div className="h-8 w-8 shrink-0 rounded-full bg-slate-300" />}
+            {!isUser &&
+              (counselorAvatarUrl ? (
+                <img src={counselorAvatarUrl} alt="counselor" className="h-8 w-8 shrink-0 rounded-full object-cover" />
+              ) : (
+                <div className="h-8 w-8 shrink-0 rounded-full bg-slate-300" />
+              ))}
             <div
               className={`${
                 isUser
@@ -31,7 +38,12 @@ const MessageList = ({ messageList, isFetching }: MessageListProps) => {
             >
               {m.message}
             </div>
-            {isUser && <div className="h-8 w-8 shrink-0 rounded-full bg-slate-300" />}
+            {isUser &&
+              (userAvatarUrl ? (
+                <img src={userAvatarUrl} alt="user" className="h-8 w-8 shrink-0 rounded-full object-cover" />
+              ) : (
+                <div className="h-8 w-8 shrink-0 rounded-full bg-slate-300" />
+              ))}
           </div>
         );
       })}
