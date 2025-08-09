@@ -6,9 +6,20 @@ interface MessageListProps {
   isFetching: boolean;
   counselorAvatarUrl?: string;
   userAvatarUrl?: string;
+  counselorName?: string;
+  userName?: string;
+  techniqueNameMap?: Record<string, string>;
 }
 
-const MessageList = ({ messageList, isFetching, counselorAvatarUrl, userAvatarUrl }: MessageListProps) => {
+const MessageList = ({
+  messageList,
+  isFetching,
+  counselorAvatarUrl,
+  userAvatarUrl,
+  counselorName,
+  userName,
+  techniqueNameMap,
+}: MessageListProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -18,9 +29,10 @@ const MessageList = ({ messageList, isFetching, counselorAvatarUrl, userAvatarUr
   }, [messageList.length, isFetching]);
 
   return (
-    <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-4">
+    <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-cover bg-center bg-no-repeat px-5 py-4">
       {messageList.map((m) => {
         const isUser = Boolean(m.userMessage);
+        const techniqueName = m.counselTechniqueId ? techniqueNameMap?.[m.counselTechniqueId] : undefined;
         return (
           <div key={m.id} className={`flex ${isUser ? 'justify-end' : ''} gap-2`}>
             {!isUser &&
@@ -29,14 +41,24 @@ const MessageList = ({ messageList, isFetching, counselorAvatarUrl, userAvatarUr
               ) : (
                 <div className="h-8 w-8 shrink-0 rounded-full bg-slate-300" />
               ))}
-            <div
-              className={`${
-                isUser
-                  ? 'max-w-[70%] rounded-2xl rounded-tr-sm bg-violet-600 px-4 py-2 text-sm text-white shadow'
-                  : 'max-w-[70%] rounded-2xl rounded-tl-sm bg-white px-4 py-2 text-sm text-slate-800 shadow'
-              }`}
-            >
-              {m.message}
+            <div className={`flex max-w-[75%] flex-col ${isUser ? 'items-end' : 'items-start'} gap-1`}>
+              <div className={`text-xs font-semibold ${isUser ? 'text-white/90' : 'text-white/90'}`}>
+                {isUser ? userName : counselorName}
+              </div>
+              <div
+                className={`${
+                  isUser
+                    ? 'w-fit rounded-3xl rounded-tr-sm bg-white/80 px-4 py-2 text-sm text-black shadow'
+                    : 'w-fit rounded-3xl rounded-tl-sm bg-white px-4 py-2 text-sm text-black shadow'
+                }`}
+              >
+                <div>{m.message}</div>
+                {techniqueName && (
+                  <div className={`mt-1 text-[10px] ${isUser ? 'text-black/80' : 'text-slate-500'}`}>
+                    ({techniqueName})
+                  </div>
+                )}
+              </div>
             </div>
             {isUser &&
               (userAvatarUrl ? (

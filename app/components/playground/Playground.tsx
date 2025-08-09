@@ -33,7 +33,7 @@ const Playground = () => {
           <Prompt key={`prompt-${temporaryVersion?.id}`} />
         </div>
       </div>
-      <div className="ml-6">
+      <div className="ml-6 flex items-center">
         <MobilePreview />
       </div>
     </div>

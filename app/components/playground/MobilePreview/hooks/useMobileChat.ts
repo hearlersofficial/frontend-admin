@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useQueries } from '@tanstack/react-query';
 
 import { queries } from '~/queries';
 import { api } from '~/api';
@@ -9,6 +9,7 @@ import {
   CounselMessage,
   CreateCounselRequest,
   PromptVersionResponseDto,
+  CreateMessageData,
   User,
 } from '~/__generated__/data-contracts';
 
@@ -68,6 +69,16 @@ export const useMobileChat = () => {
     enabled: Boolean(userId),
   });
 
+  const { data: activePromptVersion } = useQuery<PromptVersionResponseDto | undefined>({
+    queryKey: ['activePromptVersion', activeCounselPromptVersionId],
+    queryFn: async () => {
+      if (!activeCounselPromptVersionId) return undefined;
+      const res = await api.V1.getPromptVersionById(activeCounselPromptVersionId);
+      return res.data.data?.promptVersion as PromptVersionResponseDto | undefined;
+    },
+    enabled: Boolean(activeCounselPromptVersionId),
+  });
+
   const createCounselMutation = useMutation({
     mutationFn: async (body: CreateCounselRequest) => {
       if (!counselorId) throw new Error('counselorId is required');
@@ -80,12 +91,57 @@ export const useMobileChat = () => {
     },
   });
 
-  const createMessageMutation = useMutation({
-    mutationFn: async (payload: { counselId: string; message: string }) => {
+  const createMessageMutation = useMutation<
+    CreateMessageData,
+    unknown,
+    { counselId: string; message: string },
+    { previous?: CounselMessage[]; key: readonly unknown[]; tempId: string }
+  >({
+    mutationFn: async (payload) => {
       const res = await api.V1.createMessage(counselorId, payload.counselId, { message: payload.message });
-      return res.data.data;
+      return res.data; // SuccessCreateMessageResponse
     },
-    onSuccess: async () => {
+    onMutate: async (payload) => {
+      if (!activeCounselId) return undefined;
+      const key = queries.v1.getCounselMessages(counselorId, activeCounselId).queryKey as readonly unknown[];
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData<CounselMessage[] | undefined>(key) ?? [];
+      const tempId = `temp-${Date.now()}`;
+      const optimistic: CounselMessage = {
+        id: tempId,
+        message: payload.message,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        deletedAt: null,
+        counselId: activeCounselId,
+        userMessage: true,
+      };
+      queryClient.setQueryData<CounselMessage[]>(key, [...previous, optimistic]);
+      return { previous, key, tempId };
+    },
+    onSuccess: (result, _vars, context) => {
+      if (!context) return;
+      const { key, tempId } = context;
+      const serverUser = result.data?.createdCounselMessage as CounselMessage | undefined;
+      const counselorResp = result.data?.counselorResponseMessage as CounselMessage | undefined;
+      queryClient.setQueryData<CounselMessage[] | undefined>(key, (old) => {
+        const list = old ? [...old] : [];
+        const idx = list.findIndex((m) => m.id === tempId);
+        if (idx >= 0 && serverUser) {
+          list[idx] = serverUser;
+        } else if (serverUser) {
+          list.push(serverUser);
+        }
+        if (counselorResp) list.push(counselorResp);
+        return list;
+      });
+    },
+    onError: (_err, _vars, context) => {
+      if (!context) return;
+      const { key, previous } = context;
+      if (previous) queryClient.setQueryData<CounselMessage[] | undefined>(key, previous);
+    },
+    onSettled: async () => {
       if (!activeCounselId) return;
       await queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselMessages(counselorId, activeCounselId).queryKey,
@@ -130,6 +186,72 @@ export const useMobileChat = () => {
     return last?.counselTechniqueId;
   }, [messageList]);
 
+  const techniqueIds = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          (messageList as CounselMessage[]).map((m) => m.counselTechniqueId).filter((v): v is string => Boolean(v))
+        )
+      ),
+    [messageList]
+  );
+
+  const techniqueQueries = useQueries({
+    queries: techniqueIds.map((id) => ({
+      queryKey: ['counselTechnique', id],
+      queryFn: async () => {
+        const res = await api.V1.getCounselTechniqueById(id);
+        return res.data.data?.counselTechnique;
+      },
+      enabled: Boolean(id),
+    })),
+  });
+
+  const techniqueNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    techniqueQueries.forEach((q) => {
+      const ct = q.data as { id?: string; name?: string } | undefined;
+      if (ct?.id) {
+        map[ct.id] = ct.name ?? ct.id;
+      }
+    });
+    return map;
+  }, [techniqueQueries]);
+
+  // Prompt version name map for room list display
+  const promptVersionIds = useMemo(
+    () =>
+      Array.from(
+        new Set((counselList as Counsel[]).map((c) => c.promptVersionId).filter((v): v is string => Boolean(v)))
+      ),
+    [counselList]
+  );
+
+  const promptVersionQueries = useQueries({
+    queries: promptVersionIds.map((id) => ({
+      queryKey: ['promptVersion', id],
+      queryFn: async () => {
+        const res = await api.V1.getPromptVersionById(id);
+        return res.data.data?.promptVersion as PromptVersionResponseDto | undefined;
+      },
+      enabled: Boolean(id),
+    })),
+  });
+
+  const promptVersionNameMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    promptVersionQueries.forEach((q) => {
+      const pv = q.data as { id?: string; name?: string } | undefined;
+      if (pv?.id) {
+        map[pv.id] = pv.name ?? pv.id;
+      }
+    });
+    return map;
+  }, [promptVersionQueries]);
+
+  const counselorName = selectedCounselor?.name ?? undefined;
+  const userName = userData?.nickname ?? undefined;
+
   return {
     // data
     counselList,
@@ -154,7 +276,11 @@ export const useMobileChat = () => {
     userAvatarUrl,
     latestCounselTechniqueId,
     activeCounselPromptVersionId,
-
+    activePromptVersionName: activePromptVersion?.name,
+    techniqueNameMap,
+    promptVersionNameMap,
+    counselorName,
+    userName,
     // handlers
     handleCreateCounsel,
     handleSendMessage,

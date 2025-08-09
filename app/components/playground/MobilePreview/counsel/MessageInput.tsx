@@ -16,12 +16,12 @@ const MessageInput = ({ value, setValue, onSend, disabled }: MessageInputProps) 
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && onSend()}
           placeholder="내용을 입력해 주세요"
-          className="flex-1 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none"
+          className="flex-1 rounded-full bg-white/70 px-4 py-3 text-sm text-[#7c7c7c] placeholder:text-[#7c7c7c] focus:outline-none"
           disabled={disabled}
         />
         <button
           onClick={onSend}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-600 text-white shadow disabled:opacity-50"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-purpleGrad text-white shadow disabled:cursor-not-allowed disabled:opacity-50"
           disabled={disabled || !value.trim()}
         >
           <Send className="h-5 w-5" />

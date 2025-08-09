@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import MessageList from '~/components/playground/MobilePreview/components/MessageList';
-import MessageInput from '~/components/playground/MobilePreview/components/MessageInput';
-import RoomList from '~/components/playground/MobilePreview/components/RoomList';
+import Room from '~/components/playground/MobilePreview/room';
+import Counsel from '~/components/playground/MobilePreview/counsel';
 import { useMobileChat } from '~/components/playground/MobilePreview/hooks/useMobileChat';
 import CreateCounselModal from '~/components/playground/MobilePreview/modals/CreateCounselModal';
 import PromptVersionInfoModal from '~/components/playground/MobilePreview/modals/PromptVersionInfoModal';
@@ -32,6 +31,11 @@ const MobilePreview = () => {
     userAvatarUrl,
     latestCounselTechniqueId,
     activeCounselPromptVersionId,
+    activePromptVersionName,
+    techniqueNameMap,
+    promptVersionNameMap,
+    counselorName,
+    userName,
   } = useMobileChat();
 
   const canCreate = Boolean(usePromptStore.getState().selectedCounselor?.id);
@@ -49,49 +53,49 @@ const MobilePreview = () => {
 
   return (
     <div className="hidden w-[390px] min-w-[390px] xl:flex">
-      <div className="sticky top-6 h-[760px] w-full rounded-[32px] border border-slate-200 bg-gradient-to-b from-slate-50 to-white shadow-xl">
-        <div className="flex h-full flex-col overflow-hidden rounded-[32px]">
-          <div className="px-5 py-4 text-center text-sm font-semibold text-slate-700">{headerText}</div>
-          <div className="mx-4 h-px bg-slate-200" />
+      <div className="sticky top-6 h-[760px] w-full overflow-hidden rounded-[32px]">
+        <div
+          className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/chat-background.png')" }}
+        />
+        <div className="pointer-events-none absolute inset-0 bg-black/60" />
+        <div className="relative z-10 flex h-full flex-col overflow-hidden">
+          <div className="px-5 py-4 text-center text-sm font-semibold text-white">{headerText}</div>
 
           {viewDepth === 'rooms' ? (
-            <>
-              <RoomList
-                counselList={counselList}
-                onSelect={(id) => {
-                  setActiveCounselId(id);
-                  setViewDepth('chat');
-                }}
-                onOpenPromptInfo={(pvId) => {
-                  setPromptInfoId(pvId);
-                  setIsPromptInfoOpen(true);
-                }}
-              />
-            </>
+            <Room
+              canCreate={canCreate}
+              onCreate={() => setIsCreateModalOpen(true)}
+              counselList={counselList}
+              onSelect={(id) => {
+                setActiveCounselId(id);
+                setViewDepth('chat');
+              }}
+              onOpenPromptInfo={(pvId) => {
+                setPromptInfoId(pvId);
+                setIsPromptInfoOpen(true);
+              }}
+              promptVersionNameMap={promptVersionNameMap}
+            />
           ) : (
-            <>
-              <div className="flex items-center justify-between px-5 py-3">
-                <button className="text-sm text-slate-500" onClick={() => setViewDepth('rooms')}>
-                  ← 목록으로
-                </button>
-                <button className="text-sm text-slate-500" onClick={() => setIsTechniqueInfoOpen(true)}>
-                  현재 테크닉 보기
-                </button>
-              </div>
-              <div className="mx-4 h-px bg-slate-200" />
-              <MessageList
-                messageList={messageList}
-                isFetching={isFetchingMessages}
-                counselorAvatarUrl={counselorAvatarUrl}
-                userAvatarUrl={userAvatarUrl}
-              />
-              <MessageInput
-                value={inputValue}
-                setValue={setInputValue}
-                onSend={handleSendMessage}
-                disabled={isInputDisabled}
-              />
-            </>
+            <Counsel
+              promptVersionName={activePromptVersionName}
+              latestTechniqueName={latestCounselTechniqueId ? techniqueNameMap?.[latestCounselTechniqueId] : undefined}
+              onBack={() => setViewDepth('rooms')}
+              onOpenPromptInfo={() => setIsPromptInfoOpen(true)}
+              onOpenTechniqueInfo={() => setIsTechniqueInfoOpen(true)}
+              messageList={messageList}
+              isFetchingMessages={isFetchingMessages}
+              counselorAvatarUrl={counselorAvatarUrl}
+              userAvatarUrl={userAvatarUrl}
+              counselorName={counselorName}
+              userName={userName}
+              techniqueNameMap={techniqueNameMap}
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              onSend={handleSendMessage}
+              isInputDisabled={isInputDisabled}
+            />
           )}
         </div>
       </div>
