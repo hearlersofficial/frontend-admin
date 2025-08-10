@@ -1,6 +1,6 @@
 import CounselorList from './CounselorList';
 import DeploymentHistoryButton from './DeploymentHistoryButton';
-import GptVersionButton from './GptVersionButton';
+import AiVersionButton from './AiVersionButton';
 
 const Sidebar = () => {
   return (
@@ -8,7 +8,7 @@ const Sidebar = () => {
       <CounselorList />
 
       <div className="flex flex-col gap-1 pr-2">
-        <GptVersionButton />
+        <AiVersionButton />
         <DeploymentHistoryButton />
       </div>
     </div>

@@ -155,22 +155,28 @@ export interface UpdateToneResponse {
   tone?: Tone;
 }
 
-/** 임시 버전 저장 요청 DTO */
-export interface SaveTemporaryVersionRequestDto {
+/** 프롬프트 버전 수정 요청 DTO */
+export interface UpdatePromptVersionRequestDto {
   /**
    * 프롬프트 버전 이름
    * @example "2024년 7월 프롬프트 버전"
    */
-  name: string;
+  name?: string;
   /**
    * 프롬프트 버전 설명
    * @example "2024년 7월 배포 예정 버전입니다."
    */
-  description: string;
-  /** 북마크 여부 */
-  isBookmarked: boolean;
-  /** AI 모델 */
-  aiModel:
+  description?: string;
+  /**
+   * 북마크 여부
+   * @example false
+   */
+  isBookmarked?: boolean;
+  /**
+   * AI 모델
+   * @example "gpt-4o-mini"
+   */
+  aiModel?:
     | "AI_MODEL_UNSPECIFIED"
     | "GPT_3_5_TURBO"
     | "GPT_4"
@@ -275,21 +281,15 @@ export interface PromptVersionResponseDto {
   deletedAt?: string;
 }
 
-/** 임시 버전 저장 응답 DTO */
-export interface SaveTemporaryVersionResponseDto {
-  /** 프롬프트 버전 응답 DTO */
-  promptVersion?: PromptVersionResponseDto;
-}
-
 /** 성공 응답 DTO */
-export interface SuccessSaveTemporaryVersionResponseDto {
+export interface SuccessUpdatePromptVersionResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 임시 버전 저장 응답 DTO */
-  data?: SaveTemporaryVersionResponseDto;
+  /** 프롬프트 버전 수정 응답 DTO */
+  data?: UpdatePromptVersionResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -329,6 +329,61 @@ export interface ToneScopedPromptResponseDto {
    * @example "null"
    */
   deletedAt?: string;
+}
+
+/** 프롬프트 버전 수정 응답 DTO */
+export interface UpdatePromptVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
+}
+
+/** 임시 버전 저장 요청 DTO */
+export interface SaveTemporaryVersionRequestDto {
+  /**
+   * 프롬프트 버전 이름
+   * @example "2024년 7월 프롬프트 버전"
+   */
+  name: string;
+  /**
+   * 프롬프트 버전 설명
+   * @example "2024년 7월 배포 예정 버전입니다."
+   */
+  description: string;
+  /** 북마크 여부 */
+  isBookmarked: boolean;
+  /** AI 모델 */
+  aiModel:
+    | "AI_MODEL_UNSPECIFIED"
+    | "GPT_3_5_TURBO"
+    | "GPT_4"
+    | "GPT_4O"
+    | "GPT_4O_MINI"
+    | "GPT_5_MINI"
+    | "GPT_5"
+    | "GPT_5_CHAT"
+    | "UNRECOGNIZED";
+}
+
+/** 임시 버전 저장 응답 DTO */
+export interface SaveTemporaryVersionResponseDto {
+  /** 프롬프트 버전 응답 DTO */
+  promptVersion?: PromptVersionResponseDto;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessSaveTemporaryVersionResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 임시 버전 저장 응답 DTO */
+  data?: SaveTemporaryVersionResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
 }
 
 /** 기존 프롬프트 버전 로드 응답 DTO */
@@ -1967,6 +2022,31 @@ export interface SuccessFindCounselTechniqueByIdResponseDto {
   timestamp?: string;
 }
 
+/** 프롬프트 버전 삭제 응답 DTO */
+export interface DeletePromptVersionResponseDto {
+  /**
+   * 프롬프트 버전 삭제 성공 여부
+   * @example true
+   */
+  isSuccess?: boolean;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessDeletePromptVersionResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 프롬프트 버전 삭제 응답 DTO */
+  data?: DeletePromptVersionResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
 export type GetToneData = SuccessFindToneByIdResponse;
 
 export type GetToneError = Error;
@@ -1974,6 +2054,18 @@ export type GetToneError = Error;
 export type UpdateToneData = SuccessUpdateToneResponse;
 
 export type UpdateToneError = Error;
+
+export type GetPromptVersionByIdData = SuccessFindPromptVersionByIdResponseDto;
+
+export type GetPromptVersionByIdError = Error;
+
+export type UpdatePromptVersionData = SuccessUpdatePromptVersionResponseDto;
+
+export type UpdatePromptVersionError = Error;
+
+export type DeletePromptVersionData = SuccessDeletePromptVersionResponseDto;
+
+export type DeletePromptVersionError = Error;
 
 export type GetTemporaryVersionData = SuccessFindTemporaryVersionResponseDto;
 
@@ -2151,10 +2243,6 @@ export interface GetPromptVersionsParams {
 export type GetPromptVersionsData = SuccessFindPromptVersionsResponseDto;
 
 export type GetPromptVersionsError = Error;
-
-export type GetPromptVersionByIdData = SuccessFindPromptVersionByIdResponseDto;
-
-export type GetPromptVersionByIdError = Error;
 
 export type GetActiveVersionData = SuccessFindActiveVersionResponseDto;
 

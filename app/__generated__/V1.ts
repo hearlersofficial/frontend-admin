@@ -36,6 +36,8 @@ import {
   CreateToneRequest,
   CreateUserData,
   CreateUserError,
+  DeletePromptVersionData,
+  DeletePromptVersionError,
   GenerateCounselorImageUrlData,
   GenerateCounselorImageUrlError,
   GenerateCounselorImageUrlRequest,
@@ -123,6 +125,9 @@ import {
   UpdatePersonaPromptData,
   UpdatePersonaPromptError,
   UpdatePersonaPromptRequestDto,
+  UpdatePromptVersionData,
+  UpdatePromptVersionError,
+  UpdatePromptVersionRequestDto,
   UpdateToneData,
   UpdateToneError,
   UpdateTonePromptData,
@@ -172,6 +177,66 @@ export class V1<
       body: data,
       secure: true,
       type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description ID로 특정 프롬프트 버전을 조회합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name GetPromptVersionById
+   * @summary 프롬프트 버전 조회
+   * @request GET:/v1/admin/prompt-versions/{prompt-version-id}
+   * @secure
+   */
+  getPromptVersionById = (
+    promptVersionId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<GetPromptVersionByIdData, GetPromptVersionByIdError>({
+      path: `/v1/admin/prompt-versions/${promptVersionId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 프롬프트 버전을 수정합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name UpdatePromptVersion
+   * @summary 프롬프트 버전 수정
+   * @request PUT:/v1/admin/prompt-versions/{prompt-version-id}
+   * @secure
+   */
+  updatePromptVersion = (
+    promptVersionId: string,
+    data: UpdatePromptVersionRequestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<UpdatePromptVersionData, UpdatePromptVersionError>({
+      path: `/v1/admin/prompt-versions/${promptVersionId}`,
+      method: "PUT",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 프롬프트 버전을 삭제합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name DeletePromptVersion
+   * @summary 프롬프트 버전 삭제
+   * @request DELETE:/v1/admin/prompt-versions/{prompt-version-id}
+   * @secure
+   */
+  deletePromptVersion = (promptVersionId: string, params: RequestParams = {}) =>
+    this.request<DeletePromptVersionData, DeletePromptVersionError>({
+      path: `/v1/admin/prompt-versions/${promptVersionId}`,
+      method: "DELETE",
+      secure: true,
       format: "json",
       ...params,
     });
@@ -675,17 +740,16 @@ export class V1<
    * @tags 어드민/상담사
    * @name GenerateCutSceneImageUrl
    * @summary 컷신 이미지 URL 생성
-   * @request POST:/v1/admin/counselors/{counselor-id}/episodes/{episode-id}/image-url
+   * @request POST:/v1/admin/counselors/{counselor-id}/episodes/image-url
    * @secure
    */
   generateCutSceneImageUrl = (
-    episodeId: string,
     counselorId: string,
     data: GenerateCutSceneImageUrlRequest,
     params: RequestParams = {},
   ) =>
     this.request<GenerateCutSceneImageUrlData, GenerateCutSceneImageUrlError>({
-      path: `/v1/admin/counselors/${counselorId}/episodes/${episodeId}/image-url`,
+      path: `/v1/admin/counselors/${counselorId}/episodes/image-url`,
       method: "POST",
       body: data,
       secure: true,
@@ -926,26 +990,6 @@ export class V1<
       path: `/v1/admin/prompt-versions`,
       method: "GET",
       query: query,
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description ID로 특정 프롬프트 버전을 조회합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name GetPromptVersionById
-   * @summary 프롬프트 버전 조회
-   * @request GET:/v1/admin/prompt-versions/{prompt-version-id}
-   * @secure
-   */
-  getPromptVersionById = (
-    promptVersionId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetPromptVersionByIdData, GetPromptVersionByIdError>({
-      path: `/v1/admin/prompt-versions/${promptVersionId}`,
-      method: "GET",
       secure: true,
       format: "json",
       ...params,
