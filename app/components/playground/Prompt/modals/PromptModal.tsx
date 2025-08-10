@@ -61,7 +61,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
         </label>
         <select
           id="fav"
-          value={prompt.bookmarked ? 'on' : 'off'}
+          value={prompt.isBookmarked ? 'on' : 'off'}
           onChange={() => {}}
           className="w-full rounded border p-2"
           disabled
@@ -69,6 +69,19 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           <option value="on">ON</option>
           <option value="off">OFF</option>
         </select>
+      </div>
+      <div>
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="aiModel">
+          AI 모델
+        </label>
+        <input
+          id="aiModel"
+          type="text"
+          readOnly
+          value={prompt.aiModel}
+          className="w-full rounded border p-2"
+          disabled
+        />
       </div>
       <div>
         <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="memo">

@@ -80,6 +80,15 @@ const v1QueryKeys = createQueryKeys('v1', {
     queryKey: [counselTechniqueId],
     queryFn: () => api.V1.getCounselTechniqueById(counselTechniqueId),
   }),
+  // --- Mobile preview (chat) related queries ---
+  getCounsels: (counselorId: string) => ({
+    queryKey: ['counsels', counselorId],
+    queryFn: () => api.V1.getCounsels(counselorId).then((res) => res.data.data?.counsels ?? []),
+  }),
+  getCounselMessages: (counselorId: string, counselId: string) => ({
+    queryKey: ['counselMessages', counselorId, counselId],
+    queryFn: () => api.V1.getMessages(counselorId, counselId).then((res) => res.data.data?.counselMessages ?? []),
+  }),
 });
 
 export { v1QueryKeys };
