@@ -1,21 +1,71 @@
 import { V1 } from '~/__generated__/V1';
-
-const fetchWithCredentials: typeof fetch = (input, init) => {
-  return fetch(input, {
-    ...init,
-    credentials: 'include',
-  });
-};
+import type { ApiConfig } from '~/__generated__/http-client';
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // const baseURL = 'https://api.dev.hearlers.com';
 
 const isLocal = import.meta.env.VITE_ENVIRONMENT === 'local';
-const baseURL = isLocal
-  ? '/api' // 브라우저 -> vite 프록시 경유
-  : 'https://api.dev.hearlers.com'; // 서버
+const baseURL = isLocal ? '/api' : 'https://api.dev.hearlers.com';
 
-const baseConfig = { baseURL, fetch: fetchWithCredentials, withCredentials: true };
+// NOTE: fetch 설정은 실제로는 안들어가고 있었어서 지웠습니다.
+// Axios 기반 설정 (Swagger Typescript API 생성물은 Axios 사용)
+const baseConfig: ApiConfig = { baseURL, withCredentials: true } as const;
+
+// V1 인스턴스 생성 + 401 자동 refresh 인터셉터
+const v1 = new V1(baseConfig);
+
+const AUTH_REFRESH_PATH = '/v1/auth/refresh';
+const REFRESH_TIMEOUT_MS = 10000;
+let refreshInFlight: Promise<void> | null = null;
+
+const isRefreshRequest = (url?: string): boolean => !!url && url.includes(AUTH_REFRESH_PATH);
+
+const doRefresh = async (): Promise<void> => {
+  const resp = await v1.instance.post(AUTH_REFRESH_PATH, undefined, {
+    timeout: REFRESH_TIMEOUT_MS,
+    withCredentials: true,
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (resp.status !== 200) throw new Error('refresh_failed');
+};
+
+v1.instance.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: AxiosError) => {
+    const responseStatus = error.response?.status;
+    const requestConfig = error.config as (AxiosRequestConfig & { __isRetry?: boolean }) | undefined;
+    const requestUrl = requestConfig?.url;
+
+    // 재귀/루프 방지 및 조건 확인
+    if (
+      !responseStatus ||
+      responseStatus !== 401 ||
+      !requestConfig ||
+      isRefreshRequest(requestUrl) ||
+      requestConfig.__isRetry
+    ) {
+      return Promise.reject(error);
+    }
+
+    // 단일 비행: 하나의 refresh만 수행
+    if (!refreshInFlight) {
+      refreshInFlight = doRefresh().finally(() => {
+        refreshInFlight = null;
+      });
+    }
+
+    try {
+      await refreshInFlight;
+    } catch {
+      return Promise.reject(error);
+    }
+
+    // 원 요청 1회만 재시도
+    requestConfig.__isRetry = true;
+    return v1.instance.request(requestConfig);
+  }
+);
 
 export const api = {
-  V1: new V1(baseConfig),
+  V1: v1,
 } as const;
