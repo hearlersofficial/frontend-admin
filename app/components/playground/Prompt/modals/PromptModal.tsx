@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
@@ -6,6 +7,7 @@ import { Modal } from '~/components/Modal';
 import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 import { useLoadPromptVersion } from '~/hooks/mutations';
 import { usePromptStore } from '~/store/usePromptStore';
+import { queries } from '~/queries';
 
 interface PromptModalProps {
   prompt: PromptVersionResponseDto;
@@ -14,12 +16,19 @@ interface PromptModalProps {
 }
 
 const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
+  const queryClient = useQueryClient();
+
   const { mutate: loadPromptVersion } = useLoadPromptVersion({
     onSuccess: (res) => {
       const newVersion = res.data.data?.promptVersion;
       if (newVersion) {
         usePromptStore.getState().setTemporaryVersion(newVersion);
       }
+
+      queryClient.invalidateQueries({
+        queryKey: queries.v1.getTemporaryVersion.queryKey,
+      });
+
       setIsOpen(false);
     },
     onError: () => {},
