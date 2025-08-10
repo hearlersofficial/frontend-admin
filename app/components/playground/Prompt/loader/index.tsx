@@ -1,13 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
 import LoadPromptModal from '../modals/LoadPromptModal';
+import PromptModal from '../modals/PromptModal';
 
 import { useModal } from '~/hooks/useModal';
 import { queries } from '~/queries';
+import type { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 
 const PromptLoader = () => {
   const { isOpen, setIsOpen, openModal } = useModal(false);
+  const { isOpen: isEditOpen, setIsOpen: setIsEditOpen, openModal: openEditModal } = useModal(false);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
 
   const { data: promptsVersions = [] } = useQuery(queries.v1.getPromptVersions({}));
 
@@ -19,7 +24,10 @@ const PromptLoader = () => {
         return (
           <button
             key={item.id}
-            onClick={() => {}}
+            onClick={() => {
+              setSelectedPrompt(item);
+              openEditModal();
+            }}
             className="h-12 w-20 break-keep rounded-md border-2 border-[#A99FAA] p-1 text-center"
           >
             <div className="line-clamp-2 w-full text-xs text-[#A99FAA]">{item.name}</div>
@@ -32,6 +40,16 @@ const PromptLoader = () => {
       </Button>
 
       <LoadPromptModal prompts={promptsVersions} isOpen={isOpen} setIsOpen={setIsOpen} />
+      {selectedPrompt && (
+        <PromptModal
+          prompt={selectedPrompt}
+          isOpen={isEditOpen}
+          setIsOpen={(open) => {
+            setIsEditOpen(open);
+            if (!open) setSelectedPrompt(null);
+          }}
+        />
+      )}
     </div>
   );
 };
