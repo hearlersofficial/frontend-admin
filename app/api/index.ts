@@ -16,11 +16,15 @@ const v1 = new V1(baseConfig);
 
 const AUTH_REFRESH_PATH = '/v1/auth/refresh';
 const REFRESH_TIMEOUT_MS = 10000;
+const REFRESH_COOLDOWN_MS = 15000; // refresh 실패 시 재시도 유예 시간
 let refreshInFlight: Promise<void> | null = null;
+let refreshDisabledUntil = 0;
 
 const isRefreshRequest = (url?: string): boolean => !!url && url.includes(AUTH_REFRESH_PATH);
 
 const doRefresh = async (): Promise<void> => {
+  // 회로 차단기: 실패 직후 일정 시간 동안 재시도 금지
+  if (Date.now() < refreshDisabledUntil) throw new Error('refresh_cooldown');
   const resp = await v1.instance.post(AUTH_REFRESH_PATH, undefined, {
     timeout: REFRESH_TIMEOUT_MS,
     withCredentials: true,
@@ -47,11 +51,17 @@ v1.instance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // 단일 비행: 하나의 refresh만 수행
+    // 단일 비행: 하나의 refresh만 수행. 바로 직전 실패로 쿨다운 중이면 스킵
     if (!refreshInFlight) {
-      refreshInFlight = doRefresh().finally(() => {
-        refreshInFlight = null;
-      });
+      refreshInFlight = doRefresh()
+        .catch((e) => {
+          // 실패 시 쿨다운 활성화
+          refreshDisabledUntil = Date.now() + REFRESH_COOLDOWN_MS;
+          throw e;
+        })
+        .finally(() => {
+          refreshInFlight = null;
+        });
     }
 
     try {
