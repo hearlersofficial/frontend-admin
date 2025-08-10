@@ -8,7 +8,7 @@ const DeploymentHistoryButton = () => {
 
   return (
     <>
-      <Button onClick={openModal} className="rounded-full bg-[#736A84] text-sm" size="sm">
+      <Button onClick={openModal} className="mr-2 rounded-full bg-[#736A84] text-sm" size="sm">
         배포기록
       </Button>
       <DeploymentHistoryModal isOpen={isOpen} setIsOpen={setIsOpen} />
