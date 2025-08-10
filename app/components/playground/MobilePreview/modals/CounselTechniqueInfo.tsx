@@ -33,6 +33,8 @@ const CounselTechniqueInfo = ({ counselTechniqueId, isOpen, setIsOpen }: Counsel
               <span>ID: {data.id}</span>
               <span className="px-2 text-slate-300">|</span>
               <span>Threshold: {data.messageThreshold}</span>
+              <span className="px-2 text-slate-300">|</span>
+              <span>Temperature: {data.temperature}</span>
             </div>
             {/* Main info section */}
             <div className="space-y-3">

@@ -9,7 +9,19 @@ const CounselorList = () => {
     ...queries.v1.getCounselors({}),
   });
 
+  const { data: tonesData } = useQuery({
+    ...queries.v1.getTones({}),
+  });
+
   const counselors = useMemo(() => counselorsData?.data?.data?.counselors ?? [], [counselorsData]);
+  const toneList = useMemo(() => tonesData?.data?.data?.tones ?? [], [tonesData]);
+  const toneIdToTone = useMemo(() => {
+    const map: Record<string, { id?: string; name?: string }> = {};
+    for (const tone of toneList) {
+      if (tone?.id) map[tone.id] = tone;
+    }
+    return map;
+  }, [toneList]);
 
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const setSelectedCounselor = usePromptStore((s) => s.setSelectedCounselor);
@@ -35,11 +47,21 @@ const CounselorList = () => {
               isSelected ? 'bg-white' : 'bg-transparent'
             }`}
           >
-            <div className="h-16 w-16 rounded-full bg-purpleGrad" />
+            {counselor.profileImage ? (
+              <img
+                src={counselor.profileImage}
+                alt={`${counselor.name ?? 'counselor'} profile`}
+                className="h-16 w-16 rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-16 w-16 rounded-full bg-purpleGrad" />
+            )}
             {isSelected && (
               <div className="flex flex-col items-center justify-center">
                 <span className="text-base font-bold text-[#878787]">{counselor.name}</span>
-                <span className="rounded-lg bg-[#A2BBFE] px-2 py-0.5 text-xs text-white">#{counselor.description}</span>
+                <span className="rounded-lg bg-[#A2BBFE] px-2 py-0.5 text-xs text-white">
+                  #{toneIdToTone[counselor.toneId ?? '']?.name ?? counselor.description}
+                </span>
               </div>
             )}
           </button>
