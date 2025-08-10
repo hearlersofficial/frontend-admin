@@ -6,30 +6,23 @@ import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
 import { queries } from '~/queries';
 import { AIModel } from '~/types/aiModel';
-import { convertAiModelToLabel } from '~/lib/utils';
+import { AI_MODEL_OPTIONS } from '~/constants/aiModel';
 import { api } from '~/api';
+import { usePromptStore } from '~/store/usePromptStore';
 
 interface AiVersionModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
-const AI_MODELS: AIModel[] = [
-  'GPT_4O',
-  'GPT_4O_MINI',
-  'GPT_4',
-  'GPT_3_5_TURBO',
-  'GPT_5',
-  'GPT_5_MINI',
-  'GPT_5_CHAT',
-  'AI_MODEL_UNSPECIFIED',
-];
+const AI_MODELS: AIModel[] = AI_MODEL_OPTIONS as unknown as AIModel[];
 
 const AiVersionModal = ({ isOpen, setIsOpen }: AiVersionModalProps) => {
   const queryClient = useQueryClient();
   const { data } = useQuery({ ...queries.v1.getTemporaryVersion });
   const currentModel = (data?.data?.data?.promptVersion?.aiModel as AIModel | undefined) ?? 'AI_MODEL_UNSPECIFIED';
   const [selectedModel, setSelectedModel] = useState<AIModel>(currentModel);
+  const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -48,6 +41,12 @@ const AiVersionModal = ({ isOpen, setIsOpen }: AiVersionModalProps) => {
       });
     },
     onSuccess: async () => {
+      const prev =
+        usePromptStore.getState().temporaryVersion ??
+        (data?.data?.data?.promptVersion as { aiModel?: AIModel } | undefined);
+      if (prev) {
+        setTemporaryVersion({ ...prev, aiModel: selectedModel });
+      }
       await queryClient.invalidateQueries({ queryKey: queries.v1.getTemporaryVersion.queryKey });
       setIsOpen(false);
     },
@@ -69,7 +68,7 @@ const AiVersionModal = ({ isOpen, setIsOpen }: AiVersionModalProps) => {
         >
           {AI_MODELS.map((m) => (
             <option key={m} value={m}>
-              {convertAiModelToLabel(m)}
+              {m}
             </option>
           ))}
         </select>
