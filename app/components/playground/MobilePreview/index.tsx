@@ -52,7 +52,7 @@ const MobilePreview = () => {
   const [isTechniqueInfoOpen, setIsTechniqueInfoOpen] = React.useState(false);
 
   return (
-    <div className="scrollbar-none hidden w-[390px] min-w-[390px] xl:flex">
+    <div className="scrollbar-none flex w-[390px] min-w-[390px]">
       <div className="scrollbar-none sticky top-6 h-[760px] w-full overflow-hidden rounded-[32px]">
         <div
           className="pointer-events-none absolute inset-0 bg-cover bg-center bg-no-repeat"
