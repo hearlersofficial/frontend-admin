@@ -8,7 +8,6 @@ import {
   KakaoCallbackParams,
   GetPromptVersionsParams,
   GetPromptActivateHistoriesParams,
-  GetOrderedCounselTechniquesParams,
 } from '~/__generated__/data-contracts';
 
 const v1QueryKeys = createQueryKeys('v1', {
@@ -72,13 +71,13 @@ const v1QueryKeys = createQueryKeys('v1', {
     queryKey: [counselorId],
     queryFn: () => api.V1.getEpisodes(counselorId),
   }),
-  getOrderedCounselTechniques: (query: GetOrderedCounselTechniquesParams) => ({
-    queryKey: [query],
-    queryFn: () => api.V1.getOrderedCounselTechniques(query).then((res) => res.data.data?.counselTechniques),
-  }),
   getCounselTechniqueById: (counselTechniqueId: string) => ({
     queryKey: [counselTechniqueId],
     queryFn: () => api.V1.getCounselTechniqueById(counselTechniqueId),
+  }),
+  getCounselTechniques: (query: { promptVersionId: string; toneId?: string }) => ({
+    queryKey: [query],
+    queryFn: () => api.V1.getCounselTechniques(query),
   }),
   // --- Mobile preview (chat) related queries ---
   getCounsels: (counselorId: string) => ({

@@ -22,6 +22,9 @@ import {
   CreateCounselTechniqueData,
   CreateCounselTechniqueError,
   CreateCounselTechniqueRequestDto,
+  CreateCounselTechniqueTransitionRuleData,
+  CreateCounselTechniqueTransitionRuleError,
+  CreateCounselTechniqueTransitionRuleRequestDto,
   CreateCounselorData,
   CreateCounselorError,
   CreateCounselorRequest,
@@ -36,6 +39,8 @@ import {
   CreateToneRequest,
   CreateUserData,
   CreateUserError,
+  DeleteCounselTechniqueTransitionRuleData,
+  DeleteCounselTechniqueTransitionRuleError,
   DeletePromptVersionData,
   DeletePromptVersionError,
   GenerateCounselorImageUrlData,
@@ -52,6 +57,14 @@ import {
   GetCounselError,
   GetCounselTechniqueByIdData,
   GetCounselTechniqueByIdError,
+  GetCounselTechniqueTransitionRuleByIdData,
+  GetCounselTechniqueTransitionRuleByIdError,
+  GetCounselTechniqueTransitionRulesData,
+  GetCounselTechniqueTransitionRulesError,
+  GetCounselTechniqueTransitionRulesParams,
+  GetCounselTechniquesData,
+  GetCounselTechniquesError,
+  GetCounselTechniquesParams,
   GetCounselor1Data,
   GetCounselor1Error,
   GetCounselorData,
@@ -67,11 +80,11 @@ import {
   GetEpisodesError,
   GetMessagesData,
   GetMessagesError,
-  GetOrderedCounselTechniquesData,
-  GetOrderedCounselTechniquesError,
-  GetOrderedCounselTechniquesParams,
   GetPersonaPromptByIdData,
   GetPersonaPromptByIdError,
+  GetPersonaPromptsData,
+  GetPersonaPromptsError,
+  GetPersonaPromptsParams,
   GetPromptActivateHistoriesData,
   GetPromptActivateHistoriesError,
   GetPromptActivateHistoriesParams,
@@ -88,6 +101,9 @@ import {
   GetToneError,
   GetTonePromptByIdData,
   GetTonePromptByIdError,
+  GetTonePromptsData,
+  GetTonePromptsError,
+  GetTonePromptsParams,
   GetTonesData,
   GetTonesError,
   GetTonesParams,
@@ -104,9 +120,6 @@ import {
   ReactMessageRequest,
   RefreshTokenData,
   RefreshTokenError,
-  SaveCounselTechniqueSequenceData,
-  SaveCounselTechniqueSequenceError,
-  SaveCounselTechniqueSequenceRequestDto,
   SaveTemporaryVersionRequestDto,
   SaveVersionData,
   SaveVersionError,
@@ -116,6 +129,9 @@ import {
   UpdateCounselTechniqueData,
   UpdateCounselTechniqueError,
   UpdateCounselTechniqueRequestDto,
+  UpdateCounselTechniqueTransitionRuleData,
+  UpdateCounselTechniqueTransitionRuleError,
+  UpdateCounselTechniqueTransitionRuleRequestDto,
   UpdateCounselorData,
   UpdateCounselorError,
   UpdateCounselorRequest,
@@ -494,6 +510,78 @@ export class V1<
       ...params,
     });
   /**
+   * @description ID로 상담 기법 전환 규칙을 조회합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name GetCounselTechniqueTransitionRuleById
+   * @summary 상담 기법 전환 규칙 조회
+   * @request GET:/v1/admin/counsel-techniques/transition-rules/{transition-rule-id}
+   * @secure
+   */
+  getCounselTechniqueTransitionRuleById = (
+    transitionRuleId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetCounselTechniqueTransitionRuleByIdData,
+      GetCounselTechniqueTransitionRuleByIdError
+    >({
+      path: `/v1/admin/counsel-techniques/transition-rules/${transitionRuleId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 상담 기법 전환 규칙을 수정합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name UpdateCounselTechniqueTransitionRule
+   * @summary 상담 기법 전환 규칙 수정
+   * @request PUT:/v1/admin/counsel-techniques/transition-rules/{transition-rule-id}
+   * @secure
+   */
+  updateCounselTechniqueTransitionRule = (
+    transitionRuleId: string,
+    data: UpdateCounselTechniqueTransitionRuleRequestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateCounselTechniqueTransitionRuleData,
+      UpdateCounselTechniqueTransitionRuleError
+    >({
+      path: `/v1/admin/counsel-techniques/transition-rules/${transitionRuleId}`,
+      method: "PUT",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 상담 기법 전환 규칙을 삭제합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name DeleteCounselTechniqueTransitionRule
+   * @summary 상담 기법 전환 규칙 삭제
+   * @request DELETE:/v1/admin/counsel-techniques/transition-rules/{transition-rule-id}
+   * @secure
+   */
+  deleteCounselTechniqueTransitionRule = (
+    transitionRuleId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteCounselTechniqueTransitionRuleData,
+      DeleteCounselTechniqueTransitionRuleError
+    >({
+      path: `/v1/admin/counsel-techniques/transition-rules/${transitionRuleId}`,
+      method: "DELETE",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
    * @description 리프레시 토큰으로 액세스 토큰 재발급
    *
    * @tags 인증
@@ -597,31 +685,6 @@ export class V1<
   ) =>
     this.request<CreateCounselTechniqueData, CreateCounselTechniqueError>({
       path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques`,
-      method: "POST",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 임시 버전에서 상담 기법 시퀀스를 저장합니다. 기존 기법 및 임시기법들을 연결하고, 연결된 최종 기법 리스트를 반환합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name SaveCounselTechniqueSequence
-   * @summary 임시 버전에서 상담 기법 시퀀스 저장
-   * @request POST:/v1/admin/prompt-versions/temporary-version/counsel-techniques/all/sequences
-   * @secure
-   */
-  saveCounselTechniqueSequence = (
-    data: SaveCounselTechniqueSequenceRequestDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      SaveCounselTechniqueSequenceData,
-      SaveCounselTechniqueSequenceError
-    >({
-      path: `/v1/admin/prompt-versions/temporary-version/counsel-techniques/all/sequences`,
       method: "POST",
       body: data,
       secure: true,
@@ -908,6 +971,55 @@ export class V1<
       ...params,
     });
   /**
+   * @description 상담 기법 전환 규칙을 전체 조회합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name GetCounselTechniqueTransitionRules
+   * @summary 상담 기법 전환 규칙 전체 조회
+   * @request GET:/v1/admin/counsel-techniques/transition-rules
+   * @secure
+   */
+  getCounselTechniqueTransitionRules = (
+    query: GetCounselTechniqueTransitionRulesParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetCounselTechniqueTransitionRulesData,
+      GetCounselTechniqueTransitionRulesError
+    >({
+      path: `/v1/admin/counsel-techniques/transition-rules`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 상담 기법 전환 규칙을 생성합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name CreateCounselTechniqueTransitionRule
+   * @summary 상담 기법 전환 규칙 생성
+   * @request POST:/v1/admin/counsel-techniques/transition-rules
+   * @secure
+   */
+  createCounselTechniqueTransitionRule = (
+    data: CreateCounselTechniqueTransitionRuleRequestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateCounselTechniqueTransitionRuleData,
+      CreateCounselTechniqueTransitionRuleError
+    >({
+      path: `/v1/admin/counsel-techniques/transition-rules`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
    * @description 카카오 로그인을 위한 인증 코드 요청, 카카오로 리다이렉트. swagger에서는 사용 불가. a 태그로 접근
    *
    * @tags 인증
@@ -952,6 +1064,24 @@ export class V1<
     this.request<GetUserData, GetUserError>({
       path: `/v1/admin/users/${userId}`,
       method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
+   * @description 톤 프롬프트를 전체 조회합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name GetTonePrompts
+   * @summary 톤 프롬프트 전체 조회
+   * @request GET:/v1/admin/tone-prompts
+   * @secure
+   */
+  getTonePrompts = (query: GetTonePromptsParams, params: RequestParams = {}) =>
+    this.request<GetTonePromptsData, GetTonePromptsError>({
+      path: `/v1/admin/tone-prompts`,
+      method: "GET",
+      query: query,
       secure: true,
       format: "json",
       ...params,
@@ -1036,6 +1166,27 @@ export class V1<
       ...params,
     });
   /**
+   * @description 페르소나 프롬프트를 전체 조회합니다.
+   *
+   * @tags 어드민/상담 프롬프트
+   * @name GetPersonaPrompts
+   * @summary 페르소나 프롬프트 전체 조회
+   * @request GET:/v1/admin/persona-prompts
+   * @secure
+   */
+  getPersonaPrompts = (
+    query: GetPersonaPromptsParams,
+    params: RequestParams = {},
+  ) =>
+    this.request<GetPersonaPromptsData, GetPersonaPromptsError>({
+      path: `/v1/admin/persona-prompts`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
+  /**
    * @description ID로 페르소나 프롬프트를 조회합니다. 페르소나 프롬프트는 불변객체이며, 수정 시 새로운 객체가 생성됩니다.
    *
    * @tags 어드민/상담 프롬프트
@@ -1094,22 +1245,19 @@ export class V1<
       ...params,
     });
   /**
-   * @description 상담 기법을 전체 조회하거나, 첫 번째 상담 기법 ID를 통해 연결된 모든 상담 기법 목록을 조회합니다. first-counsel-technique-id 파라미터가 없으면 전체 조회, 있으면 해당 ID로 시작하는 연결된 기법들을 순서대로 반환합니다. **현재 전체 조회는 구현되지 않았습니다. 이에 따라 쿼리 파라미터가 필수입니다.
+   * @description 상담 기법을 전체 조회합니다. prompt-version-id는 필수 파라미터입니다.
    *
    * @tags 어드민/상담 프롬프트
-   * @name GetOrderedCounselTechniques
-   * @summary 상담 기법 전체 조회 || 첫 번째 상담 기법 ID를 통해 연결된 모든 상담 기법 목록 조회
+   * @name GetCounselTechniques
+   * @summary 상담 기법 전체 조회
    * @request GET:/v1/admin/counsel-techniques
    * @secure
    */
-  getOrderedCounselTechniques = (
-    query: GetOrderedCounselTechniquesParams,
+  getCounselTechniques = (
+    query: GetCounselTechniquesParams,
     params: RequestParams = {},
   ) =>
-    this.request<
-      GetOrderedCounselTechniquesData,
-      GetOrderedCounselTechniquesError
-    >({
+    this.request<GetCounselTechniquesData, GetCounselTechniquesError>({
       path: `/v1/admin/counsel-techniques`,
       method: "GET",
       query: query,
