@@ -8,6 +8,8 @@ import {
   KakaoCallbackParams,
   GetPromptVersionsParams,
   GetPromptActivateHistoriesParams,
+  GetPersonaPromptsParams,
+  GetTonePromptsParams,
 } from '~/__generated__/data-contracts';
 
 const v1QueryKeys = createQueryKeys('v1', {
@@ -43,6 +45,10 @@ const v1QueryKeys = createQueryKeys('v1', {
     queryKey: [tonePromptId],
     queryFn: () => api.V1.getTonePromptById(tonePromptId).then((res) => res.data.data?.tonePrompt),
   }),
+  getTonePrompts: (query: GetTonePromptsParams) => ({
+    queryKey: [query],
+    queryFn: () => api.V1.getTonePrompts(query).then((res) => res.data.data?.tonePrompts),
+  }),
   getPromptVersions: (query: GetPromptVersionsParams) => ({
     queryKey: [query],
     queryFn: () => api.V1.getPromptVersions(query).then((res) => res.data.data?.promptVersions),
@@ -62,6 +68,10 @@ const v1QueryKeys = createQueryKeys('v1', {
   getPersonaPromptById: (personaPromptId: string) => ({
     queryKey: [personaPromptId],
     queryFn: () => api.V1.getPersonaPromptById(personaPromptId).then((res) => res.data.data?.personaPrompt),
+  }),
+  getPersonaPrompts: (query: GetPersonaPromptsParams) => ({
+    queryKey: [query],
+    queryFn: () => api.V1.getPersonaPrompts(query).then((res) => res.data.data?.personaPrompts),
   }),
   getEpisode: (episodeId: string, counselorId: string) => ({
     queryKey: [episodeId, counselorId],
