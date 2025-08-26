@@ -9,6 +9,7 @@ import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 export const useTechniqueManagement = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
+  const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique);
   const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
   const toneId = selectedCounselor?.toneId;
@@ -32,9 +33,19 @@ export const useTechniqueManagement = () => {
   useEffect(() => {
     if (Array.isArray(counselTechniques) && counselTechniques.length > 0) {
       setTechniques(counselTechniques);
-      setSelectedCounselTechnique(counselTechniques[0]);
+
+      if (selectedCounselTechnique?.id) {
+        const sameTechnique = counselTechniques.find((tech) => tech.id === selectedCounselTechnique.id);
+        if (sameTechnique) {
+          setSelectedCounselTechnique(sameTechnique);
+        } else {
+          setSelectedCounselTechnique(counselTechniques[0]);
+        }
+      } else {
+        setSelectedCounselTechnique(counselTechniques[0]);
+      }
     }
-  }, [counselTechniques, setSelectedCounselTechnique]);
+  }, [counselTechniques, setSelectedCounselTechnique, selectedCounselTechnique?.id]);
 
   const { mutate: updateCounselTechnique } = useUpdateCounselTechnique({
     onSuccess: (res) => {
@@ -44,7 +55,6 @@ export const useTechniqueManagement = () => {
       setTechniques(updatedTechniques);
       setSelectedCounselTechnique(updatedTechniques[0]);
 
-      // Refresh the techniques query
       if (promptVersionId && toneId) {
         queryClient.invalidateQueries({
           queryKey: queries.v1.getCounselTechniques({ promptVersionId, toneId }).queryKey,

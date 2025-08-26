@@ -18,7 +18,7 @@ export const usePromptData = () => {
   });
 
   const personaData = personaPrompts?.find((persona) => persona.counselorId === selectedCounselor?.id);
-  console.log(personaData);
+
   // tone
   const toneId = selectedCounselor?.toneId;
   const { data: tonePrompts, isLoading: isToneLoading } = useQuery({
@@ -30,15 +30,17 @@ export const usePromptData = () => {
   });
 
   const toneData = tonePrompts?.find((tone) => tone.toneId === selectedCounselor?.toneId);
-  console.log(toneData);
-
   const isLoading = isPersonaLoading || isToneLoading;
 
-  return {
+  const data = {
     personaData,
     toneData,
     selectedCounselTechnique,
     selectedCounselor,
     isLoading,
   };
+
+  console.log(data);
+
+  return data;
 };
