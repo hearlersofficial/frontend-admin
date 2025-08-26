@@ -10,6 +10,7 @@ import {
   GetPromptActivateHistoriesParams,
   GetPersonaPromptsParams,
   GetTonePromptsParams,
+  GetCounselTechniqueTransitionRulesParams,
 } from '~/__generated__/data-contracts';
 
 const v1QueryKeys = createQueryKeys('v1', {
@@ -89,7 +90,11 @@ const v1QueryKeys = createQueryKeys('v1', {
     queryKey: [query],
     queryFn: () => api.V1.getCounselTechniques(query),
   }),
-  // --- Mobile preview (chat) related queries ---
+  getCounselTechniqueTransitionRules: (query: GetCounselTechniqueTransitionRulesParams) => ({
+    queryKey: [query],
+    queryFn: () =>
+      api.V1.getCounselTechniqueTransitionRules(query).then((res) => res.data.data?.counselTechniqueTransitionRules),
+  }),
   getCounsels: (counselorId: string) => ({
     queryKey: ['counsels', counselorId],
     queryFn: () => api.V1.getCounsels(counselorId).then((res) => res.data.data?.counsels ?? []),

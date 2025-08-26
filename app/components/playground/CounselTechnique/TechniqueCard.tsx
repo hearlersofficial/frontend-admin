@@ -1,5 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { X } from 'lucide-react';
 import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 
 interface TechniqueCardProps {
@@ -43,7 +44,7 @@ const TechniqueCard = ({
   };
 
   return (
-    <div ref={setNodeRef} className="flex flex-col gap-2" style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} className="relative flex flex-col gap-2" style={style} {...attributes} {...listeners}>
       {mode === 'EDIT' ? (
         <div
           className="h-14 w-20 cursor-pointer rounded-lg border-2 border-[#A99FAA] p-1 hover:border-[#736A84]"
@@ -61,30 +62,24 @@ const TechniqueCard = ({
           className={`h-14 w-20 break-keep rounded-lg border-2 px-2 py-1 text-center text-sm font-semibold leading-tight ${
             technique.id == selectedCounselTechnique.id
               ? 'border-transparent bg-purpleGrad text-white'
-              : 'border-[#A99FAA] text-[#A99FAA]'
+              : 'border-[#A99FAA] bg-white text-[#A99FAA]'
           }`}
         >
           <span className="text-xs">{technique.name}</span>
         </button>
       )}
-      {mode === 'ADDANDDELETE' ? (
+
+      {/* 삭제 버튼 - ADDANDDELETE 모드에서만 표시 */}
+      {mode === 'ADDANDDELETE' && (
         <button
-          className="rounded-lg bg-[#F7F2F2] py-1 text-center text-xs font-semibold text-[#D39393]"
           onClick={handleDelete}
+          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-600"
         >
-          삭제
+          <X className="h-3 w-3" />
         </button>
-      ) : (
-        <>
-          <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
-            {technique.messageThreshold}문장
-          </span>
-          <span className="rounded-lg bg-[#F2F2F7] py-1 text-center text-xs font-semibold text-[#848484]">
-            {technique.temperature}
-          </span>
-        </>
       )}
     </div>
   );
 };
+
 export default TechniqueCard;
