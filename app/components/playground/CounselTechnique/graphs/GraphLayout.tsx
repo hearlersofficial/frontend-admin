@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 
-import TechniqueCard from './TechniqueCard';
-import TransitionRuleDetailModal from './modals/TransitionRuleDetailModal';
-import { useGraphLayout } from './hooks/useGraphLayout';
-import { useTransitionRules } from './hooks/useTransitionRules';
+import TechniqueCard from '../TechniqueCard';
+import TransitionRuleDetailModal from '../modals/TransitionRuleDetailModal';
+import ConnectionArrow from './ConnectionArrow';
+import { useGraphLayout } from '../hooks/useGraphLayout';
+import { useTransitionRules } from '../hooks/useTransitionRules';
 import { usePromptStore } from '~/store/usePromptStore';
 import { CounselTechniqueResponseDto, CounselTechniqueTransitionRuleResponseDto } from '~/__generated__/data-contracts';
 
@@ -23,6 +24,7 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   const [selectedTransitionRule, setSelectedTransitionRule] =
     useState<CounselTechniqueTransitionRuleResponseDto | null>(null);
   const [isTransitionModalOpen, setIsTransitionModalOpen] = useState(false);
+  const [editModeSelectedTechnique, setEditModeSelectedTechnique] = useState<CounselTechniqueResponseDto | null>(null);
 
   const { transitionRules, connectedNodes, unconnectedNodes } = useTransitionRules();
 
@@ -31,6 +33,23 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   const handleTransitionRuleClick = (rule: CounselTechniqueTransitionRuleResponseDto) => {
     setSelectedTransitionRule(rule);
     setIsTransitionModalOpen(true);
+  };
+
+  const handleEditModeCardClick = (technique: CounselTechniqueResponseDto) => {
+    if (mode !== 'EDIT') return;
+
+    if (editModeSelectedTechnique && editModeSelectedTechnique.id !== technique.id) {
+      setSelectedTransitionRule({
+        id: '',
+        fromCounselTechniqueId: editModeSelectedTechnique.id,
+        toCounselTechniqueId: technique.id,
+        priority: 0,
+      } as CounselTechniqueTransitionRuleResponseDto);
+      setIsTransitionModalOpen(true);
+      setEditModeSelectedTechnique(null);
+    } else {
+      setEditModeSelectedTechnique(technique);
+    }
   };
 
   const renderConnectionLines = () => {
@@ -48,60 +67,18 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
       const toY = toNode.y;
 
       const isForward = fromNode.level < toNode.level;
-      const strokeColor = isForward ? '#736A84' : '#FF6B6B';
-      const strokeWidth = isForward ? 3 : 2;
-
-      const angle = Math.atan2(toY - fromY, toX - fromX);
-      const arrowLength = 10;
-      const arrowAngle = Math.PI / 6;
-
-      const arrowEnd = {
-        x: toX,
-        y: toY,
-      };
-
-      const arrowLeft = {
-        x: arrowEnd.x - arrowLength * Math.cos(angle + arrowAngle),
-        y: arrowEnd.y - arrowLength * Math.sin(angle + arrowAngle),
-      };
-
-      const arrowRight = {
-        x: arrowEnd.x - arrowLength * Math.cos(angle - arrowAngle),
-        y: arrowEnd.y - arrowLength * Math.sin(angle - arrowAngle),
-      };
 
       return (
-        <g key={edge.id}>
-          <line
-            x1={fromX}
-            y1={fromY}
-            x2={toX}
-            y2={toY}
-            stroke={strokeColor}
-            strokeWidth={strokeWidth}
-            strokeDasharray={isForward ? '8,8' : '4,4'}
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleTransitionRuleClick(edge.rule)}
-          />
-          <polygon
-            points={`${arrowEnd.x},${arrowEnd.y} ${arrowLeft.x},${arrowLeft.y} ${arrowRight.x},${arrowRight.y}`}
-            fill={strokeColor}
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleTransitionRuleClick(edge.rule)}
-          />
-          <text
-            x={(fromX + toX) / 2}
-            y={(fromY + toY) / 2 - 8}
-            textAnchor="middle"
-            fontSize="12"
-            fill={strokeColor}
-            fontWeight="bold"
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleTransitionRuleClick(edge.rule)}
-          >
-            {edge.priority}
-          </text>
-        </g>
+        <ConnectionArrow
+          key={edge.id}
+          fromX={fromX}
+          fromY={fromY}
+          toX={toX}
+          toY={toY}
+          description={`${edge.priority}`}
+          isForward={isForward}
+          onClick={() => handleTransitionRuleClick(edge.rule)}
+        />
       );
     });
   };
@@ -130,6 +107,8 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
                     setTechniques={setTechniques}
                     techniques={techniques}
                     onEditName={onEditName}
+                    onEditModeCardClick={handleEditModeCardClick}
+                    editModeSelectedTechnique={editModeSelectedTechnique}
                   />
                 </div>
               ))}
@@ -168,6 +147,8 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
                   setTechniques={setTechniques}
                   techniques={techniques}
                   onEditName={onEditName}
+                  onEditModeCardClick={handleEditModeCardClick}
+                  editModeSelectedTechnique={editModeSelectedTechnique}
                 />
               </div>
             ))}

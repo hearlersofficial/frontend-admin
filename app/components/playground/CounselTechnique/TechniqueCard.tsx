@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 
 interface TechniqueCardProps {
@@ -11,6 +12,8 @@ interface TechniqueCardProps {
   setTechniques?: (techniques: CounselTechniqueResponseDto[]) => void;
   techniques?: CounselTechniqueResponseDto[];
   onEditName?: (technique: CounselTechniqueResponseDto) => void;
+  onEditModeCardClick?: (technique: CounselTechniqueResponseDto) => void;
+  editModeSelectedTechnique?: CounselTechniqueResponseDto | null;
 }
 
 const TechniqueCard = ({
@@ -21,8 +24,21 @@ const TechniqueCard = ({
   setTechniques,
   techniques,
   onEditName,
+  onEditModeCardClick,
+  editModeSelectedTechnique,
 }: TechniqueCardProps) => {
   const { attributes, listeners, setNodeRef, transition, transform } = useSortable({ id: technique.id! });
+  const [theme, setTheme] = useState<'PRIMARY' | 'NORMAL' | 'DISABLED'>('NORMAL');
+
+  useEffect(() => {
+    if (mode === 'SELECT' && technique.id === selectedCounselTechnique.id) {
+      setTheme('PRIMARY');
+    } else if (mode === 'EDIT' && editModeSelectedTechnique?.id === technique.id) {
+      setTheme('PRIMARY');
+    } else {
+      setTheme('NORMAL');
+    }
+  }, [mode, technique.id, selectedCounselTechnique.id, editModeSelectedTechnique?.id]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -43,27 +59,49 @@ const TechniqueCard = ({
     }
   };
 
+  const getThemeClasses = (theme: string) => {
+    switch (theme) {
+      case 'PRIMARY':
+        return 'border-transparent bg-purpleGrad text-white';
+      case 'NORMAL':
+        return 'border-[#A99FAA] bg-white text-[#A99FAA]';
+      case 'DISABLED':
+        return 'border-gray-300 bg-gray-100 text-gray-400';
+      default:
+        return 'border-[#A99FAA] bg-white text-[#A99FAA]';
+    }
+  };
+
+  const handleCardClick = () => {
+    if (mode === 'EDIT' && onEditModeCardClick) {
+      onEditModeCardClick(technique);
+    } else {
+      setSelectedCounselTechnique(technique);
+    }
+  };
+
   return (
     <div ref={setNodeRef} className="relative flex flex-col gap-2" style={style} {...attributes} {...listeners}>
       {mode === 'EDIT' ? (
-        <div
-          className="h-14 w-20 cursor-pointer rounded-lg border-2 border-[#A99FAA] p-1 hover:border-[#736A84]"
+        <button
+          className={`h-14 w-20 cursor-pointer rounded-lg border-2 p-1 transition-colors ${getThemeClasses(theme)}`}
+          onClick={handleCardClick}
           onDoubleClick={handleNameDoubleClick}
         >
-          <div className="flex h-full w-full items-center justify-center text-center text-xs font-semibold text-[#A99FAA]">
+          <div
+            className={`flex h-full w-full items-center justify-center text-center text-xs font-semibold ${
+              theme === 'PRIMARY' ? 'text-white' : 'text-[#A99FAA]'
+            }`}
+          >
             {technique.name}
           </div>
-        </div>
+        </button>
       ) : (
         <button
           onClick={() => {
             setSelectedCounselTechnique(technique);
           }}
-          className={`h-14 w-20 break-keep rounded-lg border-2 px-2 py-1 text-center text-sm font-semibold leading-tight ${
-            technique.id == selectedCounselTechnique.id
-              ? 'border-transparent bg-purpleGrad text-white'
-              : 'border-[#A99FAA] bg-white text-[#A99FAA]'
-          }`}
+          className={`h-14 w-20 break-keep rounded-lg border-2 px-2 py-1 text-center text-sm font-semibold leading-tight ${getThemeClasses(theme)}`}
         >
           <span className="text-xs">{technique.name}</span>
         </button>

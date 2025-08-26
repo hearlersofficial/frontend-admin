@@ -850,13 +850,13 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
    * @format int32
    * @example 3
    */
-  minCurrentTechniqueMessageCount: number;
+  minCurrentTechniqueMessageCount?: number;
   /**
    * 최대 현재 기법 메시지 개수
    * @format int32
    * @example 8
    */
-  maxCurrentTechniqueMessageCount: number;
+  maxCurrentTechniqueMessageCount?: number;
   /** 필수 영향 도메인 */
   requiredImpactDomains: (
     | 'IMPACT_DOMAIN_UNSPECIFIED'
@@ -1816,13 +1816,13 @@ export interface CreateCounselTechniqueTransitionRuleRequestDto {
    * @format int32
    * @example 3
    */
-  minCurrentTechniqueMessageCount: number;
+  minCurrentTechniqueMessageCount?: number;
   /**
    * 최대 현재 기법 메시지 개수
    * @format int32
    * @example 8
    */
-  maxCurrentTechniqueMessageCount: number;
+  maxCurrentTechniqueMessageCount?: number;
   /** 필수 영향 도메인 */
   requiredImpactDomains: (
     | 'IMPACT_DOMAIN_UNSPECIFIED'

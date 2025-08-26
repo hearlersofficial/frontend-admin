@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import GraphLayout from './GraphLayout';
+import GraphLayout from './graphs/GraphLayout';
 import AddTechniqueModal from './modals/AddTechniqueModal';
 import EditTechniqueModal from './modals/EditTechniqueModal';
 
