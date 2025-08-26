@@ -42,13 +42,22 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
 
       if (!fromNode || !toNode) return null;
 
-      const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
-      const arrowLength = 15;
+      const fromX = fromNode.x + 40;
+      const fromY = fromNode.y;
+      const toX = toNode.x - 40;
+      const toY = toNode.y;
+
+      const isForward = fromNode.level < toNode.level;
+      const strokeColor = isForward ? '#736A84' : '#FF6B6B';
+      const strokeWidth = isForward ? 3 : 2;
+
+      const angle = Math.atan2(toY - fromY, toX - fromX);
+      const arrowLength = 10;
       const arrowAngle = Math.PI / 6;
 
       const arrowEnd = {
-        x: toNode.x - arrowLength * Math.cos(angle),
-        y: toNode.y - arrowLength * Math.sin(angle),
+        x: toX,
+        y: toY,
       };
 
       const arrowLeft = {
@@ -64,28 +73,28 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
       return (
         <g key={edge.id}>
           <line
-            x1={fromNode.x}
-            y1={fromNode.y}
-            x2={toNode.x}
-            y2={toNode.y}
-            stroke="#736A84"
-            strokeWidth="3"
-            strokeDasharray="8,8"
+            x1={fromX}
+            y1={fromY}
+            x2={toX}
+            y2={toY}
+            stroke={strokeColor}
+            strokeWidth={strokeWidth}
+            strokeDasharray={isForward ? '8,8' : '4,4'}
             style={{ cursor: 'pointer' }}
             onClick={() => handleTransitionRuleClick(edge.rule)}
           />
           <polygon
             points={`${arrowEnd.x},${arrowEnd.y} ${arrowLeft.x},${arrowLeft.y} ${arrowRight.x},${arrowRight.y}`}
-            fill="#736A84"
+            fill={strokeColor}
             style={{ cursor: 'pointer' }}
             onClick={() => handleTransitionRuleClick(edge.rule)}
           />
           <text
-            x={(fromNode.x + toNode.x) / 2}
-            y={(fromNode.y + toNode.y) / 2 - 15}
+            x={(fromX + toX) / 2}
+            y={(fromY + toY) / 2 - 8}
             textAnchor="middle"
-            fontSize="14"
-            fill="#736A84"
+            fontSize="12"
+            fill={strokeColor}
             fontWeight="bold"
             style={{ cursor: 'pointer' }}
             onClick={() => handleTransitionRuleClick(edge.rule)}
@@ -108,39 +117,52 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
           minHeight: '400px',
         }}
       >
-        <svg className="pointer-events-none absolute inset-0" style={{ zIndex: 1 }} width={width} height={height}>
-          <g style={{ pointerEvents: 'all' }}>{renderConnectionLines()}</g>
-        </svg>
+        <div className="absolute inset-0 flex flex-col space-y-6 p-6">
+          <div className="h-24 w-full rounded-lg border-2 border-dashed border-gray-300 bg-[#F2F2F7] p-4">
+            <div className="flex items-center space-x-4 overflow-x-visible overflow-y-visible">
+              {unconnectedNodes.map((technique) => (
+                <div key={technique.id} className="flex-shrink-0">
+                  <TechniqueCard
+                    mode={mode}
+                    technique={technique}
+                    selectedCounselTechnique={selectedCounselTechnique}
+                    setSelectedCounselTechnique={setSelectedCounselTechnique}
+                    setTechniques={setTechniques}
+                    techniques={techniques}
+                    onEditName={onEditName}
+                  />
+                </div>
+              ))}
 
-        {nodes.map((node) => (
-          <div
-            key={node.id}
-            className="absolute -translate-x-1/2 -translate-y-1/2 transform"
-            style={{
-              left: node.x,
-              top: node.y,
-              zIndex: 2,
-            }}
-          >
-            <TechniqueCard
-              mode={mode}
-              technique={node}
-              selectedCounselTechnique={selectedCounselTechnique}
-              setSelectedCounselTechnique={setSelectedCounselTechnique}
-              setTechniques={setTechniques}
-              techniques={techniques}
-              onEditName={onEditName}
-            />
+              {mode === 'ADDANDDELETE' && onAddTechnique && (
+                <button
+                  onClick={onAddTechnique}
+                  className="flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-gray-400 bg-white text-gray-500 transition-colors hover:border-gray-600 hover:bg-gray-50 hover:text-gray-700"
+                >
+                  <Plus className="h-6 w-6" />
+                </button>
+              )}
+            </div>
           </div>
-        ))}
 
-        <div className="absolute left-4 right-4 top-4 z-10">
-          <div className="flex items-center space-x-4 overflow-x-auto rounded-lg bg-[#F2F2F7] p-4">
-            {unconnectedNodes.map((technique) => (
-              <div key={technique.id} className="flex-shrink-0">
+          <div className="relative h-full w-full overflow-scroll">
+            <svg className="pointer-events-none absolute inset-0" style={{ zIndex: 1 }} width={width} height={height}>
+              <g style={{ pointerEvents: 'all' }}>{renderConnectionLines()}</g>
+            </svg>
+
+            {nodes.map((node) => (
+              <div
+                key={node.id}
+                className="absolute -translate-x-1/2 -translate-y-1/2 transform"
+                style={{
+                  left: node.x,
+                  top: node.y,
+                  zIndex: 2,
+                }}
+              >
                 <TechniqueCard
                   mode={mode}
-                  technique={technique}
+                  technique={node}
                   selectedCounselTechnique={selectedCounselTechnique}
                   setSelectedCounselTechnique={setSelectedCounselTechnique}
                   setTechniques={setTechniques}
@@ -149,15 +171,6 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
                 />
               </div>
             ))}
-
-            {mode === 'ADDANDDELETE' && onAddTechnique && (
-              <button
-                onClick={onAddTechnique}
-                className="flex h-14 w-20 flex-shrink-0 items-center justify-center rounded-lg border-2 border-dashed border-gray-400 bg-white text-gray-500 transition-colors hover:border-gray-600 hover:bg-gray-50 hover:text-gray-700"
-              >
-                <Plus className="h-6 w-6" />
-              </button>
-            )}
           </div>
         </div>
       </div>

@@ -58,36 +58,8 @@ export const useGraphLayout = (
     });
 
     const calculateLevels = () => {
-      const visited = new Set<string>();
-      const levels = new Map<string, number>();
-
-      const dfs = (nodeId: string, currentLevel: number) => {
-        if (visited.has(nodeId)) {
-          return levels.get(nodeId) || 0;
-        }
-
-        visited.add(nodeId);
-        let maxLevel = currentLevel;
-
-        const outgoingEdges = edges.filter((edge) => edge.from === nodeId);
-
-        for (const edge of outgoingEdges) {
-          const childLevel = dfs(edge.to, currentLevel + 1);
-          maxLevel = Math.max(maxLevel, childLevel);
-        }
-
-        levels.set(nodeId, maxLevel);
-        return maxLevel;
-      };
-
       nodes.forEach((node) => {
-        if (!visited.has(node.id!)) {
-          dfs(node.id!, 0);
-        }
-      });
-
-      nodes.forEach((node) => {
-        node.level = levels.get(node.id!) || 0;
+        node.level = node.inDegree || 0;
       });
     };
 
@@ -103,7 +75,6 @@ export const useGraphLayout = (
 
     const LEVEL_SPACING = 200;
     const NODE_SPACING = 120;
-    const PADDING = 50;
 
     let maxLevel = 0;
     let maxNodesInLevel = 0;
@@ -114,18 +85,17 @@ export const useGraphLayout = (
     });
 
     levelGroups.forEach((levelNodes, level) => {
-      const levelWidth = levelNodes.length * NODE_SPACING;
-      const startX = PADDING + (maxNodesInLevel * NODE_SPACING - levelWidth) / 2;
-      const y = PADDING + level * LEVEL_SPACING;
+      const startX = 50 + level * LEVEL_SPACING;
+      const startY = 50;
 
       levelNodes.forEach((node, index) => {
-        node.x = startX + index * NODE_SPACING;
-        node.y = y;
+        node.x = startX;
+        node.y = startY + index * NODE_SPACING;
       });
     });
 
-    const width = PADDING * 2 + maxNodesInLevel * NODE_SPACING;
-    const height = PADDING * 2 + (maxLevel + 1) * LEVEL_SPACING;
+    const width = 50 * 2 + (maxLevel + 1) * LEVEL_SPACING;
+    const height = 50 * 2 + maxNodesInLevel * NODE_SPACING;
 
     return {
       nodes,
