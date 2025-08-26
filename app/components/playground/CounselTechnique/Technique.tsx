@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import TechniqueContainer from './TechniqueContainer';
+import GraphLayout from './GraphLayout';
 import AddTechniqueModal from './modals/AddTechniqueModal';
 import EditTechniqueModal from './modals/EditTechniqueModal';
 
@@ -52,7 +52,7 @@ const Technique = () => {
 
       <div className="mb-4 mt-2 h-[1px] bg-[#ECE9F1]" />
 
-      <TechniqueContainer
+      <GraphLayout
         mode={mode}
         techniques={techniques}
         setTechniques={setTechniques}
