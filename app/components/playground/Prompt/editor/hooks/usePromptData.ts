@@ -40,7 +40,5 @@ export const usePromptData = () => {
     isLoading,
   };
 
-  console.log(data);
-
   return data;
 };

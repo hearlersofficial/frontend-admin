@@ -1,6 +1,7 @@
 export { useActivatePromptVersion } from './useActivatePromptVersion';
 export { useCreateCounselor } from './useCreateCounselor';
 export { useCreateCounselTechnique } from './useCreateCounselTechnique';
+export { useCreateCounselTechniqueTransitionRule } from './useCreateCounselTechniqueTransitionRule';
 export { useCreateEpisode } from './useCreateEpisode';
 export { useCreateTone } from './useCreateTone';
 export { useCreateUser } from './useCreateUser';
@@ -12,6 +13,7 @@ export { useSaveCounselTechniqueSequence } from './useSaveCounselTechniqueSequen
 export { useSaveVersion } from './useSaveVersion';
 export { useUpdateCounselor } from './useUpdateCounselor';
 export { useUpdateCounselTechnique } from './useUpdateCounselTechnique';
+export { useUpdateCounselTechniqueTransitionRule } from './useUpdateCounselTechniqueTransitionRule';
 export { useUpdateEpisode } from './useUpdateEpisode';
 export { useUpdatePersonaPrompt } from './useUpdatePersonaPrompt';
 export { useUpdateTone } from './useUpdateTone';
