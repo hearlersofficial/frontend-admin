@@ -74,7 +74,7 @@ const TechniqueCard = ({
       case 'NORMAL':
         return 'border-[#A99FAA] bg-white text-[#A99FAA]';
       case 'DISABLED':
-        return 'border-gray-300 bg-gray-100 text-gray-400';
+        return 'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed pointer-events-none';
       default:
         return 'border-[#A99FAA] bg-white text-[#A99FAA]';
     }
@@ -107,7 +107,7 @@ const TechniqueCard = ({
       {mode === 'ADDANDDELETE' && (
         <button
           onClick={handleDelete}
-          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-white transition-colors hover:bg-red-600"
+          className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#A99FAA] text-white transition-colors hover:bg-[#A99FAA]/80"
         >
           <X className="h-3 w-3" />
         </button>

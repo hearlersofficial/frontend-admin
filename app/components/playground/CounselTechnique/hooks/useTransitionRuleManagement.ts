@@ -4,15 +4,21 @@ import {
   CreateCounselTechniqueTransitionRuleRequestDto,
   UpdateCounselTechniqueTransitionRuleRequestDto,
 } from '~/__generated__/data-contracts';
+import { queries } from '~/queries';
+import { useDeleteCounselTechniqueTransitionRule } from '~/hooks/mutations/useDeleteCounselTechniqueTransitionRule';
+import { usePromptStore } from '~/store/usePromptStore';
 
 export const useTransitionRuleManagement = () => {
-  const queryClient = useQueryClient();
+  const temporaryVersionId = usePromptStore((s) => s.temporaryVersion?.id);
 
+  const queryClient = useQueryClient();
   const { mutate: createTransitionRule } = useCreateCounselTechniqueTransitionRule({
     onSuccess: (res) => {
       // 성공 시 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: ['counselTechniqueTransitionRules'],
+        queryKey: queries.v1.getCounselTechniqueTransitionRules({
+          promptVersionId: temporaryVersionId!,
+        }).queryKey,
       });
     },
   });
@@ -21,7 +27,19 @@ export const useTransitionRuleManagement = () => {
     onSuccess: (res) => {
       // 성공 시 쿼리 무효화
       queryClient.invalidateQueries({
-        queryKey: ['counselTechniqueTransitionRules'],
+        queryKey: queries.v1.getCounselTechniqueTransitionRules({
+          promptVersionId: res.data?.data?.counselTechniqueTransitionRule?.promptVersionId!,
+        }).queryKey,
+      });
+    },
+  });
+
+  const { mutate: deleteTransitionRule } = useDeleteCounselTechniqueTransitionRule({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queries.v1.getCounselTechniqueTransitionRules({
+          promptVersionId: temporaryVersionId!,
+        }).queryKey,
       });
     },
   });
@@ -37,8 +55,13 @@ export const useTransitionRuleManagement = () => {
     updateTransitionRule({ counselTechniqueTransitionRuleId: transitionRuleId, data });
   };
 
+  const handleDeleteTransitionRule = (transitionRuleId: string) => {
+    deleteTransitionRule(transitionRuleId);
+  };
+
   return {
     handleCreateTransitionRule,
     handleUpdateTransitionRule,
+    handleDeleteTransitionRule,
   };
 };
