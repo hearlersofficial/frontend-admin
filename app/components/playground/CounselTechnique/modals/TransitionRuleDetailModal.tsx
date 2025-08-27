@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
-import { X, Edit, Save, Plus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import {
   CounselTechniqueTransitionRuleResponseDto,
-  CreateCounselTechniqueTransitionRuleRequestDto,
   UpdateCounselTechniqueTransitionRuleRequestDto,
 } from '~/__generated__/data-contracts';
 import {
   TRANSITION_RULE_FIELDS,
-  KOREAN_LABELS,
   SECTIONS,
-  TransitionRuleField,
+  KOREAN_LABELS,
 } from '~/components/playground/CounselTechnique/constants/transitionRule';
 import { Modal } from '~/components/Modal';
 import { useTransitionRuleManagement } from '~/components/playground/CounselTechnique/hooks/useTransitionRuleManagement';
+import { Button } from '~/components/ui/button';
+import { DialogFooter } from '~/components/ui/dialog';
+import TransitionRuleArrayField from '~/components/playground/CounselTechnique/modals/fields/TransitionRuleArrayField';
+import TransitionRuleFormField from '~/components/playground/CounselTechnique/modals/fields/TransitionRuleFormField';
 
 interface TransitionRuleDetailModalProps {
   isOpen: boolean;
@@ -33,7 +34,7 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { handleCreateTransitionRule, handleUpdateTransitionRule } = useTransitionRuleManagement();
+  const { handleUpdateTransitionRule, handleDeleteTransitionRule } = useTransitionRuleManagement();
 
   // 폼 상태
   const [formData, setFormData] = useState({
@@ -60,8 +61,34 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
     maxRiskSeverity: transitionRule?.maxRiskSeverity,
   });
 
-  const isCreateMode = !transitionRule?.id || transitionRule?.id === '';
-  const isUpdateMode = !!transitionRule?.id && transitionRule?.id !== '';
+  // transitionRule이 변경될 때 formData 업데이트
+  useEffect(() => {
+    if (transitionRule) {
+      setFormData({
+        priority: transitionRule.priority || 1,
+        minCurrentTechniqueMessageCount: transitionRule.minCurrentTechniqueMessageCount,
+        maxCurrentTechniqueMessageCount: transitionRule.maxCurrentTechniqueMessageCount,
+        requiredEmotionPrimaries: transitionRule.requiredEmotionPrimaries || [],
+        requiredValences: transitionRule.requiredValences || [],
+        requiredArousalLevels: transitionRule.requiredArousalLevels || [],
+        minEmotionIntensity: transitionRule.minEmotionIntensity,
+        maxEmotionIntensity: transitionRule.maxEmotionIntensity,
+        requiredImpactDomains: transitionRule.requiredImpactDomains || [],
+        requiredTimeframes: transitionRule.requiredTimeframes || [],
+        requiredPerceivedControls: transitionRule.requiredPerceivedControls || [],
+        requiredMotivationStages: transitionRule.requiredMotivationStages || [],
+        requiredSocialSupportLevels: transitionRule.requiredSocialSupportLevels || [],
+        requiredRiskKinds: transitionRule.requiredRiskKinds || [],
+        requiredSleepQualities: transitionRule.requiredSleepQualities || [],
+        requiredCognitiveLoads: transitionRule.requiredCognitiveLoads || [],
+        requiredAllianceStrengths: transitionRule.requiredAllianceStrengths || [],
+        minSelfEfficacy: transitionRule.minSelfEfficacy,
+        maxSelfEfficacy: transitionRule.maxSelfEfficacy,
+        minRiskSeverity: transitionRule.minRiskSeverity,
+        maxRiskSeverity: transitionRule.maxRiskSeverity,
+      });
+    }
+  }, [transitionRule]);
 
   const handleInputChange = (field: string, value: string | number | string[] | boolean | undefined) => {
     setFormData((prev) => ({
@@ -88,224 +115,56 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
     }));
   };
 
-  const handleSubmit = async () => {
-    if (!transitionRule?.fromCounselTechniqueId || !transitionRule?.toCounselTechniqueId) return;
+  const handleDelete = async () => {
+    if (!transitionRule?.id) return;
 
     setIsLoading(true);
     try {
-      if (isCreateMode) {
-        const createData: CreateCounselTechniqueTransitionRuleRequestDto = {
-          fromCounselTechniqueId: transitionRule.fromCounselTechniqueId,
-          toCounselTechniqueId: transitionRule.toCounselTechniqueId,
-          priority: formData.priority,
-          minCurrentTechniqueMessageCount: formData.minCurrentTechniqueMessageCount,
-          maxCurrentTechniqueMessageCount: formData.maxCurrentTechniqueMessageCount,
-          requiredEmotionPrimaries: formData.requiredEmotionPrimaries,
-          requiredValences: formData.requiredValences,
-          requiredArousalLevels: formData.requiredArousalLevels,
-          minEmotionIntensity: formData.minEmotionIntensity,
-          maxEmotionIntensity: formData.maxEmotionIntensity,
-          requiredImpactDomains: formData.requiredImpactDomains,
-          requiredTimeframes: formData.requiredTimeframes,
-          requiredPerceivedControls: formData.requiredPerceivedControls,
-          requiredMotivationStages: formData.requiredMotivationStages,
-          requiredSocialSupportLevels: formData.requiredSocialSupportLevels,
-          requiredRiskKinds: formData.requiredRiskKinds,
-          requiredSleepQualities: formData.requiredSleepQualities,
-          requiredCognitiveLoads: formData.requiredCognitiveLoads,
-          requiredAllianceStrengths: formData.requiredAllianceStrengths,
-          minSelfEfficacy: formData.minSelfEfficacy,
-          maxSelfEfficacy: formData.maxSelfEfficacy,
-          minRiskSeverity: formData.minRiskSeverity,
-          maxRiskSeverity: formData.maxRiskSeverity,
-        };
-
-        handleCreateTransitionRule(createData);
-      } else if (isUpdateMode) {
-        const updateData: UpdateCounselTechniqueTransitionRuleRequestDto = {
-          priority: formData.priority,
-          minCurrentTechniqueMessageCount: formData.minCurrentTechniqueMessageCount,
-          maxCurrentTechniqueMessageCount: formData.maxCurrentTechniqueMessageCount,
-          requiredEmotionPrimaries: formData.requiredEmotionPrimaries,
-          requiredValences: formData.requiredValences,
-          requiredArousalLevels: formData.requiredArousalLevels,
-          minEmotionIntensity: formData.minEmotionIntensity,
-          maxEmotionIntensity: formData.maxEmotionIntensity,
-          requiredImpactDomains: formData.requiredImpactDomains,
-          requiredTimeframes: formData.requiredTimeframes,
-          requiredPerceivedControls: formData.requiredPerceivedControls,
-          requiredMotivationStages: formData.requiredMotivationStages,
-          requiredSocialSupportLevels: formData.requiredSocialSupportLevels,
-          requiredRiskKinds: formData.requiredRiskKinds,
-          requiredSleepQualities: formData.requiredSleepQualities,
-          requiredCognitiveLoads: formData.requiredCognitiveLoads,
-          requiredAllianceStrengths: formData.requiredAllianceStrengths,
-          minSelfEfficacy: formData.minSelfEfficacy,
-          maxSelfEfficacy: formData.maxSelfEfficacy,
-          minRiskSeverity: formData.minRiskSeverity,
-          maxRiskSeverity: formData.maxRiskSeverity,
-        };
-
-        handleUpdateTransitionRule(transitionRule.id!, updateData);
-      }
-
-      onSuccess?.();
-      setIsOpen(false);
-      setIsEditMode(false);
+      await handleDeleteTransitionRule(transitionRule.id);
     } catch (error) {
-      console.error('Error saving transition rule:', error);
+      console.error('Error deleting transition rule:', error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const renderFormField = (field: TransitionRuleField) => {
-    const fieldValue = formData[field.key as keyof typeof formData];
+  const handleUpdate = async () => {
+    if (!transitionRule?.id) return;
 
-    return (
-      <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor={field.key}>
-          {field.label}
-          {field.type === 'integer' && field.min !== undefined && field.max !== undefined && (
-            <span className="ml-2 text-sm font-normal text-gray-500">
-              ({field.min} ~ {field.max})
-            </span>
-          )}
-        </label>
-        {field.type === 'boolean' ? (
-          <select
-            id={field.key}
-            value={
-              typeof fieldValue === 'boolean' && fieldValue === true
-                ? 'true'
-                : typeof fieldValue === 'boolean' && fieldValue === false
-                  ? 'false'
-                  : ''
-            }
-            onChange={(e) =>
-              handleInputChange(
-                field.key,
-                e.target.value === 'true' ? true : e.target.value === 'false' ? false : undefined
-              )
-            }
-            className="w-full rounded border p-2"
-          >
-            <option value="">선택하세요</option>
-            <option value="true">예</option>
-            <option value="false">아니오</option>
-          </select>
-        ) : (
-          <input
-            id={field.key}
-            type="number"
-            step="1"
-            value={typeof fieldValue === 'number' ? fieldValue : ''}
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value === '' || /^\d+$/.test(value)) {
-                const numValue = value === '' ? undefined : parseInt(value, 10);
-                if (
-                  numValue === undefined ||
-                  ((field.min === undefined || numValue >= field.min) &&
-                    (field.max === undefined || numValue <= field.max))
-                ) {
-                  handleInputChange(field.key, numValue);
-                }
-              }
-            }}
-            onKeyDown={(e) => {
-              // 소숫점, 음수 부호, e, E 등 입력 방지
-              if (['.', '-', 'e', 'E'].includes(e.key)) {
-                e.preventDefault();
-              }
-            }}
-            placeholder={field.placeholder}
-            min={field.min}
-            max={field.max}
-            className="w-full rounded border p-2"
-          />
-        )}
-      </div>
-    );
-  };
+    setIsLoading(true);
+    try {
+      const updateData: UpdateCounselTechniqueTransitionRuleRequestDto = {
+        priority: formData.priority,
+        minCurrentTechniqueMessageCount: formData.minCurrentTechniqueMessageCount,
+        maxCurrentTechniqueMessageCount: formData.maxCurrentTechniqueMessageCount,
+        requiredEmotionPrimaries: formData.requiredEmotionPrimaries,
+        requiredValences: formData.requiredValences,
+        requiredArousalLevels: formData.requiredArousalLevels,
+        minEmotionIntensity: formData.minEmotionIntensity,
+        maxEmotionIntensity: formData.maxEmotionIntensity,
+        requiredImpactDomains: formData.requiredImpactDomains,
+        requiredTimeframes: formData.requiredTimeframes,
+        requiredPerceivedControls: formData.requiredPerceivedControls,
+        requiredMotivationStages: formData.requiredMotivationStages,
+        requiredSocialSupportLevels: formData.requiredSocialSupportLevels,
+        requiredRiskKinds: formData.requiredRiskKinds,
+        requiredSleepQualities: formData.requiredSleepQualities,
+        requiredCognitiveLoads: formData.requiredCognitiveLoads,
+        requiredAllianceStrengths: formData.requiredAllianceStrengths,
+        minSelfEfficacy: formData.minSelfEfficacy,
+        maxSelfEfficacy: formData.maxSelfEfficacy,
+        minRiskSeverity: formData.minRiskSeverity,
+        maxRiskSeverity: formData.maxRiskSeverity,
+      };
 
-  const renderArrayField = (field: TransitionRuleField) => {
-    const currentArray = (formData[field.key as keyof typeof formData] as string[]) || [];
-    const availableOptions = field.options?.filter((option) => !currentArray.includes(option)) || [];
-
-    return (
-      <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor={field.key}>
-          {field.label}
-          <span className="ml-2 text-sm font-normal text-gray-500">({currentArray.length}개 선택됨)</span>
-        </label>
-
-        {/* 선택된 항목들 */}
-        {currentArray.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-2">
-            {currentArray.map((item, index) => (
-              <span
-                key={index}
-                className="inline-flex items-center rounded-full bg-[#F0D467] px-3 py-1 text-sm text-[#4F4F4F]"
-              >
-                {KOREAN_LABELS[item] || item}
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem(field.key, index)}
-                  className="ml-2 text-[#4F4F4F] hover:text-[#4F4F4F]/80"
-                  title="제거"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
-
-        {/* 추가 선택 드롭다운 */}
-        {availableOptions.length > 0 && (
-          <div className="flex gap-2">
-            <select
-              id={field.key}
-              onChange={(e) => {
-                if (e.target.value && e.target.value !== '') {
-                  handleArrayInputChange(field.key, e.target.value);
-                  e.target.value = '';
-                }
-              }}
-              className="flex-1 rounded border p-2"
-            >
-              <option value="">추가할 항목 선택...</option>
-              {availableOptions.map((option) => (
-                <option key={option} value={option}>
-                  {KOREAN_LABELS[option] || option}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={() => {
-                const select = document.querySelector(`select#${field.key}`) as HTMLSelectElement;
-                if (select?.value && select.value !== '') {
-                  handleArrayInputChange(field.key, select.value);
-                  select.value = '';
-                }
-              }}
-              className="rounded-full bg-[#736A84] px-3 py-2 text-white hover:bg-[#736A84]/80 disabled:opacity-50"
-              disabled={availableOptions.length === 0}
-              title="선택된 항목 추가"
-            >
-              <Plus className="h-4 w-4" />
-            </button>
-          </div>
-        )}
-
-        {/* 모든 옵션이 선택된 경우 */}
-        {availableOptions.length === 0 && currentArray.length > 0 && (
-          <div className="text-sm italic text-gray-500">모든 항목이 선택되었습니다.</div>
-        )}
-      </div>
-    );
+      await handleUpdateTransitionRule(transitionRule.id, updateData);
+      onSuccess?.();
+      setIsEditMode(false);
+    } catch (error) {
+      console.error('Error updating transition rule:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renderDetailView = () => {
@@ -348,16 +207,16 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
                     }
                   } else if (field.type === 'enumList') {
                     const arrayValue = value as string[];
-                    if (arrayValue?.length) {
-                      return (
-                        <div key={field.key}>
-                          <div className="text-sm font-medium text-gray-600">{field.label}</div>
-                          <div className="text-sm">
-                            {arrayValue.map((item) => KOREAN_LABELS[item] || item).join(', ')}
-                          </div>
+                    return (
+                      <div key={field.key}>
+                        <div className="text-sm font-medium text-gray-600">{field.label}</div>
+                        <div className="text-sm">
+                          {arrayValue?.length
+                            ? arrayValue.map((item) => KOREAN_LABELS[item] || item).join(', ')
+                            : '제한 없음'}
                         </div>
-                      );
-                    }
+                      </div>
+                    );
                   }
                   return null;
                 })}
@@ -388,9 +247,20 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
               <div className="space-y-4">
                 {sectionFields.map((field) => (
                   <div key={field.key}>
-                    {field.type === 'integer' || field.type === 'boolean'
-                      ? renderFormField(field)
-                      : renderArrayField(field)}
+                    {field.type === 'integer' || field.type === 'boolean' ? (
+                      <TransitionRuleFormField
+                        field={field}
+                        value={formData[field.key as keyof typeof formData] as string | number | boolean | undefined}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      <TransitionRuleArrayField
+                        field={field}
+                        value={formData[field.key as keyof typeof formData] as string[]}
+                        onAdd={handleArrayInputChange}
+                        onRemove={removeArrayItem}
+                      />
+                    )}
                   </div>
                 ))}
               </div>
@@ -411,60 +281,38 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
           <h2 className="text-xl font-semibold text-[#4F4F4F]">
             {fromTechniqueName} → {toTechniqueName}
           </h2>
-          <div className="flex items-center gap-2">
-            {!isEditMode && isUpdateMode && (
-              <button
-                onClick={() => setIsEditMode(true)}
-                className="flex items-center gap-2 rounded-full bg-[#736A84] px-4 py-2 text-white hover:bg-[#736A84]/80"
-              >
-                <Edit className="h-4 w-4" />
-                수정하기
-              </button>
-            )}
-          </div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {isEditMode || isCreateMode ? renderFormView() : renderDetailView()}
-        </div>
+        <div className="flex-1 overflow-y-auto p-6">{isEditMode ? renderFormView() : renderDetailView()}</div>
 
         {/* Footer */}
         <div className="flex flex-shrink-0 justify-end gap-3 border-t p-6">
-          {(isEditMode || isCreateMode) && (
-            <>
-              {isEditMode && (
-                <button
-                  onClick={() => setIsEditMode(false)}
-                  className="rounded-full border-2 border-[#848484] bg-white px-4 py-2 text-sm font-semibold text-[#848484] hover:bg-gray-50"
+          <DialogFooter>
+            <div className="flex w-full items-center justify-between">
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    handleDelete();
+                  }}
+                  disabled={false}
+                  className="rounded-full bg-[#D39393] text-base font-semibold"
+                  size="lg"
                 >
-                  취소
-                </button>
-              )}
-              <button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="flex items-center gap-2 rounded-full bg-[#736A84] px-4 py-2 text-white hover:bg-[#736A84]/80 disabled:opacity-50"
-              >
-                {isLoading ? (
-                  '저장 중...'
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    {isCreateMode ? '생성' : '수정'}
-                  </>
-                )}
-              </button>
-            </>
-          )}
-          {!isEditMode && !isCreateMode && (
-            <button
-              onClick={() => setIsOpen(false)}
-              className="rounded-full bg-[#736A84] px-4 py-2 text-white hover:bg-[#736A84]/80"
-            >
-              닫기
-            </button>
-          )}
+                  삭제
+                </Button>
+
+                <Button
+                  onClick={() => (isEditMode ? handleUpdate() : setIsEditMode(true))}
+                  disabled={false}
+                  className="rounded-full bg-[#848484] text-base font-semibold"
+                  size="lg"
+                >
+                  {isEditMode ? '완료' : '수정'}
+                </Button>
+              </div>
+            </div>
+          </DialogFooter>
         </div>
       </div>
     </Modal>

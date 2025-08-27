@@ -5,7 +5,7 @@ import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 // const baseURL = 'https://api.dev.hearlers.com';
 
 const isLocal = import.meta.env.VITE_ENVIRONMENT === 'local';
-const baseURL = isLocal ? '/api' : 'https://api.dev.hearlers.com';
+const baseURL = isLocal ? '/api' : import.meta.env.VITE_API_URL;
 
 // NOTE: fetch 설정은 실제로는 안들어가고 있었어서 지웠습니다.
 // Axios 기반 설정 (Swagger Typescript API 생성물은 Axios 사용)
