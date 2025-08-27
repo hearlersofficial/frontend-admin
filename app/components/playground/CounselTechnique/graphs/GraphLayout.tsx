@@ -24,36 +24,44 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   const [selectedTransitionRule, setSelectedTransitionRule] =
     useState<CounselTechniqueTransitionRuleResponseDto | null>(null);
   const [isTransitionModalOpen, setIsTransitionModalOpen] = useState(false);
-  const [editModeSelectedTechnique, setEditModeSelectedTechnique] = useState<CounselTechniqueResponseDto | null>(null);
+  const [mutationModeSelectedTechnique, setMutationModeSelectedTechnique] =
+    useState<CounselTechniqueResponseDto | null>(null);
 
   const { transitionRules, connectedNodes, unconnectedNodes } = useTransitionRules();
 
   const { nodes, edges, width, height } = useGraphLayout(connectedNodes, transitionRules);
+
+  const getTechniquesPointingTo = (techniqueId: string) => {
+    return transitionRules
+      .filter((rule) => rule.toCounselTechniqueId === techniqueId && rule.fromCounselTechniqueId)
+      .map((rule) => rule.fromCounselTechniqueId!);
+  };
 
   const handleTransitionRuleClick = (rule: CounselTechniqueTransitionRuleResponseDto) => {
     setSelectedTransitionRule(rule);
     setIsTransitionModalOpen(true);
   };
 
-  const handleEditModeCardClick = (technique: CounselTechniqueResponseDto) => {
-    if (mode !== 'EDIT') return;
-
-    if (editModeSelectedTechnique && editModeSelectedTechnique.id !== technique.id) {
-      setSelectedTransitionRule({
-        id: '',
-        fromCounselTechniqueId: editModeSelectedTechnique.id,
-        toCounselTechniqueId: technique.id,
-        priority: 0,
-      } as CounselTechniqueTransitionRuleResponseDto);
-      setIsTransitionModalOpen(true);
-      setEditModeSelectedTechnique(null);
-    } else {
-      setEditModeSelectedTechnique(technique);
+  const handleCardClick = (technique: CounselTechniqueResponseDto) => {
+    if (mode === 'ADDANDDELETE' || mode === 'EDIT') {
+      // 생성 시
+      if (mutationModeSelectedTechnique && mutationModeSelectedTechnique.id !== technique.id) {
+        setSelectedTransitionRule({
+          id: '',
+          fromCounselTechniqueId: mutationModeSelectedTechnique.id,
+          toCounselTechniqueId: technique.id,
+          priority: 0,
+        } as CounselTechniqueTransitionRuleResponseDto);
+        setIsTransitionModalOpen(true);
+        setMutationModeSelectedTechnique(null);
+      } else {
+        setMutationModeSelectedTechnique(technique);
+      }
     }
   };
 
   const renderConnectionLines = () => {
-    if (mode === 'EDIT' || mode === 'ADDANDDELETE') return null;
+    // if (mode === 'EDIT' || mode === 'ADDANDDELETE') return null;
 
     return edges.map((edge) => {
       const fromNode = nodes.find((n) => n.id === edge.from);
@@ -61,12 +69,64 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
 
       if (!fromNode || !toNode) return null;
 
-      const fromX = fromNode.x + 40;
-      const fromY = fromNode.y;
-      const toX = toNode.x - 40;
-      const toY = toNode.y;
+      // 노드 크기 상수
+      const NODE_WIDTH = 80;
+      const NODE_HEIGHT = 56;
+      const NODE_HALF_WIDTH = NODE_WIDTH / 2;
+      const NODE_HALF_HEIGHT = NODE_HEIGHT / 2;
 
-      const isForward = fromNode.level < toNode.level;
+      // 두 노드 사이의 벡터 계산
+      const deltaX = toNode.x - fromNode.x;
+      const deltaY = toNode.y - fromNode.y;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+      if (distance === 0) return null; // 같은 위치의 노드는 건너뛰기
+
+      // 정규화된 방향 벡터
+      const directionX = deltaX / distance;
+      const directionY = deltaY / distance;
+
+      // 양방향 간선 겹침 방지를 위한 오프셋 계산
+      const isReverseEdge = edges.some((e) => e.from === edge.to && e.to === edge.from);
+
+      // 수직 오프셋 벡터 (원래 방향과 수직)
+      const perpendicularX = -directionY;
+      const perpendicularY = directionX;
+
+      // 오프셋 거리 (간선이 겹치지 않을 정도로)
+      const offsetDistance = 8;
+
+      // 양방향 간선이 있을 때만 오프셋 적용
+      const offsetX = isReverseEdge ? perpendicularX * offsetDistance : 0;
+      const offsetY = isReverseEdge ? perpendicularY * offsetDistance : 0;
+
+      // 노드 경계에 정확히 닿도록 계산
+      // x와 y 중 더 큰 비율을 가진 방향을 기준으로 반지름만큼 정확히 이동
+      const absDirectionX = Math.abs(directionX);
+      const absDirectionY = Math.abs(directionY);
+
+      let fromX, fromY, toX, toY;
+
+      if (absDirectionX > absDirectionY) {
+        // x 방향이 더 큰 경우: x는 반지름만큼 정확히, y는 비례적으로
+        const xOffset = NODE_HALF_WIDTH;
+        fromX = fromNode.x + (directionX > 0 ? xOffset : -xOffset) + offsetX;
+        fromY = fromNode.y + (directionY / absDirectionX) * xOffset + offsetY;
+
+        toX = toNode.x - (directionX > 0 ? xOffset : -xOffset) + offsetX;
+        toY = toNode.y - (directionY / absDirectionX) * xOffset + offsetY;
+      } else {
+        // y 방향이 더 큰 경우: y는 반지름만큼 정확히, x는 비례적으로
+        const yOffset = NODE_HALF_HEIGHT;
+        fromX = fromNode.x + (directionX / absDirectionY) * yOffset + offsetX;
+        fromY = fromNode.y + (directionY > 0 ? yOffset : -yOffset) + offsetY;
+
+        toX = toNode.x - (directionX / absDirectionY) * yOffset + offsetX;
+        toY = toNode.y - (directionY > 0 ? yOffset : -yOffset) + offsetY;
+      }
+
+      const relation: 'forward' | 'backward' | 'same' =
+        fromNode.level < toNode.level ? 'forward' : fromNode.level > toNode.level ? 'backward' : 'same';
 
       return (
         <ConnectionArrow
@@ -76,7 +136,7 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
           toX={toX}
           toY={toY}
           description={`${edge.priority}`}
-          isForward={isForward}
+          relation={relation}
           onClick={() => handleTransitionRuleClick(edge.rule)}
         />
       );
@@ -107,8 +167,9 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
                     setTechniques={setTechniques}
                     techniques={techniques}
                     onEditName={onEditName}
-                    onEditModeCardClick={handleEditModeCardClick}
-                    editModeSelectedTechnique={editModeSelectedTechnique}
+                    onCardClick={handleCardClick}
+                    mutationModeSelectedTechnique={mutationModeSelectedTechnique}
+                    techniquesPointingTo={getTechniquesPointingTo(technique.id!)}
                   />
                 </div>
               ))}
@@ -147,8 +208,9 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
                   setTechniques={setTechniques}
                   techniques={techniques}
                   onEditName={onEditName}
-                  onEditModeCardClick={handleEditModeCardClick}
-                  editModeSelectedTechnique={editModeSelectedTechnique}
+                  onCardClick={handleCardClick}
+                  mutationModeSelectedTechnique={mutationModeSelectedTechnique}
+                  techniquesPointingTo={getTechniquesPointingTo(node.id!)}
                 />
               </div>
             ))}
