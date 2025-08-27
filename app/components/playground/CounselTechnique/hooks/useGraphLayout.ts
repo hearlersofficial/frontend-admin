@@ -57,13 +57,53 @@ export const useGraphLayout = (
       node.outDegree = edges.filter((edge) => edge.from === node.id).length;
     });
 
-    const calculateLevels = () => {
+    // isStartTechnique을 기준으로 깊이 기반 레벨 계산
+    const calculateDepthBasedLevels = () => {
+      // 시작 노드 찾기 (isStartTechnique이 true인 노드)
+      const startNode = nodes.find((node) => node.isStartTechnique);
+      if (!startNode) {
+        // 시작 노드가 없으면 기존 로직 사용
+        nodes.forEach((node) => {
+          node.level = node.inDegree || 0;
+        });
+        return;
+      }
+
+      // 시작 노드는 레벨 1
+      startNode.level = 1;
+
+      // BFS를 사용하여 각 노드의 깊이 계산
+      const visited = new Set<string>();
+      const queue: { nodeId: string; level: number }[] = [{ nodeId: startNode.id!, level: 1 }];
+      visited.add(startNode.id!);
+
+      while (queue.length > 0) {
+        const { nodeId, level } = queue.shift()!;
+
+        // 현재 노드에서 나가는 엣지들을 찾아서 다음 레벨 노드들 처리
+        const outgoingEdges = edges.filter((edge) => edge.from === nodeId);
+
+        outgoingEdges.forEach((edge) => {
+          const nextNode = nodes.find((n) => n.id === edge.to);
+          if (nextNode && !visited.has(nextNode.id!)) {
+            nextNode.level = level + 1;
+            visited.add(nextNode.id!);
+            queue.push({ nodeId: nextNode.id!, level: level + 1 });
+          }
+        });
+      }
+
+      // 방문되지 않은 노드들은 시작 노드와 연결되지 않은 노드들
+      // 이들은 가장 높은 레벨 + 1로 설정
+      const maxLevel = Math.max(...nodes.map((n) => n.level));
       nodes.forEach((node) => {
-        node.level = node.inDegree || 0;
+        if (node.level === 0) {
+          node.level = maxLevel + 1;
+        }
       });
     };
 
-    calculateLevels();
+    calculateDepthBasedLevels();
 
     const levelGroups = new Map<number, GraphNode[]>();
     nodes.forEach((node) => {

@@ -12,8 +12,9 @@ interface TechniqueCardProps {
   setTechniques?: (techniques: CounselTechniqueResponseDto[]) => void;
   techniques?: CounselTechniqueResponseDto[];
   onEditName?: (technique: CounselTechniqueResponseDto) => void;
-  onEditModeCardClick?: (technique: CounselTechniqueResponseDto) => void;
-  editModeSelectedTechnique?: CounselTechniqueResponseDto | null;
+  onCardClick?: (technique: CounselTechniqueResponseDto) => void;
+  mutationModeSelectedTechnique?: CounselTechniqueResponseDto | null;
+  techniquesPointingTo?: string[];
 }
 
 const TechniqueCard = ({
@@ -24,8 +25,9 @@ const TechniqueCard = ({
   setTechniques,
   techniques,
   onEditName,
-  onEditModeCardClick,
-  editModeSelectedTechnique,
+  onCardClick,
+  mutationModeSelectedTechnique,
+  techniquesPointingTo,
 }: TechniqueCardProps) => {
   const { attributes, listeners, setNodeRef, transition, transform } = useSortable({ id: technique.id! });
   const [theme, setTheme] = useState<'PRIMARY' | 'NORMAL' | 'DISABLED'>('NORMAL');
@@ -33,12 +35,18 @@ const TechniqueCard = ({
   useEffect(() => {
     if (mode === 'SELECT' && technique.id === selectedCounselTechnique.id) {
       setTheme('PRIMARY');
-    } else if (mode === 'EDIT' && editModeSelectedTechnique?.id === technique.id) {
+    } else if (mode === 'ADDANDDELETE' && mutationModeSelectedTechnique?.id === technique.id) {
       setTheme('PRIMARY');
+    } else if (
+      mode === 'ADDANDDELETE' &&
+      mutationModeSelectedTechnique &&
+      techniquesPointingTo?.includes(mutationModeSelectedTechnique.id!)
+    ) {
+      setTheme('DISABLED');
     } else {
       setTheme('NORMAL');
     }
-  }, [mode, technique.id, selectedCounselTechnique.id, editModeSelectedTechnique?.id]);
+  }, [mode, technique.id, selectedCounselTechnique.id, mutationModeSelectedTechnique?.id, techniquesPointingTo]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -73,41 +81,29 @@ const TechniqueCard = ({
   };
 
   const handleCardClick = () => {
-    if (mode === 'EDIT' && onEditModeCardClick) {
-      onEditModeCardClick(technique);
-    } else {
+    if (onCardClick) {
+      onCardClick(technique);
+    }
+    if (mode === 'SELECT') {
       setSelectedCounselTechnique(technique);
     }
   };
 
   return (
     <div ref={setNodeRef} className="relative flex flex-col gap-2" style={style} {...attributes} {...listeners}>
-      {mode === 'EDIT' ? (
-        <button
-          className={`h-14 w-20 cursor-pointer rounded-lg border-2 p-1 transition-colors ${getThemeClasses(theme)}`}
-          onClick={handleCardClick}
-          onDoubleClick={handleNameDoubleClick}
+      <button
+        className={`h-14 w-20 cursor-pointer rounded-lg border-2 p-1 transition-colors ${getThemeClasses(theme)} hover:border-gray-400`}
+        onClick={handleCardClick}
+        onDoubleClick={handleNameDoubleClick}
+      >
+        <div
+          className={`flex h-full w-full items-center justify-center text-center text-xs font-semibold ${
+            theme === 'PRIMARY' ? 'text-white' : 'text-[#A99FAA]'
+          }`}
         >
-          <div
-            className={`flex h-full w-full items-center justify-center text-center text-xs font-semibold ${
-              theme === 'PRIMARY' ? 'text-white' : 'text-[#A99FAA]'
-            }`}
-          >
-            {technique.name}
-          </div>
-        </button>
-      ) : (
-        <button
-          onClick={() => {
-            setSelectedCounselTechnique(technique);
-          }}
-          className={`h-14 w-20 break-keep rounded-lg border-2 px-2 py-1 text-center text-sm font-semibold leading-tight ${getThemeClasses(theme)}`}
-        >
-          <span className="text-xs">{technique.name}</span>
-        </button>
-      )}
-
-      {/* 삭제 버튼 - ADDANDDELETE 모드에서만 표시 */}
+          {technique.name}
+        </div>
+      </button>
       {mode === 'ADDANDDELETE' && (
         <button
           onClick={handleDelete}
