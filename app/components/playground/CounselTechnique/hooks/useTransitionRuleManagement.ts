@@ -13,7 +13,7 @@ export const useTransitionRuleManagement = () => {
 
   const queryClient = useQueryClient();
   const { mutate: createTransitionRule } = useCreateCounselTechniqueTransitionRule({
-    onSuccess: (res) => {
+    onSuccess: () => {
       // 성공 시 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselTechniqueTransitionRules({
@@ -28,7 +28,7 @@ export const useTransitionRuleManagement = () => {
       // 성공 시 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselTechniqueTransitionRules({
-          promptVersionId: res.data?.data?.counselTechniqueTransitionRule?.promptVersionId!,
+          promptVersionId: res.data?.data?.counselTechniqueTransitionRule?.promptVersionId ?? '',
         }).queryKey,
       });
     },

@@ -10,18 +10,18 @@ interface EditTechniqueModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   technique: CounselTechniqueResponseDto | null;
-  onSave: (techniqueId: string, newName: string, newMessageThreshold: number, newTemperature: number) => void;
+  onSave: (techniqueId: string, newName: string, newIsStartTechnique: boolean, newTemperature: number) => void;
 }
 
 const EditTechniqueModal = ({ isOpen, setIsOpen, technique, onSave }: EditTechniqueModalProps) => {
   const [name, setName] = useState('');
-  const [messageThreshold, setMessageThreshold] = useState(3);
+  const [isStartTechnique, setIsStartTechnique] = useState(false);
   const [temperature, setTemperature] = useState(0.5);
 
   useEffect(() => {
     if (technique) {
       setName(technique.name || '');
-      setMessageThreshold(technique.messageThreshold || 3);
+      setIsStartTechnique(technique.isStartTechnique || false);
       setTemperature(technique.temperature || 0.5);
     }
   }, [technique]);
@@ -31,17 +31,16 @@ const EditTechniqueModal = ({ isOpen, setIsOpen, technique, onSave }: EditTechni
       return;
     }
 
-    onSave(technique.id, name.trim(), messageThreshold, temperature);
+    onSave(technique.id, name.trim(), isStartTechnique, temperature);
     setIsOpen(false);
   };
 
-  const handleMessageThresholdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleIsStartTechniqueChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (value === '') {
-      setMessageThreshold(0);
+      setIsStartTechnique(false);
     } else {
-      const numValue = parseInt(value);
-      setMessageThreshold(numValue);
+      setIsStartTechnique(value === 'true' ? true : false);
     }
   };
 
@@ -71,18 +70,18 @@ const EditTechniqueModal = ({ isOpen, setIsOpen, technique, onSave }: EditTechni
       </div>
 
       <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="messageThreshold">
-          메시지 임계값 (초과 시 다음 테크닉으로 넘어갈 지 평가 시작)
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="isStartTechnique">
+          시작 기법 여부
         </label>
-        <input
-          id="messageThreshold"
-          type="number"
-          min="1"
-          max="20"
-          value={messageThreshold || ''}
-          onChange={handleMessageThresholdChange}
+        <select
+          id="isStartTechnique"
+          value={isStartTechnique ? 'true' : 'false'}
+          onChange={(e) => handleIsStartTechniqueChange(e)}
           className="w-full rounded border p-2"
-        />
+        >
+          <option value="true">예</option>
+          <option value="false">아니오</option>
+        </select>
       </div>
 
       <div>

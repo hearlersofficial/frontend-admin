@@ -21,7 +21,7 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
     toneId: '',
     context: '',
     instruction: '',
-    messageThreshold: 3,
+    isStartTechnique: false,
     temperature: 0.5,
   });
 
@@ -62,7 +62,7 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
     });
   };
 
-  const handleInputChange = (field: keyof CreateCounselTechniqueRequestDto, value: string | number) => {
+  const handleInputChange = (field: keyof CreateCounselTechniqueRequestDto, value: string | number | boolean) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -111,18 +111,18 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
       </div>
 
       <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="messageThreshold">
-          메시지 임계값 (초과 시 다음 테크닉으로 넘어갈 지 평가 시작)
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="isStartTechnique">
+          시작 기법 여부
         </label>
-        <input
-          id="messageThreshold"
-          type="number"
-          min="1"
-          max="20"
-          value={formData.messageThreshold}
-          onChange={(e) => handleInputChange('messageThreshold', parseInt(e.target.value) || 5)}
+        <select
+          id="isStartTechnique"
+          value={formData.isStartTechnique ? 'true' : 'false'}
+          onChange={(e) => handleInputChange('isStartTechnique', e.target.value === 'true' ? true : false)}
           className="w-full rounded border p-2"
-        />
+        >
+          <option value="true">예</option>
+          <option value="false">아니오</option>
+        </select>
       </div>
 
       <div>

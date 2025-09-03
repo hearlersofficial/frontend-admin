@@ -82,12 +82,12 @@ export const useTechniqueManagement = () => {
   const handleSaveTechnique = (
     techniqueId: string,
     newName: string,
-    newMessageThreshold: number,
+    newIsStartTechnique: boolean,
     newTemperature: number
   ) => {
     const updatedTechniques = techniques.map((tech) =>
       tech.id === techniqueId
-        ? { ...tech, name: newName, messageThreshold: newMessageThreshold, temperature: newTemperature }
+        ? { ...tech, name: newName, temperature: newTemperature, isStartTechnique: newIsStartTechnique }
         : tech
     );
     setTechniques(updatedTechniques);
@@ -96,8 +96,8 @@ export const useTechniqueManagement = () => {
       counselTechniqueId: techniqueId,
       data: {
         name: newName,
-        messageThreshold: newMessageThreshold,
         temperature: newTemperature,
+        isStartTechnique: newIsStartTechnique,
       },
     });
   };
