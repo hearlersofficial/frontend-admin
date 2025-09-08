@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
 import { CreateCounselTechniqueTransitionRuleRequestDto } from '~/__generated__/data-contracts';
-import { TRANSITION_RULE_FIELDS, SECTIONS } from '~/components/playground/CounselTechnique/constants/transitionRule';
+import { SectionKor, TRANSITION_RULE_FIELDS } from '~/components/playground/CounselTechnique/constants/transitionRule';
 import { Modal } from '~/components/Modal';
 import { useTransitionRuleManagement } from '~/components/playground/CounselTechnique/hooks/useTransitionRuleManagement';
 import TransitionRuleFormField from './fields/TransitionRuleFormField';
@@ -52,6 +52,8 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
     maxSelfEfficacy: undefined,
     minRiskSeverity: undefined,
     maxRiskSeverity: undefined,
+    requiredConsentToDepth: undefined,
+    requiredPhysicalSymptomsPresent: undefined,
   });
 
   const handleInputChange = (field: string, value: string | number | string[] | boolean | undefined) => {
@@ -106,6 +108,8 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
         maxSelfEfficacy: formData.maxSelfEfficacy,
         minRiskSeverity: formData.minRiskSeverity,
         maxRiskSeverity: formData.maxRiskSeverity,
+        requiredConsentToDepth: formData.requiredConsentToDepth,
+        requiredPhysicalSymptomsPresent: formData.requiredPhysicalSymptomsPresent,
       };
 
       await handleCreateTransitionRule(createData);
@@ -135,6 +139,8 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
         maxSelfEfficacy: undefined,
         minRiskSeverity: undefined,
         maxRiskSeverity: undefined,
+        requiredConsentToDepth: undefined,
+        requiredPhysicalSymptomsPresent: undefined,
       });
     } catch (error) {
       console.error('Error creating transition rule:', error);
@@ -144,21 +150,19 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
   };
 
   const renderFormView = () => {
-    const sections = Object.keys(SECTIONS);
+    const sections = Object.keys(SectionKor);
 
     return (
       <div className="space-y-6">
         {sections.map((sectionKey) => {
-          const section = SECTIONS[sectionKey as keyof typeof SECTIONS];
-          const sectionFields = TRANSITION_RULE_FIELDS.filter((field) => field.section === sectionKey).sort(
-            (a, b) => a.order - b.order
-          );
+          const sectionKor = SectionKor[sectionKey as keyof typeof SectionKor];
+          const sectionFields = TRANSITION_RULE_FIELDS.filter((field) => sectionKey.includes(field.section));
 
           if (sectionFields.length === 0) return null;
 
           return (
             <div key={sectionKey}>
-              <h3 className="mb-3 text-lg font-medium">{section.title}</h3>
+              <h3 className="mb-3 text-lg font-medium">{sectionKor}</h3>
               <div className="space-y-4">
                 {sectionFields.map((field) => (
                   <div key={field.key}>
@@ -166,6 +170,7 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
                       <TransitionRuleFormField
                         field={field}
                         value={formData[field.key as keyof typeof formData] as string | number | boolean | undefined}
+                        required={field.required}
                         onChange={handleInputChange}
                       />
                     ) : (
@@ -174,6 +179,7 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
                         value={formData[field.key as keyof typeof formData] as string[]}
                         onAdd={handleArrayInputChange}
                         onRemove={removeArrayItem}
+                        required={field.required}
                       />
                     )}
                   </div>

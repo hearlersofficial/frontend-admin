@@ -5,8 +5,8 @@ import {
 } from '~/__generated__/data-contracts';
 import {
   TRANSITION_RULE_FIELDS,
-  SECTIONS,
   KOREAN_LABELS,
+  SectionKor,
 } from '~/components/playground/CounselTechnique/constants/transitionRule';
 import { Modal } from '~/components/Modal';
 import { useTransitionRuleManagement } from '~/components/playground/CounselTechnique/hooks/useTransitionRuleManagement';
@@ -59,6 +59,8 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
     maxSelfEfficacy: transitionRule?.maxSelfEfficacy,
     minRiskSeverity: transitionRule?.minRiskSeverity,
     maxRiskSeverity: transitionRule?.maxRiskSeverity,
+    requiredConsentToDepth: transitionRule?.requiredConsentToDepth,
+    requiredPhysicalSymptomsPresent: transitionRule?.requiredPhysicalSymptomsPresent,
   });
 
   // transitionRule이 변경될 때 formData 업데이트
@@ -86,6 +88,8 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
         maxSelfEfficacy: transitionRule.maxSelfEfficacy,
         minRiskSeverity: transitionRule.minRiskSeverity,
         maxRiskSeverity: transitionRule.maxRiskSeverity,
+        requiredConsentToDepth: transitionRule.requiredConsentToDepth,
+        requiredPhysicalSymptomsPresent: transitionRule.requiredPhysicalSymptomsPresent,
       });
     }
   }, [transitionRule]);
@@ -155,6 +159,8 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
         maxSelfEfficacy: formData.maxSelfEfficacy,
         minRiskSeverity: formData.minRiskSeverity,
         maxRiskSeverity: formData.maxRiskSeverity,
+        requiredConsentToDepth: formData.requiredConsentToDepth,
+        requiredPhysicalSymptomsPresent: formData.requiredPhysicalSymptomsPresent,
       };
 
       await handleUpdateTransitionRule(transitionRule.id, updateData);
@@ -168,22 +174,19 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
   };
 
   const renderDetailView = () => {
-    const sections = Object.keys(SECTIONS);
+    const sections = Object.keys(SectionKor);
 
     return (
       <div className="space-y-6">
         {/* constants 기반 필드 렌더링 */}
         {sections.map((sectionKey) => {
-          const section = SECTIONS[sectionKey as keyof typeof SECTIONS];
-          const sectionFields = TRANSITION_RULE_FIELDS.filter((field) => field.section === sectionKey).sort(
-            (a, b) => a.order - b.order
-          );
+          const sectionFields = TRANSITION_RULE_FIELDS.filter((field) => sectionKey.includes(field.section));
 
           if (sectionFields.length === 0) return null;
 
           return (
             <div key={sectionKey}>
-              <h3 className="mb-3 text-lg font-medium">{section.title}</h3>
+              <h3 className="mb-3 text-lg font-medium">{SectionKor[sectionKey as keyof typeof SectionKor]}</h3>
               <div className="space-y-2">
                 {sectionFields.map((field) => {
                   const value = transitionRule?.[field.key as keyof typeof transitionRule];
@@ -196,15 +199,16 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
                       </div>
                     );
                   } else if (field.type === 'boolean') {
-                    const boolValue = value as boolean;
-                    if (boolValue !== undefined) {
-                      return (
-                        <div key={field.key}>
-                          <div className="text-sm font-medium text-gray-600">{field.label}</div>
-                          <div className="text-sm">{boolValue ? '예' : '아니오'}</div>
+                    const boolValue = value;
+
+                    return (
+                      <div key={field.key}>
+                        <div className="text-sm font-medium text-gray-600">{field.label}</div>
+                        <div className="text-sm">
+                          {boolValue === undefined ? '제한 없음' : boolValue ? '예' : '아니오'}
                         </div>
-                      );
-                    }
+                      </div>
+                    );
                   } else if (field.type === 'enumList') {
                     const arrayValue = value as string[];
                     return (
@@ -229,21 +233,18 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
   };
 
   const renderFormView = () => {
-    const sections = Object.keys(SECTIONS);
+    const sections = Object.keys(SectionKor);
 
     return (
       <div className="space-y-6">
         {sections.map((sectionKey) => {
-          const section = SECTIONS[sectionKey as keyof typeof SECTIONS];
-          const sectionFields = TRANSITION_RULE_FIELDS.filter((field) => field.section === sectionKey).sort(
-            (a, b) => a.order - b.order
-          );
+          const sectionFields = TRANSITION_RULE_FIELDS.filter((field) => sectionKey.includes(field.section));
 
           if (sectionFields.length === 0) return null;
 
           return (
             <div key={sectionKey}>
-              <h3 className="mb-3 text-lg font-medium">{section.title}</h3>
+              <h3 className="mb-3 text-lg font-medium">{SectionKor[sectionKey as keyof typeof SectionKor]}</h3>
               <div className="space-y-4">
                 {sectionFields.map((field) => (
                   <div key={field.key}>
@@ -251,6 +252,7 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
                       <TransitionRuleFormField
                         field={field}
                         value={formData[field.key as keyof typeof formData] as string | number | boolean | undefined}
+                        required={field.required}
                         onChange={handleInputChange}
                       />
                     ) : (
@@ -259,6 +261,7 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
                         value={formData[field.key as keyof typeof formData] as string[]}
                         onAdd={handleArrayInputChange}
                         onRemove={removeArrayItem}
+                        required={field.required}
                       />
                     )}
                   </div>

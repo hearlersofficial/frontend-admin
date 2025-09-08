@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { TransitionRuleField } from '../../constants/transitionRule';
-import { KOREAN_LABELS } from '../../constants/transitionRule';
+import { KOREAN_LABELS, TransitionRuleField } from '../../constants/transitionRule';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 
 interface TransitionRuleArrayFieldProps {
@@ -9,6 +8,7 @@ interface TransitionRuleArrayFieldProps {
   value: string[];
   onAdd: (field: string, value: string) => void;
   onRemove: (field: string, index: number) => void;
+  required: boolean;
 }
 
 const TransitionRuleArrayField: React.FC<TransitionRuleArrayFieldProps> = ({ field, value, onAdd, onRemove }) => {
@@ -21,6 +21,7 @@ const TransitionRuleArrayField: React.FC<TransitionRuleArrayFieldProps> = ({ fie
       <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor={field.key}>
         {field.label}
         <span className="ml-2 text-sm font-normal text-gray-500">({currentArray.length}개 선택됨)</span>
+        {field.required && <span className="ml-2 text-sm font-bold text-red-600">*</span>}
       </label>
 
       {/* 선택된 항목들 */}

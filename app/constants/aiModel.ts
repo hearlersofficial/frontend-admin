@@ -1,10 +1,10 @@
 export const AI_MODEL_OPTIONS = [
-  'GPT_4O',
-  'GPT_4O_MINI',
-  'GPT_4',
-  'GPT_3_5_TURBO',
-  'GPT_5',
-  'GPT_5_MINI',
-  'GPT_5_CHAT',
+  'AI_MODEL_GPT_4O',
+  'AI_MODEL_GPT_4O_MINI',
+  'AI_MODEL_GPT_4',
+  'AI_MODEL_GPT_3_5_TURBO',
+  'AI_MODEL_GPT_5',
+  'AI_MODEL_GPT_5_MINI',
+  'AI_MODEL_GPT_5_CHAT',
   'AI_MODEL_UNSPECIFIED',
 ] as const;

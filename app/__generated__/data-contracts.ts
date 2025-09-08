@@ -178,15 +178,15 @@ export interface UpdatePromptVersionRequestDto {
    */
   aiModel?:
     | 'AI_MODEL_UNSPECIFIED'
-    | 'GPT_3_5_TURBO'
-    | 'GPT_4'
-    | 'GPT_4O'
-    | 'GPT_4O_MINI'
-    | 'GPT_5_MINI'
-    | 'GPT_5'
-    | 'GPT_5_CHAT'
-    | 'GEMINI_2_5_FLASH'
-    | 'GEMINI_2_5_PRO'
+    | 'AI_MODEL_GPT_3_5_TURBO'
+    | 'AI_MODEL_GPT_4'
+    | 'AI_MODEL_GPT_4O'
+    | 'AI_MODEL_GPT_4O_MINI'
+    | 'AI_MODEL_GPT_5_MINI'
+    | 'AI_MODEL_GPT_5'
+    | 'AI_MODEL_GPT_5_CHAT'
+    | 'AI_MODEL_GEMINI_2_5_FLASH'
+    | 'AI_MODEL_GEMINI_2_5_PRO'
     | 'UNRECOGNIZED';
 }
 
@@ -225,15 +225,15 @@ export interface PromptVersionResponseDto {
   /** AI 모델 */
   aiModel?:
     | 'AI_MODEL_UNSPECIFIED'
-    | 'GPT_3_5_TURBO'
-    | 'GPT_4'
-    | 'GPT_4O'
-    | 'GPT_4O_MINI'
-    | 'GPT_5_MINI'
-    | 'GPT_5'
-    | 'GPT_5_CHAT'
-    | 'GEMINI_2_5_FLASH'
-    | 'GEMINI_2_5_PRO'
+    | 'AI_MODEL_GPT_3_5_TURBO'
+    | 'AI_MODEL_GPT_4'
+    | 'AI_MODEL_GPT_4O'
+    | 'AI_MODEL_GPT_4O_MINI'
+    | 'AI_MODEL_GPT_5_MINI'
+    | 'AI_MODEL_GPT_5'
+    | 'AI_MODEL_GPT_5_CHAT'
+    | 'AI_MODEL_GEMINI_2_5_FLASH'
+    | 'AI_MODEL_GEMINI_2_5_PRO'
     | 'UNRECOGNIZED';
   /**
    * 생성 시간
@@ -293,15 +293,15 @@ export interface SaveTemporaryVersionRequestDto {
   /** AI 모델 */
   aiModel:
     | 'AI_MODEL_UNSPECIFIED'
-    | 'GPT_3_5_TURBO'
-    | 'GPT_4'
-    | 'GPT_4O'
-    | 'GPT_4O_MINI'
-    | 'GPT_5_MINI'
-    | 'GPT_5'
-    | 'GPT_5_CHAT'
-    | 'GEMINI_2_5_FLASH'
-    | 'GEMINI_2_5_PRO'
+    | 'AI_MODEL_GPT_3_5_TURBO'
+    | 'AI_MODEL_GPT_4'
+    | 'AI_MODEL_GPT_4O'
+    | 'AI_MODEL_GPT_4O_MINI'
+    | 'AI_MODEL_GPT_5_MINI'
+    | 'AI_MODEL_GPT_5'
+    | 'AI_MODEL_GPT_5_CHAT'
+    | 'AI_MODEL_GEMINI_2_5_FLASH'
+    | 'AI_MODEL_GEMINI_2_5_PRO'
     | 'UNRECOGNIZED';
 }
 
@@ -521,15 +521,12 @@ export interface UpdateCounselTechniqueRequestDto {
    */
   instruction?: string;
   /**
-   * 시작 기법 여부
-   * @example false
-   */
-  isStartTechnique?: boolean;
-  /**
    * AI 모델 temperature 값
    * @format double
    */
   temperature?: number;
+  /** 시작 기법 여부 */
+  isStartTechnique?: boolean;
 }
 
 /** 상담 기법 응답 DTO */
@@ -1369,15 +1366,12 @@ export interface CreateCounselTechniqueRequestDto {
    */
   instruction: string;
   /**
-   * 시작 기법 여부
-   * @example false
-   */
-  isStartTechnique?: boolean;
-  /**
    * AI 모델 temperature 값
    * @format double
    */
   temperature: number;
+  /** 시작 기법 여부 */
+  isStartTechnique?: boolean;
 }
 
 /** 상담 기법 생성 응답 DTO */

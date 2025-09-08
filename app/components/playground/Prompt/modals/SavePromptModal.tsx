@@ -19,7 +19,7 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [aiModel, setAiModel] = useState<AIModel>('GPT_4O_MINI');
+  const [aiModel, setAiModel] = useState<AIModel>('AI_MODEL_GPT_4O_MINI');
 
   const queryClient = useQueryClient();
   const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
@@ -86,12 +86,11 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
           onChange={(e) => setAiModel(e.target.value as AIModel)}
           className="w-full rounded border p-2"
         >
-          <option value="GPT_5">GPT 5</option>
-          <option value="GPT_5_CHAT">GPT 5 chat</option>
-          <option value="GPT_5_MINI">GPT 5 mini</option>
-          <option value="GPT_4O">GPT 4o</option>
-          <option value="GPT_4O_MINI">GPT 4o mini</option>
-          <option value="GPT_3_5_TURBO">GPT 3.5</option>
+          <option value="AI_MODEL_GPT_5">GPT 5</option>
+          <option value="AI_MODEL_GPT_5_CHAT">GPT 5 chat</option>
+          <option value="AI_MODEL_GPT_5_MINI">GPT 5 mini</option>
+          <option value="AI_MODEL_GPT_4O">GPT 4o</option>
+          <option value="AI_MODEL_GPT_4O_MINI">GPT 4o mini</option>
         </select>
       </div>
 

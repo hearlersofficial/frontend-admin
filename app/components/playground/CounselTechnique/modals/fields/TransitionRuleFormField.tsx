@@ -4,6 +4,7 @@ import { TransitionRuleField } from '../../constants/transitionRule';
 interface TransitionRuleFormFieldProps {
   field: TransitionRuleField;
   value: string | number | boolean | undefined;
+  required: boolean;
   onChange: (field: string, value: string | number | boolean | undefined) => void;
 }
 
@@ -17,20 +18,22 @@ const TransitionRuleFormField: React.FC<TransitionRuleFormFieldProps> = ({ field
             ({field.min} ~ {field.max})
           </span>
         )}
+        {field.required && <span className="ml-2 text-sm font-bold text-red-600">*</span>}
       </label>
       {field.type === 'boolean' ? (
         <select
           id={field.key}
-          value={
-            typeof value === 'boolean' && value === true
-              ? 'true'
-              : typeof value === 'boolean' && value === false
-                ? 'false'
-                : ''
-          }
-          onChange={(e) =>
-            onChange(field.key, e.target.value === 'true' ? true : e.target.value === 'false' ? false : undefined)
-          }
+          value={value === true ? 'true' : value === false ? 'false' : ''}
+          onChange={(e) => {
+            const selectedValue = e.target.value;
+            if (selectedValue === 'true') {
+              onChange(field.key, true);
+            } else if (selectedValue === 'false') {
+              onChange(field.key, false);
+            } else {
+              onChange(field.key, undefined);
+            }
+          }}
           className="w-full rounded border p-2"
         >
           <option value="">선택하세요</option>
