@@ -72,6 +72,31 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   };
 
   const renderConnectionLines = () => {
+    // 각 간선 쌍별로 오프셋 계산을 위한 맵
+    const edgeOffsets = new Map<string, number>();
+
+    // A↔B 양방향 간선들을 모두 포함해서 그룹화
+    const edgeGroups = new Map<string, typeof edges>();
+
+    edges.forEach((edge) => {
+      // A→B와 B→A를 같은 그룹으로 묶기 위해 정렬된 키 사용
+      const sortedKey = [edge.from, edge.to].sort().join('-');
+      if (!edgeGroups.has(sortedKey)) {
+        edgeGroups.set(sortedKey, []);
+      }
+      edgeGroups.get(sortedKey)!.push(edge);
+    });
+
+    // 각 그룹의 간선들에 오프셋 할당
+    edgeGroups.forEach((groupEdges) => {
+      // A→B와 B→A 모든 간선들을 하나의 그룹으로 보고 통합 배치
+      groupEdges.forEach((edge, index) => {
+        const totalEdges = groupEdges.length;
+        const offsetIndex = totalEdges === 1 ? 0 : index - (totalEdges - 1) / 2;
+        edgeOffsets.set(edge.id, offsetIndex);
+      });
+    });
+
     return edges.map((edge) => {
       const fromNode = nodes.find((n) => n.id === edge.from);
       const toNode = nodes.find((n) => n.id === edge.to);
@@ -95,19 +120,23 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
       const directionX = deltaX / distance;
       const directionY = deltaY / distance;
 
-      // 양방향 간선 겹침 방지를 위한 오프셋 계산
-      const isReverseEdge = edges.some((e) => e.from === edge.to && e.to === edge.from);
-
       // 수직 오프셋 벡터 (원래 방향과 수직)
       const perpendicularX = -directionY;
       const perpendicularY = directionX;
 
       // 오프셋 거리 (간선이 겹치지 않을 정도로)
-      const offsetDistance = 8;
+      const offsetDistance = 18;
 
-      // 양방향 간선이 있을 때만 오프셋 적용
-      const offsetX = isReverseEdge ? perpendicularX * offsetDistance : 0;
-      const offsetY = isReverseEdge ? perpendicularY * offsetDistance : 0;
+      // 이 간선의 오프셋 인덱스 가져오기
+      const offsetIndex = edgeOffsets.get(edge.id) || 0;
+
+      // B→A 간선인지 확인 (from > to)
+      const isReverseEdge = edge.from > edge.to;
+
+      // B→A 간선이면 오프셋 방향을 반대로
+      const finalOffsetIndex = isReverseEdge ? -offsetIndex : offsetIndex;
+      const offsetX = perpendicularX * offsetDistance * finalOffsetIndex;
+      const offsetY = perpendicularY * offsetDistance * finalOffsetIndex;
 
       // 노드 경계에 정확히 닿도록 계산
       // x와 y 중 더 큰 비율을 가진 방향을 기준으로 반지름만큼 정확히 이동

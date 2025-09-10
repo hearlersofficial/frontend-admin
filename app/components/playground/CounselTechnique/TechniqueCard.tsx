@@ -37,12 +37,6 @@ const TechniqueCard = ({
       setTheme('PRIMARY');
     } else if (mode === 'ADDANDDELETE' && mutationModeSelectedTechnique?.id === technique.id) {
       setTheme('PRIMARY');
-    } else if (
-      mode === 'ADDANDDELETE' &&
-      mutationModeSelectedTechnique &&
-      techniquesPointingTo?.includes(mutationModeSelectedTechnique.id!)
-    ) {
-      setTheme('DISABLED');
     } else {
       setTheme('NORMAL');
     }
