@@ -113,7 +113,7 @@ export const useGraphLayout = (
       levelGroups.get(node.level)!.push(node);
     });
 
-    const LEVEL_SPACING = 200;
+    const LEVEL_SPACING = 150;
     const NODE_SPACING = 120;
 
     let maxLevel = 0;
@@ -125,7 +125,7 @@ export const useGraphLayout = (
     });
 
     levelGroups.forEach((levelNodes, level) => {
-      const startX = 50 + level * LEVEL_SPACING;
+      const startX = 50 + (level - 1) * LEVEL_SPACING;
       const startY = 50;
 
       levelNodes.forEach((node, index) => {
@@ -134,7 +134,7 @@ export const useGraphLayout = (
       });
     });
 
-    const width = 50 * 2 + (maxLevel + 1) * LEVEL_SPACING;
+    const width = 2 + maxLevel * LEVEL_SPACING;
     const height = 50 * 2 + maxNodesInLevel * NODE_SPACING;
 
     return {

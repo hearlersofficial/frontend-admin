@@ -182,13 +182,12 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   };
 
   return (
-    <div className="relative w-full overflow-auto min-w-0">
+    <div className="relative h-auto w-full">
       <div
-        className="relative rounded-lg border-2 border-dashed border-gray-300 bg-gray-50"
+        className="relative h-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50"
         style={{
           width: `${width}px`,
-          height: `${height}px`,
-          minHeight: '400px',
+          minHeight: `${height}px`,
         }}
       >
         <div className="absolute inset-0 flex flex-col space-y-6 p-6">
@@ -222,8 +221,8 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
             </div>
           </div>
 
-          <div className="relative h-full w-full overflow-scroll">
-            <svg className="pointer-events-none absolute inset-0" style={{ zIndex: 1 }} width={width} height={height}>
+          <div className="relative h-full w-full">
+            <svg className="pointer-events-none absolute inset-0 h-full w-full" style={{ zIndex: 1 }}>
               <g style={{ pointerEvents: 'all' }}>{renderConnectionLines()}</g>
             </svg>
 

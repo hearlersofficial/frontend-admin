@@ -27,7 +27,7 @@ const Technique = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="scrollbar-hide h-full w-full overflow-auto">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-semibold text-[#68676A]">상담기법</h3>
         <div className="space-x-2">
@@ -59,7 +59,6 @@ const Technique = () => {
         onEditName={handleEditName}
         onAddTechnique={handleAddTechnique}
       />
-
       <AddTechniqueModal isOpen={isAddOpen} setIsOpen={setIsAddOpen} />
       <EditTechniqueModal
         isOpen={isEditOpen}
