@@ -182,13 +182,12 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   };
 
   return (
-    <div className="relative w-full overflow-auto">
+    <div className="relative w-full overflow-auto min-w-0">
       <div
         className="relative rounded-lg border-2 border-dashed border-gray-300 bg-gray-50"
         style={{
           width: `${width}px`,
           height: `${height}px`,
-          minWidth: '100%',
           minHeight: '400px',
         }}
       >
