@@ -244,66 +244,6 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description ID로 특정 프롬프트 버전을 조회합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name GetPromptVersionById
-   * @summary 프롬프트 버전 조회
-   * @request GET:/v1/admin/prompt-versions/{prompt-version-id}
-   * @secure
-   */
-  getPromptVersionById = (
-    promptVersionId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetPromptVersionByIdData, GetPromptVersionByIdError>({
-      path: `/v1/admin/prompt-versions/${promptVersionId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 프롬프트 버전을 수정합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name UpdatePromptVersion
-   * @summary 프롬프트 버전 수정
-   * @request PUT:/v1/admin/prompt-versions/{prompt-version-id}
-   * @secure
-   */
-  updatePromptVersion = (
-    promptVersionId: string,
-    data: UpdatePromptVersionRequestDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<UpdatePromptVersionData, UpdatePromptVersionError>({
-      path: `/v1/admin/prompt-versions/${promptVersionId}`,
-      method: "PUT",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 프롬프트 버전을 삭제합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name DeletePromptVersion
-   * @summary 프롬프트 버전 삭제
-   * @request DELETE:/v1/admin/prompt-versions/{prompt-version-id}
-   * @secure
-   */
-  deletePromptVersion = (promptVersionId: string, params: RequestParams = {}) =>
-    this.request<DeletePromptVersionData, DeletePromptVersionError>({
-      path: `/v1/admin/prompt-versions/${promptVersionId}`,
-      method: "DELETE",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
    * @description 현재 수정 중인 임시 프롬프트 버전을 조회합니다. 2025.04.17 기준 피그마 상 보이는 모든 뷰는 이 API를 통하면 됩니다. 추후 토글을 통해 임시 버전과 활성화 버전을 왔다갈 수 있게 해야 좋을 듯 합니다. 임시 버전이 비게 되면, 임시 버전 라이프사이클에 의해 새로운 임시 버전이 자동 생성됩니다. 즉 오직 1개의 임시 버전이 항상 존재합니다.
    *
    * @tags 어드민/상담 프롬프트
@@ -580,78 +520,6 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       method: 'DELETE',
       secure: true,
       format: 'json',
-      ...params,
-    });
-  /**
-   * @description ID로 상담 기법 전환 규칙을 조회합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name GetCounselTechniqueTransitionRuleById
-   * @summary 상담 기법 전환 규칙 조회
-   * @request GET:/v1/admin/counsel-techniques/transition-rules/{transition-rule-id}
-   * @secure
-   */
-  getCounselTechniqueTransitionRuleById = (
-    transitionRuleId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      GetCounselTechniqueTransitionRuleByIdData,
-      GetCounselTechniqueTransitionRuleByIdError
-    >({
-      path: `/v1/admin/counsel-techniques/transition-rules/${transitionRuleId}`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담 기법 전환 규칙을 수정합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name UpdateCounselTechniqueTransitionRule
-   * @summary 상담 기법 전환 규칙 수정
-   * @request PUT:/v1/admin/counsel-techniques/transition-rules/{transition-rule-id}
-   * @secure
-   */
-  updateCounselTechniqueTransitionRule = (
-    transitionRuleId: string,
-    data: UpdateCounselTechniqueTransitionRuleRequestDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      UpdateCounselTechniqueTransitionRuleData,
-      UpdateCounselTechniqueTransitionRuleError
-    >({
-      path: `/v1/admin/counsel-techniques/transition-rules/${transitionRuleId}`,
-      method: "PUT",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담 기법 전환 규칙을 삭제합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name DeleteCounselTechniqueTransitionRule
-   * @summary 상담 기법 전환 규칙 삭제
-   * @request DELETE:/v1/admin/counsel-techniques/transition-rules/{transition-rule-id}
-   * @secure
-   */
-  deleteCounselTechniqueTransitionRule = (
-    transitionRuleId: string,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      DeleteCounselTechniqueTransitionRuleData,
-      DeleteCounselTechniqueTransitionRuleError
-    >({
-      path: `/v1/admin/counsel-techniques/transition-rules/${transitionRuleId}`,
-      method: "DELETE",
-      secure: true,
-      format: "json",
       ...params,
     });
   /**
@@ -1052,55 +920,6 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       ...params,
     });
   /**
-   * @description 상담 기법 전환 규칙을 전체 조회합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name GetCounselTechniqueTransitionRules
-   * @summary 상담 기법 전환 규칙 전체 조회
-   * @request GET:/v1/admin/counsel-techniques/transition-rules
-   * @secure
-   */
-  getCounselTechniqueTransitionRules = (
-    query: GetCounselTechniqueTransitionRulesParams,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      GetCounselTechniqueTransitionRulesData,
-      GetCounselTechniqueTransitionRulesError
-    >({
-      path: `/v1/admin/counsel-techniques/transition-rules`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
-      ...params,
-    });
-  /**
-   * @description 상담 기법 전환 규칙을 생성합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name CreateCounselTechniqueTransitionRule
-   * @summary 상담 기법 전환 규칙 생성
-   * @request POST:/v1/admin/counsel-techniques/transition-rules
-   * @secure
-   */
-  createCounselTechniqueTransitionRule = (
-    data: CreateCounselTechniqueTransitionRuleRequestDto,
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      CreateCounselTechniqueTransitionRuleData,
-      CreateCounselTechniqueTransitionRuleError
-    >({
-      path: `/v1/admin/counsel-techniques/transition-rules`,
-      method: "POST",
-      body: data,
-      secure: true,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
    * @description 카카오 로그인을 위한 인증 코드 요청, 카카오로 리다이렉트. swagger에서는 사용 불가. a 태그로 접근
    *
    * @tags 인증
@@ -1165,24 +984,6 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       query: query,
       secure: true,
       format: 'json',
-      ...params,
-    });
-  /**
-   * @description 톤 프롬프트를 전체 조회합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name GetTonePrompts
-   * @summary 톤 프롬프트 전체 조회
-   * @request GET:/v1/admin/tone-prompts
-   * @secure
-   */
-  getTonePrompts = (query: GetTonePromptsParams, params: RequestParams = {}) =>
-    this.request<GetTonePromptsData, GetTonePromptsError>({
-      path: `/v1/admin/tone-prompts`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
       ...params,
     });
   /**
@@ -1271,27 +1072,6 @@ export class V1<SecurityDataType = unknown> extends HttpClient<SecurityDataType>
       query: query,
       secure: true,
       format: 'json',
-      ...params,
-    });
-  /**
-   * @description 페르소나 프롬프트를 전체 조회합니다.
-   *
-   * @tags 어드민/상담 프롬프트
-   * @name GetPersonaPrompts
-   * @summary 페르소나 프롬프트 전체 조회
-   * @request GET:/v1/admin/persona-prompts
-   * @secure
-   */
-  getPersonaPrompts = (
-    query: GetPersonaPromptsParams,
-    params: RequestParams = {},
-  ) =>
-    this.request<GetPersonaPromptsData, GetPersonaPromptsError>({
-      path: `/v1/admin/persona-prompts`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
       ...params,
     });
   /**
