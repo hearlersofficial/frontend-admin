@@ -30,7 +30,7 @@ export const useEpisodeCreation = (
     },
   });
 
-  const transformScenesToCutScenes = (scenes: Array<{ speaker: string; dialogue: string }>) => {
+  const transformScenesToCutScenes = (scenes: Array<{ id: string; speaker: string; dialogue: string; image?: string }>) => {
     return scenes.map((scene, index) => 
       transformSceneToCutScene(scene, index, counselor)
     );
@@ -39,7 +39,7 @@ export const useEpisodeCreation = (
   const executeCreation = (episodeData: {
     title: string;
     level: number;
-    scenes: Array<{ speaker: string; dialogue: string }>;
+    scenes: Array<{ id: string; speaker: string; dialogue: string; image?: string }>;
   }) => {
     if (!counselorId) {
       console.error('counselorId is required for episode creation');

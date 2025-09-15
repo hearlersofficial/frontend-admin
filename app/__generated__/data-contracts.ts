@@ -15,9 +15,9 @@ export interface UpdateToneRequest {
   /** 톤 ID */
   toneId: string;
   /** 톤 이름 */
-  name?: string | null;
+  name?: string;
   /** 톤 설명 */
-  description?: string | null;
+  description?: string;
 }
 
 /** 에러 응답 DTO */
@@ -109,7 +109,7 @@ export interface Error {
   /** 상세 에러 정보 */
   details?: string[];
   /** 추가 데이터 */
-  data?: object;
+  data?: any;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -124,7 +124,7 @@ export interface SuccessUpdateToneResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 업데이트 응답 */
+  /** 응답 데이터 */
   data?: UpdateToneResponse;
   /**
    * 응답 시간
@@ -146,66 +146,48 @@ export interface Tone {
   /** 톤 수정 시간 */
   updatedAt?: string;
   /** 톤 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 톤 업데이트 응답 */
 export interface UpdateToneResponse {
-  /** 톤 */
+  /** 업데이트된 톤 */
   tone?: Tone;
 }
 
-/** 임시 버전 저장 요청 DTO */
-export interface SaveTemporaryVersionRequestDto {
+/** 프롬프트 버전 수정 요청 DTO */
+export interface UpdatePromptVersionRequestDto {
   /**
    * 프롬프트 버전 이름
    * @example "2024년 7월 프롬프트 버전"
    */
-  name: string;
+  name?: string;
   /**
    * 프롬프트 버전 설명
    * @example "2024년 7월 배포 예정 버전입니다."
    */
-  description: string;
-  /** 북마크 여부 */
-  isBookmarked: boolean;
-  /** AI 모델 */
-  aiModel:
+  description?: string;
+  /**
+   * 북마크 여부
+   * @example false
+   */
+  isBookmarked?: boolean;
+  /**
+   * AI 모델
+   * @example "gpt-4o-mini"
+   */
+  aiModel?:
     | "AI_MODEL_UNSPECIFIED"
-    | "GPT_3_5_TURBO"
-    | "GPT_4"
-    | "GPT_4O"
-    | "GPT_4O_MINI"
+    | "AI_MODEL_GPT_3_5_TURBO"
+    | "AI_MODEL_GPT_4"
+    | "AI_MODEL_GPT_4O"
+    | "AI_MODEL_GPT_4O_MINI"
+    | "AI_MODEL_GPT_5_MINI"
+    | "AI_MODEL_GPT_5"
+    | "AI_MODEL_GPT_5_CHAT"
+    | "AI_MODEL_GEMINI_2_5_FLASH"
+    | "AI_MODEL_GEMINI_2_5_PRO"
     | "UNRECOGNIZED";
-}
-
-/** 상담사별 프롬프트 응답 DTO */
-export interface CounselorScopedPromptResponseDto {
-  /**
-   * 상담사 ID
-   * @example "counselor_123456"
-   */
-  counselorId?: string;
-  /**
-   * 페르소나 프롬프트 ID
-   * @example "pp_123456"
-   */
-  personaPromptId?: string;
-  /**
-   * 생성 시간
-   * @example "2024-06-01T12:34:56.000Z"
-   */
-  createdAt?: string;
-  /**
-   * 수정 시간
-   * @example "2024-06-01T12:34:56.000Z"
-   */
-  updatedAt?: string;
-  /**
-   * 삭제 시간
-   * @example "null"
-   */
-  deletedAt?: string;
 }
 
 /** 프롬프트 버전 응답 DTO */
@@ -243,15 +225,16 @@ export interface PromptVersionResponseDto {
   /** AI 모델 */
   aiModel?:
     | "AI_MODEL_UNSPECIFIED"
-    | "GPT_3_5_TURBO"
-    | "GPT_4"
-    | "GPT_4O"
-    | "GPT_4O_MINI"
+    | "AI_MODEL_GPT_3_5_TURBO"
+    | "AI_MODEL_GPT_4"
+    | "AI_MODEL_GPT_4O"
+    | "AI_MODEL_GPT_4O_MINI"
+    | "AI_MODEL_GPT_5_MINI"
+    | "AI_MODEL_GPT_5"
+    | "AI_MODEL_GPT_5_CHAT"
+    | "AI_MODEL_GEMINI_2_5_FLASH"
+    | "AI_MODEL_GEMINI_2_5_PRO"
     | "UNRECOGNIZED";
-  /** 상담사별 프롬프트 목록 */
-  counselorScopedPrompts?: CounselorScopedPromptResponseDto[];
-  /** 톤별 프롬프트 목록 */
-  toneScopedPrompts?: ToneScopedPromptResponseDto[];
   /**
    * 생성 시간
    * @example "2024-06-01T12:34:56.000Z"
@@ -264,14 +247,67 @@ export interface PromptVersionResponseDto {
   updatedAt?: string;
   /**
    * 삭제 시간
-   * @example "null"
+   * @example null
    */
   deletedAt?: string;
 }
 
+/** 성공 응답 DTO */
+export interface SuccessUpdatePromptVersionResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: UpdatePromptVersionResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 프롬프트 버전 수정 응답 DTO */
+export interface UpdatePromptVersionResponseDto {
+  /** 프롬프트 버전 */
+  promptVersion?: PromptVersionResponseDto;
+}
+
+/** 임시 버전 저장 요청 DTO */
+export interface SaveTemporaryVersionRequestDto {
+  /**
+   * 프롬프트 버전 이름
+   * @minLength 1
+   * @example "2024년 7월 프롬프트 버전"
+   */
+  name: string;
+  /**
+   * 프롬프트 버전 설명
+   * @minLength 1
+   * @example "2024년 7월 배포 예정 버전입니다."
+   */
+  description: string;
+  /** 북마크 여부 */
+  isBookmarked: boolean;
+  /** AI 모델 */
+  aiModel:
+    | "AI_MODEL_UNSPECIFIED"
+    | "AI_MODEL_GPT_3_5_TURBO"
+    | "AI_MODEL_GPT_4"
+    | "AI_MODEL_GPT_4O"
+    | "AI_MODEL_GPT_4O_MINI"
+    | "AI_MODEL_GPT_5_MINI"
+    | "AI_MODEL_GPT_5"
+    | "AI_MODEL_GPT_5_CHAT"
+    | "AI_MODEL_GEMINI_2_5_FLASH"
+    | "AI_MODEL_GEMINI_2_5_PRO"
+    | "UNRECOGNIZED";
+}
+
 /** 임시 버전 저장 응답 DTO */
 export interface SaveTemporaryVersionResponseDto {
-  /** 프롬프트 버전 응답 DTO */
+  /** 프롬프트 버전 */
   promptVersion?: PromptVersionResponseDto;
 }
 
@@ -282,7 +318,7 @@ export interface SuccessSaveTemporaryVersionResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 임시 버전 저장 응답 DTO */
+  /** 응답 데이터 */
   data?: SaveTemporaryVersionResponseDto;
   /**
    * 응답 시간
@@ -291,43 +327,9 @@ export interface SuccessSaveTemporaryVersionResponseDto {
   timestamp?: string;
 }
 
-/** 톤별 프롬프트 응답 DTO */
-export interface ToneScopedPromptResponseDto {
-  /**
-   * 톤 ID
-   * @example "tone_123456"
-   */
-  toneId?: string;
-  /**
-   * 톤 프롬프트 ID
-   * @example "tp_123456"
-   */
-  tonePromptId?: string;
-  /**
-   * 첫 번째 상담 기법 ID
-   * @example "ct_123456"
-   */
-  firstCounselTechniqueId?: string;
-  /**
-   * 생성 시간
-   * @example "2024-06-01T12:34:56.000Z"
-   */
-  createdAt?: string;
-  /**
-   * 수정 시간
-   * @example "2024-06-01T12:34:56.000Z"
-   */
-  updatedAt?: string;
-  /**
-   * 삭제 시간
-   * @example "null"
-   */
-  deletedAt?: string;
-}
-
 /** 기존 프롬프트 버전 로드 응답 DTO */
 export interface LoadExistingPromptVersionResponseDto {
-  /** 프롬프트 버전 응답 DTO */
+  /** 프롬프트 버전 */
   promptVersion?: PromptVersionResponseDto;
 }
 
@@ -338,7 +340,7 @@ export interface SuccessLoadExistingPromptVersionResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 기존 프롬프트 버전 로드 응답 DTO */
+  /** 응답 데이터 */
   data?: LoadExistingPromptVersionResponseDto;
   /**
    * 응답 시간
@@ -351,11 +353,13 @@ export interface SuccessLoadExistingPromptVersionResponseDto {
 export interface UpdateTonePromptRequestDto {
   /**
    * 톤 ID
+   * @minLength 1
    * @example "tone_123456"
    */
   toneId: string;
   /**
    * 톤 프롬프트 내용
+   * @minLength 1
    * @example "공감적이고 따뜻한 어조로 대화하세요."
    */
   body: string;
@@ -368,7 +372,7 @@ export interface SuccessUpdateTonePromptResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 프롬프트 업데이트 응답 DTO */
+  /** 응답 데이터 */
   data?: UpdateTonePromptResponseDto;
   /**
    * 응답 시간
@@ -384,6 +388,11 @@ export interface TonePromptResponseDto {
    * @example "tp_123456"
    */
   id?: string;
+  /**
+   * 프롬프트 버전 ID
+   * @example 334324523543
+   */
+  promptVersionId?: string;
   /**
    * 톤 프롬프트 내용
    * @example "공감적이고 따뜻한 어조로 대화하세요."
@@ -406,14 +415,14 @@ export interface TonePromptResponseDto {
   updatedAt?: string;
   /**
    * 삭제 시간
-   * @example "null"
+   * @example null
    */
   deletedAt?: string;
 }
 
 /** 톤 프롬프트 업데이트 응답 DTO */
 export interface UpdateTonePromptResponseDto {
-  /** 톤 프롬프트 응답 DTO */
+  /** 톤 프롬프트 */
   tonePrompt?: TonePromptResponseDto;
 }
 
@@ -421,11 +430,13 @@ export interface UpdateTonePromptResponseDto {
 export interface UpdatePersonaPromptRequestDto {
   /**
    * 상담사 ID
+   * @minLength 1
    * @example "counselor_123456"
    */
   counselorId: string;
   /**
    * 페르소나 프롬프트 내용
+   * @minLength 1
    * @example "저는 12년 경력의 심리상담사로, 우울증, 불안장애, 트라우마 분야를 전문으로 다룹니다."
    */
   body: string;
@@ -438,6 +449,11 @@ export interface PersonaPromptResponseDto {
    * @example "pp_123456"
    */
   id?: string;
+  /**
+   * 프롬프트 버전 ID
+   * @example 334324523543
+   */
+  promptVersionId?: string;
   /**
    * 페르소나 프롬프트 내용
    * @example "저는 10년 경력의 심리상담사로, 우울증과 불안장애 분야를 전문으로 다룹니다."
@@ -460,7 +476,7 @@ export interface PersonaPromptResponseDto {
   updatedAt?: string;
   /**
    * 삭제 시간
-   * @example "null"
+   * @example null
    */
   deletedAt?: string;
 }
@@ -472,7 +488,7 @@ export interface SuccessUpdatePersonaPromptResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 페르소나 프롬프트 업데이트 응답 DTO */
+  /** 응답 데이터 */
   data?: UpdatePersonaPromptResponseDto;
   /**
    * 응답 시간
@@ -483,7 +499,7 @@ export interface SuccessUpdatePersonaPromptResponseDto {
 
 /** 페르소나 프롬프트 업데이트 응답 DTO */
 export interface UpdatePersonaPromptResponseDto {
-  /** 페르소나 프롬프트 응답 DTO */
+  /** 페르소나 프롬프트 */
   personaPrompt?: PersonaPromptResponseDto;
 }
 
@@ -505,16 +521,12 @@ export interface UpdateCounselTechniqueRequestDto {
    */
   instruction?: string;
   /**
-   * 메시지 임계값
-   * @format int32
-   * @example 5
-   */
-  messageThreshold?: number;
-  /**
    * AI 모델 temperature 값
    * @format double
    */
   temperature?: number;
+  /** 시작 기법 여부 */
+  isStartTechnique?: boolean;
 }
 
 /** 상담 기법 응답 DTO */
@@ -524,6 +536,11 @@ export interface CounselTechniqueResponseDto {
    * @example "ct_123456"
    */
   id?: string;
+  /**
+   * 프롬프트 버전 ID
+   * @example 334324523543
+   */
+  promptVersionId?: string;
   /**
    * 상담 기법 이름
    * @example "공감 반응 기법"
@@ -545,21 +562,10 @@ export interface CounselTechniqueResponseDto {
    */
   instruction?: string;
   /**
-   * 메시지 임계값
-   * @format int32
-   * @example 3
-   */
-  messageThreshold?: number;
-  /**
-   * 임시 기법 여부
+   * 시작 기법 여부
    * @example false
    */
-  isTemporary?: boolean;
-  /**
-   * 다음 상담 기법 ID
-   * @example "ct_789012"
-   */
-  nextCounselTechniqueId?: string;
+  isStartTechnique?: boolean;
   /**
    * AI 모델 temperature 값
    * @format double
@@ -577,7 +583,7 @@ export interface CounselTechniqueResponseDto {
   updatedAt?: string;
   /**
    * 삭제 시간
-   * @example "null"
+   * @example null
    */
   deletedAt?: string;
 }
@@ -589,7 +595,7 @@ export interface SuccessUpdateCounselTechniqueResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 기법 업데이트 응답 DTO */
+  /** 응답 데이터 */
   data?: UpdateCounselTechniqueResponseDto;
   /**
    * 응답 시간
@@ -600,28 +606,27 @@ export interface SuccessUpdateCounselTechniqueResponseDto {
 
 /** 상담 기법 업데이트 응답 DTO */
 export interface UpdateCounselTechniqueResponseDto {
-  /** 상담 기법 목록 */
-  counselTechnique?: CounselTechniqueResponseDto[];
+  /** 상담 기법 */
+  counselTechnique?: CounselTechniqueResponseDto;
 }
 
 /** 상담사 업데이트 요청 */
 export interface UpdateCounselorRequest {
   /** 톤 ID */
-  toneId?: string | null;
+  toneId?: string;
   /** 상담사 이름 */
-  name?: string | null;
+  name?: string;
   /** 상담사 설명 */
-  description?: string | null;
+  description?: string;
   /** 상담사 프로필 이미지 */
-  profileImage?: string | null;
+  profileImage?: string;
   /** 상담사 성별 */
   gender?:
     | "COUNSELOR_GENDER_UNSPECIFIED"
     | "COUNSELOR_GENDER_MALE"
     | "COUNSELOR_GENDER_FEMALE"
     | "COUNSELOR_GENDER_NONE"
-    | "UNRECOGNIZED"
-    | null;
+    | "UNRECOGNIZED";
 }
 
 /** 상담사 */
@@ -648,7 +653,7 @@ export interface Counselor {
   /** 상담사 수정 시간 */
   updatedAt?: string;
   /** 상담사 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 성공 응답 DTO */
@@ -658,7 +663,7 @@ export interface SuccessUpdateCounselorResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담사 업데이트 응답 */
+  /** 응답 데이터 */
   data?: UpdateCounselorResponse;
   /**
    * 응답 시간
@@ -669,14 +674,14 @@ export interface SuccessUpdateCounselorResponse {
 
 /** 상담사 업데이트 응답 */
 export interface UpdateCounselorResponse {
-  /** 상담사 */
+  /** 업데이트된 상담사 */
   counselor?: Counselor;
 }
 
 /** 에피소드 컷신 저장 요청 */
-export type SaveEpisodeCutSceneRequest = {
+export interface SaveEpisodeCutSceneRequest {
   /** 컷신 ID (수정 시 필요) */
-  id?: string | null;
+  id?: string;
   /** 컷신 발화자 */
   speaker:
     | "SPEAKER_UNSPECIFIED"
@@ -692,21 +697,21 @@ export type SaveEpisodeCutSceneRequest = {
   orderIndex: number;
   /** 컷신 이미지 URL */
   image: string;
-};
+}
 
 /** 에피소드 업데이트 요청 */
 export interface UpdateEpisodeRequest {
   /** 에피소드 제목 */
-  title?: string | null;
+  title?: string;
   /**
    * 에피소드 해금을 위한 라포 수치
    * @format int32
    */
-  requiredRapportThreshold?: number | null;
+  requiredRapportThreshold?: number;
   /** 임시 여부 */
-  isTemporary?: boolean | null;
+  isTemporary?: boolean;
   /** 에피소드 컷신 목록 */
-  cutScenes?: SaveEpisodeCutSceneRequest[] | null;
+  cutScenes?: SaveEpisodeCutSceneRequest[];
 }
 
 /** 에피소드 */
@@ -731,7 +736,7 @@ export interface Episode {
   /** 에피소드 수정 시간 */
   updatedAt?: string;
   /** 에피소드 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 에피소드 컷신 */
@@ -760,7 +765,7 @@ export interface EpisodeCutScene {
   /** 컷신 수정 시간 */
   updatedAt?: string;
   /** 컷신 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 성공 응답 DTO */
@@ -770,7 +775,7 @@ export interface SuccessUpdateEpisodeResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 에피소드 업데이트 응답 */
+  /** 응답 데이터 */
   data?: UpdateEpisodeResponse;
   /**
    * 응답 시간
@@ -781,18 +786,18 @@ export interface SuccessUpdateEpisodeResponse {
 
 /** 에피소드 업데이트 응답 */
 export interface UpdateEpisodeResponse {
-  /** 에피소드 */
+  /** 업데이트된 에피소드 */
   episode?: Episode;
 }
 
 /** 버블 업데이트 요청 */
 export interface UpdateBubbleRequest {
   /** 버블 질문 */
-  question?: string | null;
+  question?: string;
   /** 버블 응답 1 */
-  responseOption1?: string | null;
+  responseOption1?: string;
   /** 버블 응답 2 */
-  responseOption2?: string | null;
+  responseOption2?: string;
 }
 
 /** 버블 */
@@ -810,7 +815,7 @@ export interface Bubble {
   /** 버블 수정 시간 */
   updatedAt?: string;
   /** 버블 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 성공 응답 DTO */
@@ -820,7 +825,7 @@ export interface SuccessUpdateBubbleResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 버블 업데이트 응답 */
+  /** 응답 데이터 */
   data?: UpdateBubbleResponse;
   /**
    * 응답 시간
@@ -831,8 +836,429 @@ export interface SuccessUpdateBubbleResponse {
 
 /** 버블 업데이트 응답 */
 export interface UpdateBubbleResponse {
-  /** 버블 */
+  /** 업데이트된 버블 */
   bubble?: Bubble;
+}
+
+/** 상담 기법 전환 규칙 수정 요청 DTO */
+export interface UpdateCounselTechniqueTransitionRuleRequestDto {
+  /**
+   * 우선순위
+   * @format int32
+   * @example 1
+   */
+  priority?: number;
+  /**
+   * 최소 현재 기법 메시지 개수
+   * @format int32
+   * @example 3
+   */
+  minCurrentTechniqueMessageCount?: number;
+  /**
+   * 최대 현재 기법 메시지 개수
+   * @format int32
+   * @example 8
+   */
+  maxCurrentTechniqueMessageCount?: number;
+  /** 필수 영향 도메인 */
+  requiredImpactDomains: (
+    | "IMPACT_DOMAIN_UNSPECIFIED"
+    | "IMPACT_DOMAIN_WORK"
+    | "IMPACT_DOMAIN_STUDY"
+    | "IMPACT_DOMAIN_RELATIONSHIP"
+    | "IMPACT_DOMAIN_FAMILY"
+    | "IMPACT_DOMAIN_HEALTH"
+    | "IMPACT_DOMAIN_FINANCE"
+    | "IMPACT_DOMAIN_SELF"
+    | "IMPACT_DOMAIN_OTHER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 시간 프레임 */
+  requiredTimeframes: (
+    | "TIMEFRAME_UNSPECIFIED"
+    | "TIMEFRAME_TODAY"
+    | "TIMEFRAME_THIS_WEEK"
+    | "TIMEFRAME_THIS_MONTH"
+    | "TIMEFRAME_THIS_YEAR"
+    | "TIMEFRAME_LONGER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 1차 감정 */
+  requiredEmotionPrimaries: (
+    | "EMOTION_PRIMARY_UNSPECIFIED"
+    | "EMOTION_PRIMARY_ANXIETY"
+    | "EMOTION_PRIMARY_SADNESS"
+    | "EMOTION_PRIMARY_ANGER"
+    | "EMOTION_PRIMARY_LONELINESS"
+    | "EMOTION_PRIMARY_GUILT"
+    | "EMOTION_PRIMARY_SHAME"
+    | "EMOTION_PRIMARY_STRESS"
+    | "EMOTION_PRIMARY_HOPE"
+    | "EMOTION_PRIMARY_CALM"
+    | "EMOTION_PRIMARY_OTHER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 감정 긍부정 */
+  requiredValences: (
+    | "VALENCE_UNSPECIFIED"
+    | "VALENCE_NEGATIVE"
+    | "VALENCE_NEUTRAL"
+    | "VALENCE_POSITIVE"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 감정 각성 수준 */
+  requiredArousalLevels: (
+    | "AROUSAL_LEVEL_UNSPECIFIED"
+    | "AROUSAL_LEVEL_LOW"
+    | "AROUSAL_LEVEL_MEDIUM"
+    | "AROUSAL_LEVEL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 감정 강도
+   * @format int32
+   * @example 3
+   */
+  minEmotionIntensity?: number;
+  /**
+   * 최대 감정 강도
+   * @format int32
+   * @example 7
+   */
+  maxEmotionIntensity?: number;
+  /** 필수 인지된 통제 수준 */
+  requiredPerceivedControls: (
+    | "PERCEIVED_CONTROL_UNSPECIFIED"
+    | "PERCEIVED_CONTROL_LOW"
+    | "PERCEIVED_CONTROL_MEDIUM"
+    | "PERCEIVED_CONTROL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 동기 단계 */
+  requiredMotivationStages: (
+    | "MOTIVATION_STAGE_UNSPECIFIED"
+    | "MOTIVATION_STAGE_PRECONTEMPLATION"
+    | "MOTIVATION_STAGE_CONTEMPLATION"
+    | "MOTIVATION_STAGE_PREPARATION"
+    | "MOTIVATION_STAGE_ACTION"
+    | "MOTIVATION_STAGE_MAINTENANCE"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 자기 효능감
+   * @format int32
+   * @example 4
+   */
+  minSelfEfficacy?: number;
+  /**
+   * 최대 자기 효능감
+   * @format int32
+   * @example 8
+   */
+  maxSelfEfficacy?: number;
+  /** 필수 사회적 지지 수준 */
+  requiredSocialSupportLevels: (
+    | "SOCIAL_SUPPORT_LEVEL_UNSPECIFIED"
+    | "SOCIAL_SUPPORT_LEVEL_NONE"
+    | "SOCIAL_SUPPORT_LEVEL_LOW"
+    | "SOCIAL_SUPPORT_LEVEL_MEDIUM"
+    | "SOCIAL_SUPPORT_LEVEL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 위험 종류 */
+  requiredRiskKinds: (
+    | "RISK_KIND_UNSPECIFIED"
+    | "RISK_KIND_NONE"
+    | "RISK_KIND_SELF_HARM"
+    | "RISK_KIND_HARM_TO_OTHERS"
+    | "RISK_KIND_ABUSE"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 위험 심각도
+   * @format int32
+   * @example 2
+   */
+  minRiskSeverity?: number;
+  /**
+   * 최대 위험 심각도
+   * @format int32
+   * @example 5
+   */
+  maxRiskSeverity?: number;
+  /** 필수 수면의 질 */
+  requiredSleepQualities: (
+    | "SLEEP_QUALITY_UNSPECIFIED"
+    | "SLEEP_QUALITY_POOR"
+    | "SLEEP_QUALITY_FAIR"
+    | "SLEEP_QUALITY_GOOD"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 신체 증상 존재 여부 필요 조건
+   * @example true
+   */
+  requiredPhysicalSymptomsPresent?: boolean;
+  /** 필수 인지 부하 수준 */
+  requiredCognitiveLoads: (
+    | "COGNITIVE_LOAD_UNSPECIFIED"
+    | "COGNITIVE_LOAD_LOW"
+    | "COGNITIVE_LOAD_MEDIUM"
+    | "COGNITIVE_LOAD_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 동맹 강도 */
+  requiredAllianceStrengths: (
+    | "ALLIANCE_STRENGTH_UNSPECIFIED"
+    | "ALLIANCE_STRENGTH_WEAK"
+    | "ALLIANCE_STRENGTH_MEDIUM"
+    | "ALLIANCE_STRENGTH_STRONG"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 심층 탐색 동의 필요 여부
+   * @example false
+   */
+  requiredConsentToDepth?: boolean;
+}
+
+/** 상담 기법 전환 규칙 응답 DTO */
+export interface CounselTechniqueTransitionRuleResponseDto {
+  /**
+   * 상담 기법 전환 규칙 ID
+   * @example "cttr_12345678"
+   */
+  id?: string;
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_12345678"
+   */
+  promptVersionId?: string;
+  /**
+   * 선행 상담 기법 ID
+   * @example "ct_12345678"
+   */
+  fromCounselTechniqueId?: string;
+  /**
+   * 타겟 상담 기법 ID
+   * @example "ct_87654321"
+   */
+  toCounselTechniqueId?: string;
+  /**
+   * 우선순위
+   * @format int32
+   * @example 1
+   */
+  priority?: number;
+  /**
+   * 최소 현재 기법 메시지 개수
+   * @format int32
+   * @example 3
+   */
+  minCurrentTechniqueMessageCount?: number;
+  /**
+   * 최대 현재 기법 메시지 개수
+   * @format int32
+   * @example 8
+   */
+  maxCurrentTechniqueMessageCount?: number;
+  /** 필수 영향 도메인 */
+  requiredImpactDomains?: (
+    | "IMPACT_DOMAIN_UNSPECIFIED"
+    | "IMPACT_DOMAIN_WORK"
+    | "IMPACT_DOMAIN_STUDY"
+    | "IMPACT_DOMAIN_RELATIONSHIP"
+    | "IMPACT_DOMAIN_FAMILY"
+    | "IMPACT_DOMAIN_HEALTH"
+    | "IMPACT_DOMAIN_FINANCE"
+    | "IMPACT_DOMAIN_SELF"
+    | "IMPACT_DOMAIN_OTHER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 시간 프레임 */
+  requiredTimeframes?: (
+    | "TIMEFRAME_UNSPECIFIED"
+    | "TIMEFRAME_TODAY"
+    | "TIMEFRAME_THIS_WEEK"
+    | "TIMEFRAME_THIS_MONTH"
+    | "TIMEFRAME_THIS_YEAR"
+    | "TIMEFRAME_LONGER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 1차 감정 */
+  requiredEmotionPrimaries?: (
+    | "EMOTION_PRIMARY_UNSPECIFIED"
+    | "EMOTION_PRIMARY_ANXIETY"
+    | "EMOTION_PRIMARY_SADNESS"
+    | "EMOTION_PRIMARY_ANGER"
+    | "EMOTION_PRIMARY_LONELINESS"
+    | "EMOTION_PRIMARY_GUILT"
+    | "EMOTION_PRIMARY_SHAME"
+    | "EMOTION_PRIMARY_STRESS"
+    | "EMOTION_PRIMARY_HOPE"
+    | "EMOTION_PRIMARY_CALM"
+    | "EMOTION_PRIMARY_OTHER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 감정 긍부정 */
+  requiredValences?: (
+    | "VALENCE_UNSPECIFIED"
+    | "VALENCE_NEGATIVE"
+    | "VALENCE_NEUTRAL"
+    | "VALENCE_POSITIVE"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 감정 각성 수준 */
+  requiredArousalLevels?: (
+    | "AROUSAL_LEVEL_UNSPECIFIED"
+    | "AROUSAL_LEVEL_LOW"
+    | "AROUSAL_LEVEL_MEDIUM"
+    | "AROUSAL_LEVEL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 감정 강도
+   * @format int32
+   * @example 3
+   */
+  minEmotionIntensity?: number;
+  /**
+   * 최대 감정 강도
+   * @format int32
+   * @example 7
+   */
+  maxEmotionIntensity?: number;
+  /** 필수 인지된 통제 수준 */
+  requiredPerceivedControls?: (
+    | "PERCEIVED_CONTROL_UNSPECIFIED"
+    | "PERCEIVED_CONTROL_LOW"
+    | "PERCEIVED_CONTROL_MEDIUM"
+    | "PERCEIVED_CONTROL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 동기 단계 */
+  requiredMotivationStages?: (
+    | "MOTIVATION_STAGE_UNSPECIFIED"
+    | "MOTIVATION_STAGE_PRECONTEMPLATION"
+    | "MOTIVATION_STAGE_CONTEMPLATION"
+    | "MOTIVATION_STAGE_PREPARATION"
+    | "MOTIVATION_STAGE_ACTION"
+    | "MOTIVATION_STAGE_MAINTENANCE"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 자기 효능감
+   * @format int32
+   * @example 4
+   */
+  minSelfEfficacy?: number;
+  /**
+   * 최대 자기 효능감
+   * @format int32
+   * @example 8
+   */
+  maxSelfEfficacy?: number;
+  /** 필수 사회적 지지 수준 */
+  requiredSocialSupportLevels?: (
+    | "SOCIAL_SUPPORT_LEVEL_UNSPECIFIED"
+    | "SOCIAL_SUPPORT_LEVEL_NONE"
+    | "SOCIAL_SUPPORT_LEVEL_LOW"
+    | "SOCIAL_SUPPORT_LEVEL_MEDIUM"
+    | "SOCIAL_SUPPORT_LEVEL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 위험 종류 */
+  requiredRiskKinds?: (
+    | "RISK_KIND_UNSPECIFIED"
+    | "RISK_KIND_NONE"
+    | "RISK_KIND_SELF_HARM"
+    | "RISK_KIND_HARM_TO_OTHERS"
+    | "RISK_KIND_ABUSE"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 위험 심각도
+   * @format int32
+   * @example 2
+   */
+  minRiskSeverity?: number;
+  /**
+   * 최대 위험 심각도
+   * @format int32
+   * @example 5
+   */
+  maxRiskSeverity?: number;
+  /** 필수 수면의 질 */
+  requiredSleepQualities?: (
+    | "SLEEP_QUALITY_UNSPECIFIED"
+    | "SLEEP_QUALITY_POOR"
+    | "SLEEP_QUALITY_FAIR"
+    | "SLEEP_QUALITY_GOOD"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 신체 증상 존재 여부 필요 조건
+   * @example true
+   */
+  requiredPhysicalSymptomsPresent?: boolean;
+  /** 필수 인지 부하 수준 */
+  requiredCognitiveLoads?: (
+    | "COGNITIVE_LOAD_UNSPECIFIED"
+    | "COGNITIVE_LOAD_LOW"
+    | "COGNITIVE_LOAD_MEDIUM"
+    | "COGNITIVE_LOAD_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 동맹 강도 */
+  requiredAllianceStrengths?: (
+    | "ALLIANCE_STRENGTH_UNSPECIFIED"
+    | "ALLIANCE_STRENGTH_WEAK"
+    | "ALLIANCE_STRENGTH_MEDIUM"
+    | "ALLIANCE_STRENGTH_STRONG"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 심층 탐색 동의 필요 여부
+   * @example false
+   */
+  requiredConsentToDepth?: boolean;
+  /**
+   * 생성 시각
+   * @example "2025-08-24T17:30:00Z"
+   */
+  createdAt?: string;
+  /**
+   * 수정 시각
+   * @example "2025-08-24T18:00:00Z"
+   */
+  updatedAt?: string;
+  /**
+   * 삭제 시각
+   * @example null
+   */
+  deletedAt?: string;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessUpdateCounselTechniqueTransitionRuleResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: UpdateCounselTechniqueTransitionRuleResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 기법 전환 조건 수정 응답 DTO */
+export interface UpdateCounselTechniqueTransitionRuleResponseDto {
+  /** 상담 기번 전환 조건 */
+  counselTechniqueTransitionRule?: CounselTechniqueTransitionRuleResponseDto;
 }
 
 /** 성공 응답 DTO */
@@ -842,7 +1268,7 @@ export interface SuccessTokenResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 토큰 생성 응답 */
+  /** 응답 데이터 */
   data?: TokenResponseDto;
   /**
    * 응답 시간
@@ -879,7 +1305,7 @@ export interface CreateToneRequest {
 
 /** 톤 생성 응답 */
 export interface CreateToneResponse {
-  /** 톤 */
+  /** 생성된 톤 */
   tone?: Tone;
 }
 
@@ -890,7 +1316,7 @@ export interface SuccessCreateToneResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 생성 응답 */
+  /** 응답 데이터 */
   data?: CreateToneResponse;
   /**
    * 응답 시간
@@ -901,7 +1327,7 @@ export interface SuccessCreateToneResponse {
 
 /** 프롬프트 버전 활성화 응답 DTO */
 export interface ActivatePromptVersionResponseDto {
-  /** 프롬프트 버전 응답 DTO */
+  /** 프롬프트 버전 */
   promptVersion?: PromptVersionResponseDto;
 }
 
@@ -912,7 +1338,7 @@ export interface SuccessActivatePromptVersionResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 프롬프트 버전 활성화 응답 DTO */
+  /** 응답 데이터 */
   data?: ActivatePromptVersionResponseDto;
   /**
    * 응답 시간
@@ -925,40 +1351,40 @@ export interface SuccessActivatePromptVersionResponseDto {
 export interface CreateCounselTechniqueRequestDto {
   /**
    * 상담 기법 이름
+   * @minLength 1
    * @example "공감 반응 기법"
    */
   name: string;
   /**
    * 톤 ID
+   * @minLength 1
    * @example "tone_123456"
    */
   toneId: string;
   /**
    * 컨텍스트
+   * @minLength 1
    * @example "내담자의 감정에 공감하는 컨텍스트"
    */
   context: string;
   /**
    * 지시사항
+   * @minLength 1
    * @example "내담자의 감정을 반영하고 공감하세요."
    */
   instruction: string;
-  /**
-   * 메시지 임계값
-   * @format int32
-   * @example 3
-   */
-  messageThreshold: number;
   /**
    * AI 모델 temperature 값
    * @format double
    */
   temperature: number;
+  /** 시작 기법 여부 */
+  isStartTechnique?: boolean;
 }
 
 /** 상담 기법 생성 응답 DTO */
 export interface CreateCounselTechniqueResponseDto {
-  /** 상담 기법 응답 DTO */
+  /** 상담 기법 */
   counselTechnique?: CounselTechniqueResponseDto;
 }
 
@@ -969,44 +1395,8 @@ export interface SuccessCreateCounselTechniqueResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 기법 생성 응답 DTO */
+  /** 응답 데이터 */
   data?: CreateCounselTechniqueResponseDto;
-  /**
-   * 응답 시간
-   * @example "2024-07-01 14:30:45"
-   */
-  timestamp?: string;
-}
-
-/** 상담 기법 시퀀스 저장 요청 DTO */
-export interface SaveCounselTechniqueSequenceRequestDto {
-  /**
-   * 톤 ID
-   * @example "tone_123456"
-   */
-  toneId: string;
-  /**
-   * 상담 기법 ID 목록
-   * @example ["ct_123456","ct_789012"]
-   */
-  counselTechniqueIds: string[];
-}
-
-/** 상담 기법 시퀀스 저장 응답 DTO */
-export interface SaveCounselTechniqueSequenceResponseDto {
-  /** 상담 기법 목록 */
-  counselTechniques?: CounselTechniqueResponseDto[];
-}
-
-/** 성공 응답 DTO */
-export interface SuccessSaveCounselTechniqueSequenceResponseDto {
-  /**
-   * 성공 메시지
-   * @example "요청이 성공적으로 처리되었습니다."
-   */
-  message?: string;
-  /** 상담 기법 시퀀스 저장 응답 DTO */
-  data?: SaveCounselTechniqueSequenceResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -1035,7 +1425,7 @@ export interface CreateCounselorRequest {
 
 /** 상담사 생성 응답 */
 export interface CreateCounselorResponse {
-  /** 상담사 */
+  /** 생성된 상담사 */
   counselor?: Counselor;
 }
 
@@ -1046,7 +1436,7 @@ export interface SuccessCreateCounselorResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담사 생성 응답 */
+  /** 응답 데이터 */
   data?: CreateCounselorResponse;
   /**
    * 응답 시간
@@ -1069,7 +1459,7 @@ export interface GenerateCounselorImageUrlRequest {
 
 /** 상담사 이미지 URL 생성 응답 */
 export interface GenerateCounselorImageUrlResponse {
-  /** Presigned URL 응답 */
+  /** Presigned URL */
   presignedUrl?: PresignedUrlResponse;
 }
 
@@ -1099,7 +1489,7 @@ export interface SuccessGenerateCounselorImageUrlResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담사 이미지 URL 생성 응답 */
+  /** 응답 데이터 */
   data?: GenerateCounselorImageUrlResponse;
   /**
    * 응답 시간
@@ -1144,7 +1534,7 @@ export interface SaveNewEpisodeCutSceneRequest {
 
 /** 에피소드 생성 응답 */
 export interface CreateEpisodeResponse {
-  /** 에피소드 */
+  /** 생성된 에피소드 */
   episode?: Episode;
 }
 
@@ -1155,7 +1545,7 @@ export interface SuccessCreateEpisodeResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 에피소드 생성 응답 */
+  /** 응답 데이터 */
   data?: CreateEpisodeResponse;
   /**
    * 응답 시간
@@ -1178,7 +1568,7 @@ export interface GenerateCutSceneImageUrlRequest {
 
 /** 컷신 이미지 URL 생성 응답 */
 export interface GenerateCutSceneImageUrlResponse {
-  /** Presigned URL 응답 */
+  /** Presigned URL */
   presignedUrl?: PresignedUrlResponse;
 }
 
@@ -1189,7 +1579,7 @@ export interface SuccessGenerateCutSceneImageUrlResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 컷신 이미지 URL 생성 응답 */
+  /** 응답 데이터 */
   data?: GenerateCutSceneImageUrlResponse;
   /**
    * 응답 시간
@@ -1201,56 +1591,56 @@ export interface SuccessGenerateCutSceneImageUrlResponse {
 /** 상담 생성 요청 */
 export interface CreateCounselRequest {
   /** 버블 ID */
-  bubbleId?: string | null;
+  bubbleId?: string;
   /**
    * 응답 옵션 번호
    * @format int32
    */
-  responseOptionNo?: number | null;
+  responseOptionNo?: number;
   /** 프롬프트 버전 아이디 */
-  promptVersionId?: string | null;
+  promptVersionId?: string;
 }
 
 /** 상담 */
 export interface Counsel {
   /**
    * 상담 ID
-   * @example "123534543"
+   * @example 123534543
    */
   id?: string;
   /**
    * 상담사 ID
-   * @example "53453454323"
+   * @example 53453454323
    */
   counselorId?: string;
   /**
    * 유저 ID
-   * @example "53453454323"
+   * @example 53453454323
    */
   userId?: string;
   /**
    * 마지막 메시지
    * @example "안녕하세요, 상담사님!"
    */
-  lastMessage?: string | null;
+  lastMessage?: string;
   /**
    * 마지막 채팅 날짜
    * @example "2024-12-29T12:34:56.000Z"
    */
-  lastChatedAt?: string | null;
+  lastChatedAt?: string;
   /**
    * 프롬프트 버전 ID
-   * @example "5435345345"
+   * @example 5435345345
    */
   promptVersionId?: string;
   /**
    * 상담 테크닉 ID
-   * @example "436534342321"
+   * @example 436534342321
    */
   counselTechniqueId?: string;
   /**
    * 상담사와 유저의 관계 ID
-   * @example "436534342321"
+   * @example 436534342321
    */
   counselorUserRelationshipId?: string;
   /** 상담 생성 시간 */
@@ -1258,7 +1648,7 @@ export interface Counsel {
   /** 상담 수정 시간 */
   updatedAt?: string;
   /** 상담 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 상담 메세지 */
@@ -1270,17 +1660,16 @@ export interface CounselMessage {
   /** 메시지 내용 */
   message?: string;
   /** 메시지 반응 시간 (ISO 8601) */
-  reactedAt?: string | null;
+  reactedAt?: string;
   /** 메시지 반응 객체 */
   reaction?:
     | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
     | "COUNSEL_MESSAGE_REACTION_LIKE"
     | "COUNSEL_MESSAGE_REACTION_DISLIKE"
-    | "UNRECOGNIZED"
-    | null;
+    | "UNRECOGNIZED";
   /**
    * 상담 테크닉 ID
-   * @example "436534342321"
+   * @example 436534342321
    */
   counselTechniqueId?: string;
   /** 생성 시간 (ISO 8601) */
@@ -1288,13 +1677,13 @@ export interface CounselMessage {
   /** 수정 시간 (ISO 8601) */
   updatedAt?: string;
   /** 삭제 시간 (ISO 8601) */
-  deletedAt?: string | null;
+  deletedAt?: string;
   userMessage?: boolean;
 }
 
 /** 상담 생성 응답 */
 export interface CreateCounselResponse {
-  /** 상담 */
+  /** 생성된 상담 */
   counsel?: Counsel;
   /** 상담 메시지 목록 */
   counselMessages?: CounselMessage[];
@@ -1307,7 +1696,7 @@ export interface SuccessCreateCounselResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 생성 응답 */
+  /** 응답 데이터 */
   data?: CreateCounselResponse;
   /**
    * 응답 시간
@@ -1324,9 +1713,9 @@ export interface CreateMessageRequest {
 
 /** 메시지 생성 응답 */
 export interface CreateMessageResponse {
-  /** 상담 메세지 */
+  /** 생성된 상담 메시지 */
   createdCounselMessage?: CounselMessage;
-  /** 상담 메세지 */
+  /** 상담사 응답 메시지 */
   counselorResponseMessage?: CounselMessage;
 }
 
@@ -1337,7 +1726,7 @@ export interface SuccessCreateMessageResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 메시지 생성 응답 */
+  /** 응답 데이터 */
   data?: CreateMessageResponse;
   /**
    * 응답 시간
@@ -1358,7 +1747,7 @@ export interface ReactMessageRequest {
 
 /** 메시지 반응 응답 */
 export interface ReactMessageResponse {
-  /** 상담 메세지 */
+  /** 반응이 추가된 상담 메시지 */
   counselMessage?: CounselMessage;
 }
 
@@ -1369,7 +1758,7 @@ export interface SuccessReactMessageResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 메시지 반응 응답 */
+  /** 응답 데이터 */
   data?: ReactMessageResponse;
   /**
    * 응답 시간
@@ -1390,7 +1779,7 @@ export interface CreateBubbleRequest {
 
 /** 버블 생성 응답 */
 export interface CreateBubbleResponse {
-  /** 버블 */
+  /** 생성된 버블 */
   bubble?: Bubble;
 }
 
@@ -1401,8 +1790,222 @@ export interface SuccessCreateBubbleResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 버블 생성 응답 */
+  /** 응답 데이터 */
   data?: CreateBubbleResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 기법 전환 규칙 생성 요청 DTO */
+export interface CreateCounselTechniqueTransitionRuleRequestDto {
+  /**
+   * 선행 상담 기법 ID
+   * @example "ct_12345678"
+   */
+  fromCounselTechniqueId: string;
+  /**
+   * 타겟 상담 기법 ID
+   * @example "ct_87654321"
+   */
+  toCounselTechniqueId: string;
+  /**
+   * 우선순위
+   * @format int32
+   * @example 1
+   */
+  priority: number;
+  /**
+   * 최소 현재 기법 메시지 개수
+   * @format int32
+   * @example 3
+   */
+  minCurrentTechniqueMessageCount?: number;
+  /**
+   * 최대 현재 기법 메시지 개수
+   * @format int32
+   * @example 8
+   */
+  maxCurrentTechniqueMessageCount?: number;
+  /** 필수 영향 도메인 */
+  requiredImpactDomains: (
+    | "IMPACT_DOMAIN_UNSPECIFIED"
+    | "IMPACT_DOMAIN_WORK"
+    | "IMPACT_DOMAIN_STUDY"
+    | "IMPACT_DOMAIN_RELATIONSHIP"
+    | "IMPACT_DOMAIN_FAMILY"
+    | "IMPACT_DOMAIN_HEALTH"
+    | "IMPACT_DOMAIN_FINANCE"
+    | "IMPACT_DOMAIN_SELF"
+    | "IMPACT_DOMAIN_OTHER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 시간 프레임 */
+  requiredTimeframes: (
+    | "TIMEFRAME_UNSPECIFIED"
+    | "TIMEFRAME_TODAY"
+    | "TIMEFRAME_THIS_WEEK"
+    | "TIMEFRAME_THIS_MONTH"
+    | "TIMEFRAME_THIS_YEAR"
+    | "TIMEFRAME_LONGER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 1차 감정 */
+  requiredEmotionPrimaries: (
+    | "EMOTION_PRIMARY_UNSPECIFIED"
+    | "EMOTION_PRIMARY_ANXIETY"
+    | "EMOTION_PRIMARY_SADNESS"
+    | "EMOTION_PRIMARY_ANGER"
+    | "EMOTION_PRIMARY_LONELINESS"
+    | "EMOTION_PRIMARY_GUILT"
+    | "EMOTION_PRIMARY_SHAME"
+    | "EMOTION_PRIMARY_STRESS"
+    | "EMOTION_PRIMARY_HOPE"
+    | "EMOTION_PRIMARY_CALM"
+    | "EMOTION_PRIMARY_OTHER"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 감정 긍부정 */
+  requiredValences: (
+    | "VALENCE_UNSPECIFIED"
+    | "VALENCE_NEGATIVE"
+    | "VALENCE_NEUTRAL"
+    | "VALENCE_POSITIVE"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 감정 각성 수준 */
+  requiredArousalLevels: (
+    | "AROUSAL_LEVEL_UNSPECIFIED"
+    | "AROUSAL_LEVEL_LOW"
+    | "AROUSAL_LEVEL_MEDIUM"
+    | "AROUSAL_LEVEL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 감정 강도
+   * @format int32
+   * @example 3
+   */
+  minEmotionIntensity?: number;
+  /**
+   * 최대 감정 강도
+   * @format int32
+   * @example 7
+   */
+  maxEmotionIntensity?: number;
+  /** 필수 인지된 통제 수준 */
+  requiredPerceivedControls: (
+    | "PERCEIVED_CONTROL_UNSPECIFIED"
+    | "PERCEIVED_CONTROL_LOW"
+    | "PERCEIVED_CONTROL_MEDIUM"
+    | "PERCEIVED_CONTROL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 동기 단계 */
+  requiredMotivationStages: (
+    | "MOTIVATION_STAGE_UNSPECIFIED"
+    | "MOTIVATION_STAGE_PRECONTEMPLATION"
+    | "MOTIVATION_STAGE_CONTEMPLATION"
+    | "MOTIVATION_STAGE_PREPARATION"
+    | "MOTIVATION_STAGE_ACTION"
+    | "MOTIVATION_STAGE_MAINTENANCE"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 자기 효능감
+   * @format int32
+   * @example 4
+   */
+  minSelfEfficacy?: number;
+  /**
+   * 최대 자기 효능감
+   * @format int32
+   * @example 8
+   */
+  maxSelfEfficacy?: number;
+  /** 필수 사회적 지지 수준 */
+  requiredSocialSupportLevels: (
+    | "SOCIAL_SUPPORT_LEVEL_UNSPECIFIED"
+    | "SOCIAL_SUPPORT_LEVEL_NONE"
+    | "SOCIAL_SUPPORT_LEVEL_LOW"
+    | "SOCIAL_SUPPORT_LEVEL_MEDIUM"
+    | "SOCIAL_SUPPORT_LEVEL_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 위험 종류 */
+  requiredRiskKinds: (
+    | "RISK_KIND_UNSPECIFIED"
+    | "RISK_KIND_NONE"
+    | "RISK_KIND_SELF_HARM"
+    | "RISK_KIND_HARM_TO_OTHERS"
+    | "RISK_KIND_ABUSE"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 최소 위험 심각도
+   * @format int32
+   * @example 2
+   */
+  minRiskSeverity?: number;
+  /**
+   * 최대 위험 심각도
+   * @format int32
+   * @example 5
+   */
+  maxRiskSeverity?: number;
+  /** 필수 수면의 질 */
+  requiredSleepQualities: (
+    | "SLEEP_QUALITY_UNSPECIFIED"
+    | "SLEEP_QUALITY_POOR"
+    | "SLEEP_QUALITY_FAIR"
+    | "SLEEP_QUALITY_GOOD"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 신체 증상 존재 여부 필요 조건
+   * @example true
+   */
+  requiredPhysicalSymptomsPresent?: boolean;
+  /** 필수 인지 부하 수준 */
+  requiredCognitiveLoads: (
+    | "COGNITIVE_LOAD_UNSPECIFIED"
+    | "COGNITIVE_LOAD_LOW"
+    | "COGNITIVE_LOAD_MEDIUM"
+    | "COGNITIVE_LOAD_HIGH"
+    | "UNRECOGNIZED"
+  )[];
+  /** 필수 동맹 강도 */
+  requiredAllianceStrengths: (
+    | "ALLIANCE_STRENGTH_UNSPECIFIED"
+    | "ALLIANCE_STRENGTH_WEAK"
+    | "ALLIANCE_STRENGTH_MEDIUM"
+    | "ALLIANCE_STRENGTH_STRONG"
+    | "UNRECOGNIZED"
+  )[];
+  /**
+   * 심층 탐색 동의 필요 여부
+   * @example false
+   */
+  requiredConsentToDepth?: boolean;
+}
+
+/** 상담 기법 전환 조건 생성 응답 DTO */
+export interface CreateCounselTechniqueTransitionRuleResponseDto {
+  /** 상담 기번 전환 조건 */
+  counselTechniqueTransitionRule?: CounselTechniqueTransitionRuleResponseDto;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessCreateCounselTechniqueTransitionRuleResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: CreateCounselTechniqueTransitionRuleResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -1423,7 +2026,7 @@ export interface SuccessFindUserByIdResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 유저 ID로 조회 응답 */
+  /** 응답 데이터 */
   data?: FindUserByIdResponse;
   /**
    * 응답 시간
@@ -1438,27 +2041,26 @@ export interface User {
   id?: string;
   /** 닉네임 */
   nickname?: string;
-  /** 유저 프로필 정보 */
+  /** 유저 프로필 */
   userProfile?: UserProfile;
   /** 생성 시간 */
   createdAt?: string;
   /** 수정 시간 */
   updatedAt?: string;
   /** 삭제 시간 */
-  deletedAt?: string | null;
+  deletedAt?: string;
 }
 
 /** 유저 프로필 정보 */
 export interface UserProfile {
   /** 프로필 이미지 URL */
-  profileImage?: string | null;
+  profileImage?: string;
   /** 성별 */
   gender?:
     | "GENDER_UNSPECIFIED"
     | "GENDER_MALE"
     | "GENDER_FEMALE"
-    | "UNRECOGNIZED"
-    | null;
+    | "UNRECOGNIZED";
   /** MBTI */
   mbti?:
     | "MBTI_UNSPECIFIED"
@@ -1478,13 +2080,12 @@ export interface UserProfile {
     | "MBTI_ISTJ"
     | "MBTI_ISFP"
     | "MBTI_ISFJ"
-    | "UNRECOGNIZED"
-    | null;
+    | "UNRECOGNIZED";
   /**
    * 생년
    * @format int32
    */
-  birthYear?: number | null;
+  birthYear?: number;
 }
 
 /** 톤 조회 응답 */
@@ -1500,7 +2101,7 @@ export interface SuccessFindTonesResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 조회 응답 */
+  /** 응답 데이터 */
   data?: FindTonesResponse;
   /**
    * 응답 시간
@@ -1511,7 +2112,7 @@ export interface SuccessFindTonesResponse {
 
 /** 톤 ID로 조회 응답 */
 export interface FindToneByIdResponse {
-  /** 톤 */
+  /** 톤 정보 */
   tone?: Tone;
 }
 
@@ -1522,8 +2123,30 @@ export interface SuccessFindToneByIdResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 ID로 조회 응답 */
+  /** 응답 데이터 */
   data?: FindToneByIdResponse;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 톤 프롬프트 전체 조회 응답 DTO */
+export interface FindTonePromptsResponseDto {
+  /** 톤 프롬프트 목록 */
+  tonePrompts?: TonePromptResponseDto[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindTonePromptsResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: FindTonePromptsResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -1533,7 +2156,7 @@ export interface SuccessFindToneByIdResponse {
 
 /** 톤 프롬프트 조회 응답 DTO */
 export interface FindTonePromptByIdResponseDto {
-  /** 톤 프롬프트 응답 DTO */
+  /** 톤 프롬프트 */
   tonePrompt?: TonePromptResponseDto;
 }
 
@@ -1544,7 +2167,7 @@ export interface SuccessFindTonePromptByIdResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 톤 프롬프트 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindTonePromptByIdResponseDto;
   /**
    * 응답 시간
@@ -1566,7 +2189,7 @@ export interface SuccessFindPromptVersionsResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 프롬프트 버전 목록 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindPromptVersionsResponseDto;
   /**
    * 응답 시간
@@ -1577,7 +2200,7 @@ export interface SuccessFindPromptVersionsResponseDto {
 
 /** 프롬프트 버전 조회 응답 DTO */
 export interface FindPromptVersionByIdResponseDto {
-  /** 프롬프트 버전 응답 DTO */
+  /** 프롬프트 버전 */
   promptVersion?: PromptVersionResponseDto;
 }
 
@@ -1588,7 +2211,7 @@ export interface SuccessFindPromptVersionByIdResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 프롬프트 버전 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindPromptVersionByIdResponseDto;
   /**
    * 응답 시간
@@ -1599,7 +2222,7 @@ export interface SuccessFindPromptVersionByIdResponseDto {
 
 /** 임시 버전 조회 응답 DTO */
 export interface FindTemporaryVersionResponseDto {
-  /** 프롬프트 버전 응답 DTO */
+  /** 프롬프트 버전 */
   promptVersion?: PromptVersionResponseDto;
 }
 
@@ -1610,7 +2233,7 @@ export interface SuccessFindTemporaryVersionResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 임시 버전 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindTemporaryVersionResponseDto;
   /**
    * 응답 시간
@@ -1621,7 +2244,7 @@ export interface SuccessFindTemporaryVersionResponseDto {
 
 /** 활성 버전 조회 응답 DTO */
 export interface FindActiveVersionResponseDto {
-  /** 프롬프트 버전 응답 DTO */
+  /** 프롬프트 버전 */
   promptVersion?: PromptVersionResponseDto;
 }
 
@@ -1632,7 +2255,7 @@ export interface SuccessFindActiveVersionResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 활성 버전 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindActiveVersionResponseDto;
   /**
    * 응답 시간
@@ -1676,7 +2299,7 @@ export interface PromptActivateHistoryResponseDto {
   updatedAt?: string;
   /**
    * 삭제 시간
-   * @example "null"
+   * @example null
    */
   deletedAt?: string;
 }
@@ -1688,8 +2311,30 @@ export interface SuccessFindPromptActivateHistoriesResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 프롬프트 활성화 히스토리 목록 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindPromptActivateHistoriesResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 페르소나 프롬프트 전체 조회 응답 DTO */
+export interface FindPersonaPromptsResponseDto {
+  /** 페르소나 프롬프트 목록 */
+  personaPrompts?: PersonaPromptResponseDto[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindPersonaPromptsResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: FindPersonaPromptsResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -1699,7 +2344,7 @@ export interface SuccessFindPromptActivateHistoriesResponseDto {
 
 /** 페르소나 프롬프트 조회 응답 DTO */
 export interface FindPersonaPromptByIdResponseDto {
-  /** 페르소나 프롬프트 응답 DTO */
+  /** 페르소나 프롬프트 */
   personaPrompt?: PersonaPromptResponseDto;
 }
 
@@ -1710,7 +2355,7 @@ export interface SuccessFindPersonaPromptByIdResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 페르소나 프롬프트 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindPersonaPromptByIdResponseDto;
   /**
    * 응답 시간
@@ -1732,7 +2377,7 @@ export interface SuccessFindCounselorsResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담사 조회 응답 */
+  /** 응답 데이터 */
   data?: FindCounselorsResponse;
   /**
    * 응답 시간
@@ -1743,7 +2388,7 @@ export interface SuccessFindCounselorsResponse {
 
 /** 상담사 ID로 조회 응답 */
 export interface FindCounselorByIdResponse {
-  /** 상담사 */
+  /** 상담사 정보 */
   counselor?: Counselor;
 }
 
@@ -1754,7 +2399,7 @@ export interface SuccessFindCounselorByIdResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담사 ID로 조회 응답 */
+  /** 응답 데이터 */
   data?: FindCounselorByIdResponse;
   /**
    * 응답 시간
@@ -1776,7 +2421,7 @@ export interface SuccessFindEpisodesResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 에피소드 조회 응답 */
+  /** 응답 데이터 */
   data?: FindEpisodesResponse;
   /**
    * 응답 시간
@@ -1787,7 +2432,7 @@ export interface SuccessFindEpisodesResponse {
 
 /** 에피소드 ID로 조회 응답 */
 export interface FindEpisodeByIdResponse {
-  /** 에피소드 */
+  /** 에피소드 정보 */
   episode?: Episode;
 }
 
@@ -1798,7 +2443,7 @@ export interface SuccessFindEpisodeByIdResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 에피소드 ID로 조회 응답 */
+  /** 응답 데이터 */
   data?: FindEpisodeByIdResponse;
   /**
    * 응답 시간
@@ -1820,7 +2465,7 @@ export interface SuccessFindCounselsResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 목록 조회 응답 */
+  /** 응답 데이터 */
   data?: FindCounselsResponse;
   /**
    * 응답 시간
@@ -1842,7 +2487,7 @@ export interface SuccessFindCounselByIdResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 단건 조회 응답 */
+  /** 응답 데이터 */
   data?: FindCounselByIdResponse;
   /**
    * 응답 시간
@@ -1864,7 +2509,7 @@ export interface SuccessFindMessagesResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 메시지 목록 조회 응답 */
+  /** 응답 데이터 */
   data?: FindMessagesResponse;
   /**
    * 응답 시간
@@ -1886,7 +2531,7 @@ export interface SuccessFindBubblesResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 버블 조회 응답 */
+  /** 응답 데이터 */
   data?: FindBubblesResponse;
   /**
    * 응답 시간
@@ -1897,7 +2542,7 @@ export interface SuccessFindBubblesResponse {
 
 /** 버블 ID로 조회 응답 */
 export interface FindBubbleByIdResponse {
-  /** 버블 */
+  /** 버블 정보 */
   bubble?: Bubble;
 }
 
@@ -1908,7 +2553,7 @@ export interface SuccessFindBubbleByIdResponse {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 버블 ID로 조회 응답 */
+  /** 응답 데이터 */
   data?: FindBubbleByIdResponse;
   /**
    * 응답 시간
@@ -1917,21 +2562,21 @@ export interface SuccessFindBubbleByIdResponse {
   timestamp?: string;
 }
 
-/** 상담 기법 목록 조회 응답 DTO */
-export interface FindOrderedCounselTechniquesResponseDto {
+/** 상담 기법 전체 조회 응답 DTO */
+export interface FindCounselTechniquesResponseDto {
   /** 상담 기법 목록 */
   counselTechniques?: CounselTechniqueResponseDto[];
 }
 
 /** 성공 응답 DTO */
-export interface SuccessFindOrderedCounselTechniquesResponseDto {
+export interface SuccessFindCounselTechniquesResponseDto {
   /**
    * 성공 메시지
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 기법 목록 조회 응답 DTO */
-  data?: FindOrderedCounselTechniquesResponseDto;
+  /** 응답 데이터 */
+  data?: FindCounselTechniquesResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -1941,7 +2586,7 @@ export interface SuccessFindOrderedCounselTechniquesResponseDto {
 
 /** 상담 기법 조회 응답 DTO */
 export interface FindCounselTechniqueByIdResponseDto {
-  /** 상담 기법 응답 DTO */
+  /** 상담 기법 */
   counselTechnique?: CounselTechniqueResponseDto;
 }
 
@@ -1952,8 +2597,102 @@ export interface SuccessFindCounselTechniqueByIdResponseDto {
    * @example "요청이 성공적으로 처리되었습니다."
    */
   message?: string;
-  /** 상담 기법 조회 응답 DTO */
+  /** 응답 데이터 */
   data?: FindCounselTechniqueByIdResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 기법 전환 조건 목록 조회 응답 DTO */
+export interface FindCounselTechniqueTransitionRulesResponseDto {
+  /** 상담 기번 전환 조건 목록 */
+  counselTechniqueTransitionRules?: CounselTechniqueTransitionRuleResponseDto[];
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselTechniqueTransitionRulesResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: FindCounselTechniqueTransitionRulesResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 기법 전환 조건 조회 응답 DTO */
+export interface FindCounselTechniqueTransitionRuleByIdResponseDto {
+  /** 상담 기번 전환 조건 */
+  counselTechniqueTransitionRule?: CounselTechniqueTransitionRuleResponseDto;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessFindCounselTechniqueTransitionRuleByIdResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: FindCounselTechniqueTransitionRuleByIdResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 프롬프트 버전 삭제 응답 DTO */
+export interface DeletePromptVersionResponseDto {
+  /**
+   * 프롬프트 버전 삭제 성공 여부
+   * @example true
+   */
+  isSuccess?: boolean;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessDeletePromptVersionResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: DeletePromptVersionResponseDto;
+  /**
+   * 응답 시간
+   * @example "2024-07-01 14:30:45"
+   */
+  timestamp?: string;
+}
+
+/** 상담 기법 전환 조건 삭제 응답 DTO */
+export interface DeleteCounselTechniqueTransitionRuleResponseDto {
+  /**
+   * 프롬프트 버전 삭제 성공 여부
+   * @example true
+   */
+  isSuccess?: boolean;
+}
+
+/** 성공 응답 DTO */
+export interface SuccessDeleteCounselTechniqueTransitionRuleResponseDto {
+  /**
+   * 성공 메시지
+   * @example "요청이 성공적으로 처리되었습니다."
+   */
+  message?: string;
+  /** 응답 데이터 */
+  data?: DeleteCounselTechniqueTransitionRuleResponseDto;
   /**
    * 응답 시간
    * @example "2024-07-01 14:30:45"
@@ -1968,6 +2707,18 @@ export type GetToneError = Error;
 export type UpdateToneData = SuccessUpdateToneResponse;
 
 export type UpdateToneError = Error;
+
+export type GetPromptVersionByIdData = SuccessFindPromptVersionByIdResponseDto;
+
+export type GetPromptVersionByIdError = Error;
+
+export type UpdatePromptVersionData = SuccessUpdatePromptVersionResponseDto;
+
+export type UpdatePromptVersionError = Error;
+
+export type DeletePromptVersionData = SuccessDeletePromptVersionResponseDto;
+
+export type DeletePromptVersionError = Error;
 
 export type GetTemporaryVersionData = SuccessFindTemporaryVersionResponseDto;
 
@@ -2018,6 +2769,21 @@ export type UpdateBubbleData = SuccessUpdateBubbleResponse;
 
 export type UpdateBubbleError = Error;
 
+export type GetCounselTechniqueTransitionRuleByIdData =
+  SuccessFindCounselTechniqueTransitionRuleByIdResponseDto;
+
+export type GetCounselTechniqueTransitionRuleByIdError = Error;
+
+export type UpdateCounselTechniqueTransitionRuleData =
+  SuccessUpdateCounselTechniqueTransitionRuleResponseDto;
+
+export type UpdateCounselTechniqueTransitionRuleError = Error;
+
+export type DeleteCounselTechniqueTransitionRuleData =
+  SuccessDeleteCounselTechniqueTransitionRuleResponseDto;
+
+export type DeleteCounselTechniqueTransitionRuleError = Error;
+
 export type RefreshTokenData = SuccessTokenResponseDto;
 
 export type RefreshTokenError = Error;
@@ -2028,7 +2794,7 @@ export type CreateUserError = Error;
 
 export interface GetTonesParams {
   /** 톤 이름 (선택) */
-  name?: string | null;
+  name?: string;
 }
 
 export type GetTonesData = SuccessFindTonesResponse;
@@ -2047,11 +2813,6 @@ export type CreateCounselTechniqueData =
   SuccessCreateCounselTechniqueResponseDto;
 
 export type CreateCounselTechniqueError = Error;
-
-export type SaveCounselTechniqueSequenceData =
-  SuccessSaveCounselTechniqueSequenceResponseDto;
-
-export type SaveCounselTechniqueSequenceError = Error;
 
 export interface GetCounselorsParams {
   /** 톤 ID (선택) */
@@ -2112,6 +2873,34 @@ export type CreateBubbleData = SuccessCreateBubbleResponse;
 
 export type CreateBubbleError = Error;
 
+export interface GetCounselTechniqueTransitionRulesParams {
+  /**
+   * 선행 상담 기법 ID
+   * @example "ct_123456"
+   */
+  fromCounselTechniqueId?: string;
+  /**
+   * 후행 상담 기법 ID
+   * @example "ct_123456"
+   */
+  toCounselTechniqueId?: string;
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_123456"
+   */
+  promptVersionId: string;
+}
+
+export type GetCounselTechniqueTransitionRulesData =
+  SuccessFindCounselTechniqueTransitionRulesResponseDto;
+
+export type GetCounselTechniqueTransitionRulesError = Error;
+
+export type CreateCounselTechniqueTransitionRuleData =
+  SuccessCreateCounselTechniqueTransitionRuleResponseDto;
+
+export type CreateCounselTechniqueTransitionRuleError = Error;
+
 export interface KakaoParams {
   /** 로그인 후 리다이렉트할 클라이언트 URL */
   "redirect-url": string;
@@ -2130,6 +2919,23 @@ export type GetUserData = SuccessFindUserByIdResponse;
 
 export type GetUserError = Error;
 
+export interface GetTonePromptsParams {
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_123456"
+   */
+  promptVersionId: string;
+  /**
+   * 톤 ID
+   * @example "tone_123456"
+   */
+  toneId?: string;
+}
+
+export type GetTonePromptsData = SuccessFindTonePromptsResponseDto;
+
+export type GetTonePromptsError = Error;
+
 export type GetTonePromptByIdData = SuccessFindTonePromptByIdResponseDto;
 
 export type GetTonePromptByIdError = Error;
@@ -2146,10 +2952,6 @@ export type GetPromptVersionsData = SuccessFindPromptVersionsResponseDto;
 
 export type GetPromptVersionsError = Error;
 
-export type GetPromptVersionByIdData = SuccessFindPromptVersionByIdResponseDto;
-
-export type GetPromptVersionByIdError = Error;
-
 export type GetActiveVersionData = SuccessFindActiveVersionResponseDto;
 
 export type GetActiveVersionError = Error;
@@ -2163,6 +2965,23 @@ export type GetPromptActivateHistoriesData =
 
 export type GetPromptActivateHistoriesError = Error;
 
+export interface GetPersonaPromptsParams {
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_123456"
+   */
+  promptVersionId: string;
+  /**
+   * 상담사 ID
+   * @example "counselor_123456"
+   */
+  counselorId?: string;
+}
+
+export type GetPersonaPromptsData = SuccessFindPersonaPromptsResponseDto;
+
+export type GetPersonaPromptsError = Error;
+
 export type GetPersonaPromptByIdData = SuccessFindPersonaPromptByIdResponseDto;
 
 export type GetPersonaPromptByIdError = Error;
@@ -2175,14 +2994,22 @@ export type GetRandomBubbleData = SuccessFindBubbleByIdResponse;
 
 export type GetRandomBubbleError = Error;
 
-export interface GetOrderedCounselTechniquesParams {
-  "first-counsel-technique-id": string;
+export interface GetCounselTechniquesParams {
+  /**
+   * 프롬프트 버전 ID
+   * @example "pv_123456"
+   */
+  promptVersionId: string;
+  /**
+   * 톤 ID
+   * @example "tone_123456"
+   */
+  toneId?: string;
 }
 
-export type GetOrderedCounselTechniquesData =
-  SuccessFindOrderedCounselTechniquesResponseDto;
+export type GetCounselTechniquesData = SuccessFindCounselTechniquesResponseDto;
 
-export type GetOrderedCounselTechniquesError = Error;
+export type GetCounselTechniquesError = Error;
 
 export type GetCounselTechniqueByIdData =
   SuccessFindCounselTechniqueByIdResponseDto;

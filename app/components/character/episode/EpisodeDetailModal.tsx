@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent } from '~/components/ui/dialog';
-import { useEpisodeDetail, useEpisodeImages } from './hooks';
+import { useEpisodeDetailStore } from "~/stores/episodeDetailStore";
+import { useEpisodeAPIData } from './hooks/useEpisodeAPIData';
+import { useEpisodeCreation } from './hooks/useEpisodeCreation';
+import { useEpisodeUpdate } from './hooks/useEpisodeUpdate';
 import StatusWarningModal from './StatusWarningModal';
 import EpisodeInfoSection from './EpisodeInfoSection';
 import ImageThumbnailsSection from './ImageThumbnailsSection';
@@ -12,7 +16,10 @@ interface EpisodeDetailModalProps {
 }
 
 // 캐릭터 헤더 컴포넌트 분리 - 모드 정보 추가
-const CharacterHeader = ({ characterName, isNewEpisode }: { characterName?: string; isNewEpisode: boolean }) => {
+const CharacterHeader = ({ characterName }: { characterName?: string }) => {
+  const currentEpisode = useEpisodeDetailStore(state => state.currentEpisode);
+  const isNewEpisode = !currentEpisode?.id;
+
   if (!characterName) return null;
 
   return (
@@ -30,175 +37,123 @@ const CharacterHeader = ({ characterName, isNewEpisode }: { characterName?: stri
   );
 };
 
-// 이미지 관리 버튼들 컴포넌트 분리
-const ImageManagementButtons = ({ isEditing }: { isEditing: boolean }) => {
-  if (!isEditing) return null;
+// 액션 버튼들 컴포넌트 분리
+const ActionButtons = ({ counselorId }: { counselorId: string }) => {
+  const isEditing = useEpisodeDetailStore(state => state.isEditing);
+  const currentEpisode = useEpisodeDetailStore(state => state.currentEpisode);
+  const editedEpisode = useEpisodeDetailStore(state => state.editedEpisode);
+  const editData = useEpisodeDetailStore(state => state.editData);
+  const startEditing = useEpisodeDetailStore(state => state.startEditing);
+  const cancelEditing = useEpisodeDetailStore(state => state.cancelEditing);
+  const closeModal = useEpisodeDetailStore(state => state.closeModal);
+  
+  const isNewEpisode = !currentEpisode?.id;
+  
+  // 새 에피소드 생성용 훅
+  const { isCreating, executeCreation } = useEpisodeCreation(counselorId, closeModal);
+  
+  // 기존 에피소드 업데이트용 훅 (편집 모드 해제만)
+  const { isUpdating, executeUpdate } = useEpisodeUpdate(counselorId, () => {
+    // 업데이트 성공 시 편집 모드 해제
+    useEpisodeDetailStore.getState().saveChanges();
+  });
 
-  const handlePageDelete = () => {
-    console.log('페이지 삭제 기능');
-    // TODO: Implement page deletion logic
+  // 저장 로직
+  const handleSave = () => {
+    if (!editedEpisode) return;
+
+    if (isNewEpisode) {
+      // 새 에피소드 생성
+      executeCreation({
+        title: editedEpisode.title,
+        level: editedEpisode.level || 0,
+        scenes: editData.scenes,
+      });
+    } else {
+      // 기존 에피소드 업데이트
+      executeUpdate({
+        episodeId: currentEpisode!.id!,
+        title: editedEpisode.title,
+        level: editedEpisode.level || 0,
+        status: editData.tempStatus,
+        scenes: editData.scenes,
+      });
+    }
   };
 
-  const handleExistingImages = () => {
-    console.log('기존 이미지 기능');
-    // TODO: Implement existing images browser
-  };
-
-  const handlePCUpload = () => {
-    console.log('PC에서 추가 기능');
-    // TODO: Implement PC file upload
-  };
+  const isLoading = isCreating || isUpdating;
 
   return (
-    <div className="mb-6 flex items-center justify-between">
-      <div className="flex space-x-2">
-        <Button variant="outline" onClick={handlePageDelete}>
-          페이지 삭제
+    <div className="flex justify-center space-x-3">
+      {!isEditing ? (
+        <Button size="lg" className="px-8" onClick={startEditing}>
+          수정
         </Button>
-        <Button variant="outline" onClick={handleExistingImages}>
-          기존 이미지
-        </Button>
-        <Button variant="outline" onClick={handlePCUpload}>
-          PC에서 추가
-        </Button>
-      </div>
+      ) : (
+        <>
+          <Button size="lg" className="px-8" onClick={handleSave} disabled={isLoading}>
+            {isNewEpisode 
+              ? (isCreating ? '생성 중...' : '생성') 
+              : (isUpdating ? '저장 중...' : '저장')
+            }
+          </Button>
+          <Button size="lg" variant="outline" className="px-8" onClick={cancelEditing} disabled={isLoading}>
+            취소
+          </Button>
+        </>
+      )}
     </div>
   );
 };
 
-// 액션 버튼들 컴포넌트 분리
-const ActionButtons = ({
-  isEditing,
-  isNewEpisode,
-  isCreating,
-  onStartEditing,
-  onSave,
-  onCancel,
-}: {
-  isEditing: boolean;
-  isNewEpisode: boolean;
-  isCreating?: boolean;
-  onStartEditing: () => void;
-  onSave: () => void;
-  onCancel: () => void;
-}) => (
-  <div className="flex justify-center space-x-3">
-    {!isEditing ? (
-      <Button size="lg" className="px-8" onClick={onStartEditing}>
-        수정
-      </Button>
-    ) : (
-      <>
-        <Button size="lg" className="px-8" onClick={onSave} disabled={isCreating}>
-          {isNewEpisode ? (isCreating ? '생성 중...' : '생성') : '저장'}
-        </Button>
-        <Button size="lg" variant="outline" className="px-8" onClick={onCancel} disabled={isCreating}>
-          취소
-        </Button>
-      </>
-    )}
-  </div>
-);
+// 데이터 초기화 및 동기화 훅
+const useEpisodeInitialization = (counselorId: string) => {
+  const { currentEpisode, isModalOpen, updateEditData } = useEpisodeDetailStore();
+  const isNewEpisode = !currentEpisode?.id;
+
+  // API 데이터 페칭 (기존 에피소드일 때만)
+  const { apiEpisodeDetail, getEditDataFromAPI } = useEpisodeAPIData(
+    currentEpisode?.id || '',
+    counselorId,
+    !!currentEpisode?.id && !!counselorId && isModalOpen && !isNewEpisode
+  );
+
+  // API 데이터가 로드되면 편집 데이터와 동기화
+  useEffect(() => {
+    if (apiEpisodeDetail && currentEpisode && !isNewEpisode) {
+      const editData = getEditDataFromAPI(apiEpisodeDetail);
+      if (editData) {
+        updateEditData(editData);
+      }
+    }
+  }, [apiEpisodeDetail, currentEpisode, isNewEpisode]);
+};
 
 const EpisodeDetailModal = ({ characterName, counselorId }: EpisodeDetailModalProps) => {
-  const {
-    isModalOpen,
-    currentEpisode,
-    editedEpisode,
-    isEditing,
-    editData,
-    showWarningModal,
-    warningType,
-    isDetailLoading,
-    isCreating,
-    isNewEpisode,
-    closeModal,
-    startEditing,
-    saveChanges,
-    cancelEditing,
-    handleStatusChange,
-    confirmStatusChange,
-    cancelStatusChange,
-    onTitleChange,
-    onLevelChange,
-    onSpeakerChange,
-    onDialogueChange,
-    onAddScene,
-  } = useEpisodeDetail(counselorId);
+  const isModalOpen = useEpisodeDetailStore(state => state.isModalOpen);
+  const currentEpisode = useEpisodeDetailStore(state => state.currentEpisode);
+  const closeModal = useEpisodeDetailStore(state => state.closeModal);
+  const showWarningModal = useEpisodeDetailStore(state => state.showWarningModal);
+  const warningType = useEpisodeDetailStore(state => state.warningType);
+  const confirmStatusChange = useEpisodeDetailStore(state => state.confirmStatusChange);
+  const cancelStatusChange = useEpisodeDetailStore(state => state.cancelStatusChange);
 
-  const {
-    isOrderAdjustmentMode,
-    imageOrder,
-    selectedImageIndex,
-    toggleOrderAdjustmentMode,
-    reorderImages,
-    setSelectedImageIndex,
-    navigateImage,
-  } = useEpisodeImages();
+  // 데이터 초기화
+  useEpisodeInitialization(counselorId);
 
   if (!currentEpisode) return null;
-
-  // 실제 씬 개수에 맞춰 imageOrder 조정
-  const sceneCount = editData.scenes.length;
-  const adjustedImageOrder = Array.from({ length: sceneCount }, (_, i) => i);
-  const adjustedSelectedIndex = Math.min(selectedImageIndex, sceneCount - 1);
 
   return (
     <>
       <Dialog open={isModalOpen} onOpenChange={closeModal}>
         <DialogContent className="h-full max-h-[700px] w-full max-w-[1420px] p-0">
           <div className="h-full w-full overflow-y-auto p-6">
-            <CharacterHeader characterName={characterName} isNewEpisode={isNewEpisode} />
+            <CharacterHeader characterName={characterName} />
 
-            {isDetailLoading ? (
-              <div className="flex h-64 items-center justify-center">
-                <div className="text-lg">에피소드 상세 정보를 불러오는 중...</div>
-              </div>
-            ) : (
-              <>
-                <EpisodeInfoSection
-                  episode={editedEpisode || currentEpisode}
-                  isEditing={isEditing}
-                  status={editData.tempStatus}
-                  onTitleChange={onTitleChange}
-                  onLevelChange={onLevelChange}
-                  onStatusChange={handleStatusChange}
-                  onOrderAdjustment={toggleOrderAdjustmentMode}
-                  isOrderAdjustmentMode={isOrderAdjustmentMode}
-                />
-
-                <ImageThumbnailsSection
-                  isOrderAdjustmentMode={isOrderAdjustmentMode}
-                  imageOrder={adjustedImageOrder}
-                  selectedImageIndex={adjustedSelectedIndex}
-                  isEditing={isEditing}
-                  sceneCount={sceneCount}
-                  onReorderImages={reorderImages}
-                  onSelectImage={setSelectedImageIndex}
-                  onAddScene={onAddScene}
-                />
-
-                <SceneContentSection
-                  isEditing={isEditing}
-                  selectedImageIndex={adjustedSelectedIndex}
-                  currentScene={editData.scenes[adjustedSelectedIndex] || { speaker: 'jihoo', dialogue: '' }}
-                  onSpeakerChange={(speaker) => onSpeakerChange(speaker, adjustedSelectedIndex)}
-                  onDialogueChange={(dialogue) => onDialogueChange(dialogue, adjustedSelectedIndex)}
-                  onNavigateImage={navigateImage}
-                />
-
-                <ImageManagementButtons isEditing={isEditing} />
-
-                <ActionButtons
-                  isEditing={isEditing}
-                  isNewEpisode={isNewEpisode}
-                  isCreating={isCreating}
-                  onStartEditing={startEditing}
-                  onSave={saveChanges}
-                  onCancel={cancelEditing}
-                />
-              </>
-            )}
+            <EpisodeInfoSection />
+            <ImageThumbnailsSection />
+            <SceneContentSection counselorId={counselorId} />
+            <ActionButtons counselorId={counselorId} />
           </div>
         </DialogContent>
       </Dialog>

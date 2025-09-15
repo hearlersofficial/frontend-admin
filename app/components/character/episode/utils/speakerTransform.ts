@@ -54,13 +54,14 @@ export const transformCutSceneToScene = (
   counselor?: Counselor | null,
   fallbackCounselorName?: string
 ) => ({
+  id: `scene_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   speaker: apiSpeakerToUI(cutScene.speaker || '', counselor, fallbackCounselorName),
   dialogue: cutScene.content || '',
 });
 
 // Scene 데이터 변환: UI scene → API cutScene
 export const transformSceneToCutScene = (
-  scene: { speaker: string; dialogue: string },
+  scene: { id: string; speaker: string; dialogue: string; image?: string },
   index: number,
   counselor?: Counselor | null,
   fallbackCounselorName?: string
@@ -68,5 +69,5 @@ export const transformSceneToCutScene = (
   speaker: uiSpeakerToAPI(scene.speaker, counselor, fallbackCounselorName),
   content: scene.dialogue,
   orderIndex: index + 1, // 서버는 1부터 시작
-  image: '', // TODO: 이미지 기능 구현 시 실제 이미지 URL로 변경
+  image: scene.image || '', // 실제 이미지 URL 사용
 }); 

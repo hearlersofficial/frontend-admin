@@ -8,7 +8,7 @@ import {
   KakaoCallbackParams,
   GetPromptVersionsParams,
   GetPromptActivateHistoriesParams,
-  GetOrderedCounselTechniquesParams,
+  GetCounselTechniquesParams,
 } from '~/__generated__/data-contracts';
 
 const v1QueryKeys = createQueryKeys('v1', {
@@ -72,9 +72,9 @@ const v1QueryKeys = createQueryKeys('v1', {
     queryKey: [counselorId],
     queryFn: () => api.V1.getEpisodes(counselorId),
   }),
-  getOrderedCounselTechniques: (query: GetOrderedCounselTechniquesParams) => ({
+  getCounselTechniques: (query: GetCounselTechniquesParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getOrderedCounselTechniques(query).then((res) => res.data.data?.counselTechniques),
+    queryFn: () => api.V1.getCounselTechniques(query).then((res) => res.data.data?.counselTechniques),
   }),
   getCounselTechniqueById: (counselTechniqueId: string) => ({
     queryKey: [counselTechniqueId],
