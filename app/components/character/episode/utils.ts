@@ -37,4 +37,13 @@ export const paginateItems = <T>(items: T[], currentPage: number, itemsPerPage: 
 
 // 에피소드 필터링
 export const filterEpisodes = (episodes: Episode[], isDraftOnly: boolean): Episode[] => 
-  episodes.filter(episode => isDraftOnly ? episode.status === "임시" : true); 
+  episodes.filter(episode => isDraftOnly ? episode.status === "임시" : true);
+
+// Speaker 변환 유틸리티 re-export
+export {
+  type APISpeaker,
+  apiSpeakerToUI,
+  uiSpeakerToAPI,
+  transformCutSceneToScene,
+  transformSceneToCutScene,
+} from './utils/speakerTransform'; 

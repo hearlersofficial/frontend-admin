@@ -1,29 +1,21 @@
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
-import { Episode } from "../types";
+import { useEpisodeDetailStore } from "~/stores/episodeDetailStore";
+import { useEpisodeImageStore } from "~/stores/episodeImageStore";
 
-interface EpisodeInfoSectionProps {
-  episode: Episode | null;
-  isEditing: boolean;
-  status: string;
-  onTitleChange: (title: string) => void;
-  onLevelChange: (level: number) => void;
-  onStatusChange: (status: string) => void;
-  onOrderAdjustment: () => void;
-  isOrderAdjustmentMode?: boolean;
-}
+const EpisodeInfoSection = () => {
+  const editedEpisode = useEpisodeDetailStore(state => state.editedEpisode);
+  const currentEpisode = useEpisodeDetailStore(state => state.currentEpisode);
+  const isEditing = useEpisodeDetailStore(state => state.isEditing);
+  const tempStatus = useEpisodeDetailStore(state => state.editData.tempStatus);
+  const updateEditedEpisode = useEpisodeDetailStore(state => state.updateEditedEpisode);
+  const handleStatusChange = useEpisodeDetailStore(state => state.handleStatusChange);
+  
+  const isOrderAdjustmentMode = useEpisodeImageStore(state => state.isOrderAdjustmentMode);
+  const toggleOrderAdjustmentMode = useEpisodeImageStore(state => state.toggleOrderAdjustmentMode);
 
-const EpisodeInfoSection = ({
-  episode,
-  isEditing,
-  status,
-  onTitleChange,
-  onLevelChange,
-  onStatusChange,
-  onOrderAdjustment,
-  isOrderAdjustmentMode = false,
-}: EpisodeInfoSectionProps) => {
+  const episode = editedEpisode || currentEpisode;
   if (!episode) return null;
 
   return (
@@ -34,7 +26,7 @@ const EpisodeInfoSection = ({
           value={episode.title || ''} 
           readOnly={!isEditing} 
           className={!isEditing ? "bg-gray-50" : ""}
-          onChange={(e) => onTitleChange(e.target.value)}
+          onChange={(e) => updateEditedEpisode({ title: e.target.value })}
         />
       </div>
       <div className="w-full">
@@ -42,7 +34,7 @@ const EpisodeInfoSection = ({
         <Select 
           defaultValue={episode.level.toString()} 
           disabled={!isEditing}
-          onValueChange={(value) => onLevelChange(parseInt(value))}
+          onValueChange={(value) => updateEditedEpisode({ level: parseInt(value) })}
         >
           <SelectTrigger className="w-full h-9">
             <SelectValue placeholder="기준 레벨" />
@@ -59,13 +51,13 @@ const EpisodeInfoSection = ({
       <div className="w-full">
         <div className="font-medium mb-1">배포 상태</div>
         <Select 
-          value={status}
+          value={tempStatus}
           disabled={!isEditing}
-          onValueChange={onStatusChange}
+          onValueChange={handleStatusChange}
         >
           <SelectTrigger 
-            className={`w-full h-9 ${status === '배포' ? 'text-white' : ''}`}
-            style={status === '배포' ? { backgroundColor: '#EC5E5E' } : {}}
+            className={`w-full h-9 ${tempStatus === '배포' ? 'text-white' : ''}`}
+            style={tempStatus === '배포' ? { backgroundColor: '#EC5E5E' } : {}}
           >
             <SelectValue placeholder="배포 상태" />
           </SelectTrigger>
@@ -79,7 +71,7 @@ const EpisodeInfoSection = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={onOrderAdjustment}
+          onClick={toggleOrderAdjustmentMode}
           className="w-full"
           disabled={!isEditing}
         >

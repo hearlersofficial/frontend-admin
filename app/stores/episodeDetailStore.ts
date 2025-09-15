@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { Episode } from '~/components/character/types';
 
-interface SceneData {
+export interface SceneData {
+  id: string;
   speaker: string;
   dialogue: string;
+  image?: string; // 이미지 URL 필드 추가
 }
 
 interface EpisodeEditData {
@@ -36,15 +38,19 @@ interface EpisodeDetailStore {
   updateEditedEpisode: (updates: Partial<Episode>) => void;
   updateEditData: (updates: Partial<EpisodeEditData>) => void;
   updateSceneData: (sceneIndex: number, updates: Partial<SceneData>) => void;
+  updateSceneImage: (sceneIndex: number, imageUrl: string) => void;
   addScene: () => void;
+  reorderScenes: (reorderedScenes: SceneData[]) => void;
   handleStatusChange: (newStatus: string) => void;
   confirmStatusChange: () => void;
   cancelStatusChange: () => void;
 }
 
 const createEmptyScene = (): SceneData => ({
+  id: `scene_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
   speaker: 'jihoo',
   dialogue: '',
+  image: '',
 });
 
 const createNewEpisode = (): Episode => ({
@@ -123,15 +129,10 @@ export const useEpisodeDetailStore = create<EpisodeDetailStore>((set, get) => ({
     const { editedEpisode, editData } = get();
     if (!editedEpisode) return;
 
-    // TODO: API call to save changes or create new episode
     const isNewEpisode = !editedEpisode.id;
-    console.log(`${isNewEpisode ? 'Creating' : 'Updating'} episode:`, {
-      episode: editedEpisode,
-      ...editData
-    });
-
+    
     if (isNewEpisode) {
-      // 새 에피소드 생성 후 모달 닫기
+      // 새 에피소드 생성 후 모달 닫기 (실제 생성은 useEpisodeCreation에서 처리)
       set({ 
         isModalOpen: false,
         currentEpisode: null,
@@ -139,9 +140,12 @@ export const useEpisodeDetailStore = create<EpisodeDetailStore>((set, get) => ({
         editedEpisode: null,
       });
     } else {
-      // 기존 에피소드 수정 후 편집 모드만 해제
+      // 기존 에피소드 수정 후 편집 모드만 해제 (실제 업데이트는 useEpisodeUpdate에서 처리)
       set({ 
-        currentEpisode: { ...editedEpisode, status: editData.tempStatus },
+        currentEpisode: { 
+          ...editedEpisode, 
+          status: editData.tempStatus === '임시' ? '임시' : '배포'
+        },
         isEditing: false 
       });
     }
@@ -179,14 +183,36 @@ export const useEpisodeDetailStore = create<EpisodeDetailStore>((set, get) => ({
     editedEpisode: state.editedEpisode ? { ...state.editedEpisode, ...updates } : null
   })),
   
-  updateEditData: (updates) => set((state) => ({
-    editData: { ...state.editData, ...updates }
-  })),
+  updateEditData: (updates) => set((state) => {
+    // scenes에 id가 없으면 추가
+    const updatedData = { ...state.editData, ...updates };
+    if (updatedData.scenes) {
+      updatedData.scenes = updatedData.scenes.map(scene => ({
+        id: scene.id || `scene_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        speaker: scene.speaker,
+        dialogue: scene.dialogue,
+        image: scene.image || '',
+      }));
+    }
+    return {
+      editData: updatedData
+    };
+  }),
   
   updateSceneData: (sceneIndex, updates) => set((state) => {
     const newScenes = [...state.editData.scenes];
     if (sceneIndex < newScenes.length) {
       newScenes[sceneIndex] = { ...newScenes[sceneIndex], ...updates };
+    }
+    return {
+      editData: { ...state.editData, scenes: newScenes }
+    };
+  }),
+
+  updateSceneImage: (sceneIndex, imageUrl) => set((state) => {
+    const newScenes = [...state.editData.scenes];
+    if (sceneIndex < newScenes.length) {
+      newScenes[sceneIndex] = { ...newScenes[sceneIndex], image: imageUrl };
     }
     return {
       editData: { ...state.editData, scenes: newScenes }
@@ -200,6 +226,13 @@ export const useEpisodeDetailStore = create<EpisodeDetailStore>((set, get) => ({
     }
   })),
   
+  reorderScenes: (reorderedScenes) => set((state) => ({
+    editData: {
+      ...state.editData,
+      scenes: reorderedScenes
+    }
+  })),
+
   handleStatusChange: (newStatus) => {
     const { editData } = get();
     const currentStatus = editData.tempStatus;

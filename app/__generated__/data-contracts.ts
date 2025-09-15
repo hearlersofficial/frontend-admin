@@ -177,17 +177,17 @@ export interface UpdatePromptVersionRequestDto {
    * @example "gpt-4o-mini"
    */
   aiModel?:
-    | 'AI_MODEL_UNSPECIFIED'
-    | 'AI_MODEL_GPT_3_5_TURBO'
-    | 'AI_MODEL_GPT_4'
-    | 'AI_MODEL_GPT_4O'
-    | 'AI_MODEL_GPT_4O_MINI'
-    | 'AI_MODEL_GPT_5_MINI'
-    | 'AI_MODEL_GPT_5'
-    | 'AI_MODEL_GPT_5_CHAT'
-    | 'AI_MODEL_GEMINI_2_5_FLASH'
-    | 'AI_MODEL_GEMINI_2_5_PRO'
-    | 'UNRECOGNIZED';
+    | "AI_MODEL_UNSPECIFIED"
+    | "AI_MODEL_GPT_3_5_TURBO"
+    | "AI_MODEL_GPT_4"
+    | "AI_MODEL_GPT_4O"
+    | "AI_MODEL_GPT_4O_MINI"
+    | "AI_MODEL_GPT_5_MINI"
+    | "AI_MODEL_GPT_5"
+    | "AI_MODEL_GPT_5_CHAT"
+    | "AI_MODEL_GEMINI_2_5_FLASH"
+    | "AI_MODEL_GEMINI_2_5_PRO"
+    | "UNRECOGNIZED";
 }
 
 /** 프롬프트 버전 응답 DTO */
@@ -224,17 +224,17 @@ export interface PromptVersionResponseDto {
   isBookmarked?: boolean;
   /** AI 모델 */
   aiModel?:
-    | 'AI_MODEL_UNSPECIFIED'
-    | 'AI_MODEL_GPT_3_5_TURBO'
-    | 'AI_MODEL_GPT_4'
-    | 'AI_MODEL_GPT_4O'
-    | 'AI_MODEL_GPT_4O_MINI'
-    | 'AI_MODEL_GPT_5_MINI'
-    | 'AI_MODEL_GPT_5'
-    | 'AI_MODEL_GPT_5_CHAT'
-    | 'AI_MODEL_GEMINI_2_5_FLASH'
-    | 'AI_MODEL_GEMINI_2_5_PRO'
-    | 'UNRECOGNIZED';
+    | "AI_MODEL_UNSPECIFIED"
+    | "AI_MODEL_GPT_3_5_TURBO"
+    | "AI_MODEL_GPT_4"
+    | "AI_MODEL_GPT_4O"
+    | "AI_MODEL_GPT_4O_MINI"
+    | "AI_MODEL_GPT_5_MINI"
+    | "AI_MODEL_GPT_5"
+    | "AI_MODEL_GPT_5_CHAT"
+    | "AI_MODEL_GEMINI_2_5_FLASH"
+    | "AI_MODEL_GEMINI_2_5_PRO"
+    | "UNRECOGNIZED";
   /**
    * 생성 시간
    * @example "2024-06-01T12:34:56.000Z"
@@ -292,17 +292,17 @@ export interface SaveTemporaryVersionRequestDto {
   isBookmarked: boolean;
   /** AI 모델 */
   aiModel:
-    | 'AI_MODEL_UNSPECIFIED'
-    | 'AI_MODEL_GPT_3_5_TURBO'
-    | 'AI_MODEL_GPT_4'
-    | 'AI_MODEL_GPT_4O'
-    | 'AI_MODEL_GPT_4O_MINI'
-    | 'AI_MODEL_GPT_5_MINI'
-    | 'AI_MODEL_GPT_5'
-    | 'AI_MODEL_GPT_5_CHAT'
-    | 'AI_MODEL_GEMINI_2_5_FLASH'
-    | 'AI_MODEL_GEMINI_2_5_PRO'
-    | 'UNRECOGNIZED';
+    | "AI_MODEL_UNSPECIFIED"
+    | "AI_MODEL_GPT_3_5_TURBO"
+    | "AI_MODEL_GPT_4"
+    | "AI_MODEL_GPT_4O"
+    | "AI_MODEL_GPT_4O_MINI"
+    | "AI_MODEL_GPT_5_MINI"
+    | "AI_MODEL_GPT_5"
+    | "AI_MODEL_GPT_5_CHAT"
+    | "AI_MODEL_GEMINI_2_5_FLASH"
+    | "AI_MODEL_GEMINI_2_5_PRO"
+    | "UNRECOGNIZED";
 }
 
 /** 임시 버전 저장 응답 DTO */
@@ -622,11 +622,11 @@ export interface UpdateCounselorRequest {
   profileImage?: string;
   /** 상담사 성별 */
   gender?:
-    | 'COUNSELOR_GENDER_UNSPECIFIED'
-    | 'COUNSELOR_GENDER_MALE'
-    | 'COUNSELOR_GENDER_FEMALE'
-    | 'COUNSELOR_GENDER_NONE'
-    | 'UNRECOGNIZED';
+    | "COUNSELOR_GENDER_UNSPECIFIED"
+    | "COUNSELOR_GENDER_MALE"
+    | "COUNSELOR_GENDER_FEMALE"
+    | "COUNSELOR_GENDER_NONE"
+    | "UNRECOGNIZED";
 }
 
 /** 상담사 */
@@ -854,57 +854,57 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
   maxCurrentTechniqueMessageCount?: number;
   /** 필수 영향 도메인 */
   requiredImpactDomains: (
-    | 'IMPACT_DOMAIN_UNSPECIFIED'
-    | 'IMPACT_DOMAIN_WORK'
-    | 'IMPACT_DOMAIN_STUDY'
-    | 'IMPACT_DOMAIN_RELATIONSHIP'
-    | 'IMPACT_DOMAIN_FAMILY'
-    | 'IMPACT_DOMAIN_HEALTH'
-    | 'IMPACT_DOMAIN_FINANCE'
-    | 'IMPACT_DOMAIN_SELF'
-    | 'IMPACT_DOMAIN_OTHER'
-    | 'UNRECOGNIZED'
+    | "IMPACT_DOMAIN_UNSPECIFIED"
+    | "IMPACT_DOMAIN_WORK"
+    | "IMPACT_DOMAIN_STUDY"
+    | "IMPACT_DOMAIN_RELATIONSHIP"
+    | "IMPACT_DOMAIN_FAMILY"
+    | "IMPACT_DOMAIN_HEALTH"
+    | "IMPACT_DOMAIN_FINANCE"
+    | "IMPACT_DOMAIN_SELF"
+    | "IMPACT_DOMAIN_OTHER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 시간 프레임 */
   requiredTimeframes: (
-    | 'TIMEFRAME_UNSPECIFIED'
-    | 'TIMEFRAME_TODAY'
-    | 'TIMEFRAME_THIS_WEEK'
-    | 'TIMEFRAME_THIS_MONTH'
-    | 'TIMEFRAME_THIS_YEAR'
-    | 'TIMEFRAME_LONGER'
-    | 'UNRECOGNIZED'
+    | "TIMEFRAME_UNSPECIFIED"
+    | "TIMEFRAME_TODAY"
+    | "TIMEFRAME_THIS_WEEK"
+    | "TIMEFRAME_THIS_MONTH"
+    | "TIMEFRAME_THIS_YEAR"
+    | "TIMEFRAME_LONGER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 1차 감정 */
   requiredEmotionPrimaries: (
-    | 'EMOTION_PRIMARY_UNSPECIFIED'
-    | 'EMOTION_PRIMARY_ANXIETY'
-    | 'EMOTION_PRIMARY_SADNESS'
-    | 'EMOTION_PRIMARY_ANGER'
-    | 'EMOTION_PRIMARY_LONELINESS'
-    | 'EMOTION_PRIMARY_GUILT'
-    | 'EMOTION_PRIMARY_SHAME'
-    | 'EMOTION_PRIMARY_STRESS'
-    | 'EMOTION_PRIMARY_HOPE'
-    | 'EMOTION_PRIMARY_CALM'
-    | 'EMOTION_PRIMARY_OTHER'
-    | 'UNRECOGNIZED'
+    | "EMOTION_PRIMARY_UNSPECIFIED"
+    | "EMOTION_PRIMARY_ANXIETY"
+    | "EMOTION_PRIMARY_SADNESS"
+    | "EMOTION_PRIMARY_ANGER"
+    | "EMOTION_PRIMARY_LONELINESS"
+    | "EMOTION_PRIMARY_GUILT"
+    | "EMOTION_PRIMARY_SHAME"
+    | "EMOTION_PRIMARY_STRESS"
+    | "EMOTION_PRIMARY_HOPE"
+    | "EMOTION_PRIMARY_CALM"
+    | "EMOTION_PRIMARY_OTHER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 감정 긍부정 */
   requiredValences: (
-    | 'VALENCE_UNSPECIFIED'
-    | 'VALENCE_NEGATIVE'
-    | 'VALENCE_NEUTRAL'
-    | 'VALENCE_POSITIVE'
-    | 'UNRECOGNIZED'
+    | "VALENCE_UNSPECIFIED"
+    | "VALENCE_NEGATIVE"
+    | "VALENCE_NEUTRAL"
+    | "VALENCE_POSITIVE"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 감정 각성 수준 */
   requiredArousalLevels: (
-    | 'AROUSAL_LEVEL_UNSPECIFIED'
-    | 'AROUSAL_LEVEL_LOW'
-    | 'AROUSAL_LEVEL_MEDIUM'
-    | 'AROUSAL_LEVEL_HIGH'
-    | 'UNRECOGNIZED'
+    | "AROUSAL_LEVEL_UNSPECIFIED"
+    | "AROUSAL_LEVEL_LOW"
+    | "AROUSAL_LEVEL_MEDIUM"
+    | "AROUSAL_LEVEL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 감정 강도
@@ -920,21 +920,21 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
   maxEmotionIntensity?: number;
   /** 필수 인지된 통제 수준 */
   requiredPerceivedControls: (
-    | 'PERCEIVED_CONTROL_UNSPECIFIED'
-    | 'PERCEIVED_CONTROL_LOW'
-    | 'PERCEIVED_CONTROL_MEDIUM'
-    | 'PERCEIVED_CONTROL_HIGH'
-    | 'UNRECOGNIZED'
+    | "PERCEIVED_CONTROL_UNSPECIFIED"
+    | "PERCEIVED_CONTROL_LOW"
+    | "PERCEIVED_CONTROL_MEDIUM"
+    | "PERCEIVED_CONTROL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 동기 단계 */
   requiredMotivationStages: (
-    | 'MOTIVATION_STAGE_UNSPECIFIED'
-    | 'MOTIVATION_STAGE_PRECONTEMPLATION'
-    | 'MOTIVATION_STAGE_CONTEMPLATION'
-    | 'MOTIVATION_STAGE_PREPARATION'
-    | 'MOTIVATION_STAGE_ACTION'
-    | 'MOTIVATION_STAGE_MAINTENANCE'
-    | 'UNRECOGNIZED'
+    | "MOTIVATION_STAGE_UNSPECIFIED"
+    | "MOTIVATION_STAGE_PRECONTEMPLATION"
+    | "MOTIVATION_STAGE_CONTEMPLATION"
+    | "MOTIVATION_STAGE_PREPARATION"
+    | "MOTIVATION_STAGE_ACTION"
+    | "MOTIVATION_STAGE_MAINTENANCE"
+    | "UNRECOGNIZED
   )[];
   /**
    * 최소 자기 효능감
@@ -950,21 +950,21 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
   maxSelfEfficacy?: number;
   /** 필수 사회적 지지 수준 */
   requiredSocialSupportLevels: (
-    | 'SOCIAL_SUPPORT_LEVEL_UNSPECIFIED'
-    | 'SOCIAL_SUPPORT_LEVEL_NONE'
-    | 'SOCIAL_SUPPORT_LEVEL_LOW'
-    | 'SOCIAL_SUPPORT_LEVEL_MEDIUM'
-    | 'SOCIAL_SUPPORT_LEVEL_HIGH'
-    | 'UNRECOGNIZED'
+    | "SOCIAL_SUPPORT_LEVEL_UNSPECIFIED"
+    | "SOCIAL_SUPPORT_LEVEL_NONE"
+    | "SOCIAL_SUPPORT_LEVEL_LOW"
+    | "SOCIAL_SUPPORT_LEVEL_MEDIUM"
+    | "SOCIAL_SUPPORT_LEVEL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 위험 종류 */
   requiredRiskKinds: (
-    | 'RISK_KIND_UNSPECIFIED'
-    | 'RISK_KIND_NONE'
-    | 'RISK_KIND_SELF_HARM'
-    | 'RISK_KIND_HARM_TO_OTHERS'
-    | 'RISK_KIND_ABUSE'
-    | 'UNRECOGNIZED'
+    | "RISK_KIND_UNSPECIFIED"
+    | "RISK_KIND_NONE"
+    | "RISK_KIND_SELF_HARM"
+    | "RISK_KIND_HARM_TO_OTHERS"
+    | "RISK_KIND_ABUSE"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 위험 심각도
@@ -980,11 +980,11 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
   maxRiskSeverity?: number;
   /** 필수 수면의 질 */
   requiredSleepQualities: (
-    | 'SLEEP_QUALITY_UNSPECIFIED'
-    | 'SLEEP_QUALITY_POOR'
-    | 'SLEEP_QUALITY_FAIR'
-    | 'SLEEP_QUALITY_GOOD'
-    | 'UNRECOGNIZED'
+    | "SLEEP_QUALITY_UNSPECIFIED"
+    | "SLEEP_QUALITY_POOR"
+    | "SLEEP_QUALITY_FAIR"
+    | "SLEEP_QUALITY_GOOD"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 신체 증상 존재 여부 필요 조건
@@ -993,19 +993,19 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
   requiredPhysicalSymptomsPresent?: boolean;
   /** 필수 인지 부하 수준 */
   requiredCognitiveLoads: (
-    | 'COGNITIVE_LOAD_UNSPECIFIED'
-    | 'COGNITIVE_LOAD_LOW'
-    | 'COGNITIVE_LOAD_MEDIUM'
-    | 'COGNITIVE_LOAD_HIGH'
-    | 'UNRECOGNIZED'
+    | "COGNITIVE_LOAD_UNSPECIFIED"
+    | "COGNITIVE_LOAD_LOW"
+    | "COGNITIVE_LOAD_MEDIUM"
+    | "COGNITIVE_LOAD_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 동맹 강도 */
   requiredAllianceStrengths: (
-    | 'ALLIANCE_STRENGTH_UNSPECIFIED'
-    | 'ALLIANCE_STRENGTH_WEAK'
-    | 'ALLIANCE_STRENGTH_MEDIUM'
-    | 'ALLIANCE_STRENGTH_STRONG'
-    | 'UNRECOGNIZED'
+    | "ALLIANCE_STRENGTH_UNSPECIFIED"
+    | "ALLIANCE_STRENGTH_WEAK"
+    | "ALLIANCE_STRENGTH_MEDIUM"
+    | "ALLIANCE_STRENGTH_STRONG"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 심층 탐색 동의 필요 여부
@@ -1056,57 +1056,57 @@ export interface CounselTechniqueTransitionRuleResponseDto {
   maxCurrentTechniqueMessageCount?: number;
   /** 필수 영향 도메인 */
   requiredImpactDomains?: (
-    | 'IMPACT_DOMAIN_UNSPECIFIED'
-    | 'IMPACT_DOMAIN_WORK'
-    | 'IMPACT_DOMAIN_STUDY'
-    | 'IMPACT_DOMAIN_RELATIONSHIP'
-    | 'IMPACT_DOMAIN_FAMILY'
-    | 'IMPACT_DOMAIN_HEALTH'
-    | 'IMPACT_DOMAIN_FINANCE'
-    | 'IMPACT_DOMAIN_SELF'
-    | 'IMPACT_DOMAIN_OTHER'
-    | 'UNRECOGNIZED'
+    | "IMPACT_DOMAIN_UNSPECIFIED"
+    | "IMPACT_DOMAIN_WORK"
+    | "IMPACT_DOMAIN_STUDY"
+    | "IMPACT_DOMAIN_RELATIONSHIP"
+    | "IMPACT_DOMAIN_FAMILY"
+    | "IMPACT_DOMAIN_HEALTH"
+    | "IMPACT_DOMAIN_FINANCE"
+    | "IMPACT_DOMAIN_SELF"
+    | "IMPACT_DOMAIN_OTHER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 시간 프레임 */
   requiredTimeframes?: (
-    | 'TIMEFRAME_UNSPECIFIED'
-    | 'TIMEFRAME_TODAY'
-    | 'TIMEFRAME_THIS_WEEK'
-    | 'TIMEFRAME_THIS_MONTH'
-    | 'TIMEFRAME_THIS_YEAR'
-    | 'TIMEFRAME_LONGER'
-    | 'UNRECOGNIZED'
+    | "TIMEFRAME_UNSPECIFIED"
+    | "TIMEFRAME_TODAY"
+    | "TIMEFRAME_THIS_WEEK"
+    | "TIMEFRAME_THIS_MONTH"
+    | "TIMEFRAME_THIS_YEAR"
+    | "TIMEFRAME_LONGER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 1차 감정 */
   requiredEmotionPrimaries?: (
-    | 'EMOTION_PRIMARY_UNSPECIFIED'
-    | 'EMOTION_PRIMARY_ANXIETY'
-    | 'EMOTION_PRIMARY_SADNESS'
-    | 'EMOTION_PRIMARY_ANGER'
-    | 'EMOTION_PRIMARY_LONELINESS'
-    | 'EMOTION_PRIMARY_GUILT'
-    | 'EMOTION_PRIMARY_SHAME'
-    | 'EMOTION_PRIMARY_STRESS'
-    | 'EMOTION_PRIMARY_HOPE'
-    | 'EMOTION_PRIMARY_CALM'
-    | 'EMOTION_PRIMARY_OTHER'
-    | 'UNRECOGNIZED'
+    | "EMOTION_PRIMARY_UNSPECIFIED"
+    | "EMOTION_PRIMARY_ANXIETY"
+    | "EMOTION_PRIMARY_SADNESS"
+    | "EMOTION_PRIMARY_ANGER"
+    | "EMOTION_PRIMARY_LONELINESS"
+    | "EMOTION_PRIMARY_GUILT"
+    | "EMOTION_PRIMARY_SHAME"
+    | "EMOTION_PRIMARY_STRESS"
+    | "EMOTION_PRIMARY_HOPE"
+    | "EMOTION_PRIMARY_CALM"
+    | "EMOTION_PRIMARY_OTHER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 감정 긍부정 */
   requiredValences?: (
-    | 'VALENCE_UNSPECIFIED'
-    | 'VALENCE_NEGATIVE'
-    | 'VALENCE_NEUTRAL'
-    | 'VALENCE_POSITIVE'
-    | 'UNRECOGNIZED'
+    | "VALENCE_UNSPECIFIED"
+    | "VALENCE_NEGATIVE"
+    | "VALENCE_NEUTRAL"
+    | "VALENCE_POSITIVE"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 감정 각성 수준 */
   requiredArousalLevels?: (
-    | 'AROUSAL_LEVEL_UNSPECIFIED'
-    | 'AROUSAL_LEVEL_LOW'
-    | 'AROUSAL_LEVEL_MEDIUM'
-    | 'AROUSAL_LEVEL_HIGH'
-    | 'UNRECOGNIZED'
+    | "AROUSAL_LEVEL_UNSPECIFIED"
+    | "AROUSAL_LEVEL_LOW"
+    | "AROUSAL_LEVEL_MEDIUM"
+    | "AROUSAL_LEVEL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 감정 강도
@@ -1122,21 +1122,21 @@ export interface CounselTechniqueTransitionRuleResponseDto {
   maxEmotionIntensity?: number;
   /** 필수 인지된 통제 수준 */
   requiredPerceivedControls?: (
-    | 'PERCEIVED_CONTROL_UNSPECIFIED'
-    | 'PERCEIVED_CONTROL_LOW'
-    | 'PERCEIVED_CONTROL_MEDIUM'
-    | 'PERCEIVED_CONTROL_HIGH'
-    | 'UNRECOGNIZED'
+    | "PERCEIVED_CONTROL_UNSPECIFIED"
+    | "PERCEIVED_CONTROL_LOW"
+    | "PERCEIVED_CONTROL_MEDIUM"
+    | "PERCEIVED_CONTROL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 동기 단계 */
   requiredMotivationStages?: (
-    | 'MOTIVATION_STAGE_UNSPECIFIED'
-    | 'MOTIVATION_STAGE_PRECONTEMPLATION'
-    | 'MOTIVATION_STAGE_CONTEMPLATION'
-    | 'MOTIVATION_STAGE_PREPARATION'
-    | 'MOTIVATION_STAGE_ACTION'
-    | 'MOTIVATION_STAGE_MAINTENANCE'
-    | 'UNRECOGNIZED'
+    | "MOTIVATION_STAGE_UNSPECIFIED"
+    | "MOTIVATION_STAGE_PRECONTEMPLATION"
+    | "MOTIVATION_STAGE_CONTEMPLATION"
+    | "MOTIVATION_STAGE_PREPARATION"
+    | "MOTIVATION_STAGE_ACTION"
+    | "MOTIVATION_STAGE_MAINTENANCE"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 자기 효능감
@@ -1152,21 +1152,21 @@ export interface CounselTechniqueTransitionRuleResponseDto {
   maxSelfEfficacy?: number;
   /** 필수 사회적 지지 수준 */
   requiredSocialSupportLevels?: (
-    | 'SOCIAL_SUPPORT_LEVEL_UNSPECIFIED'
-    | 'SOCIAL_SUPPORT_LEVEL_NONE'
-    | 'SOCIAL_SUPPORT_LEVEL_LOW'
-    | 'SOCIAL_SUPPORT_LEVEL_MEDIUM'
-    | 'SOCIAL_SUPPORT_LEVEL_HIGH'
-    | 'UNRECOGNIZED'
+    | "SOCIAL_SUPPORT_LEVEL_UNSPECIFIED"
+    | "SOCIAL_SUPPORT_LEVEL_NONE"
+    | "SOCIAL_SUPPORT_LEVEL_LOW"
+    | "SOCIAL_SUPPORT_LEVEL_MEDIUM"
+    | "SOCIAL_SUPPORT_LEVEL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 위험 종류 */
   requiredRiskKinds?: (
-    | 'RISK_KIND_UNSPECIFIED'
-    | 'RISK_KIND_NONE'
-    | 'RISK_KIND_SELF_HARM'
-    | 'RISK_KIND_HARM_TO_OTHERS'
-    | 'RISK_KIND_ABUSE'
-    | 'UNRECOGNIZED'
+    | "RISK_KIND_UNSPECIFIED"
+    | "RISK_KIND_NONE"
+    | "RISK_KIND_SELF_HARM"
+    | "RISK_KIND_HARM_TO_OTHERS"
+    | "RISK_KIND_ABUSE"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 위험 심각도
@@ -1182,11 +1182,11 @@ export interface CounselTechniqueTransitionRuleResponseDto {
   maxRiskSeverity?: number;
   /** 필수 수면의 질 */
   requiredSleepQualities?: (
-    | 'SLEEP_QUALITY_UNSPECIFIED'
-    | 'SLEEP_QUALITY_POOR'
-    | 'SLEEP_QUALITY_FAIR'
-    | 'SLEEP_QUALITY_GOOD'
-    | 'UNRECOGNIZED'
+    | "SLEEP_QUALITY_UNSPECIFIED"
+    | "SLEEP_QUALITY_POOR"
+    | "SLEEP_QUALITY_FAIR"
+    | "SLEEP_QUALITY_GOOD"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 신체 증상 존재 여부 필요 조건
@@ -1195,19 +1195,19 @@ export interface CounselTechniqueTransitionRuleResponseDto {
   requiredPhysicalSymptomsPresent?: boolean;
   /** 필수 인지 부하 수준 */
   requiredCognitiveLoads?: (
-    | 'COGNITIVE_LOAD_UNSPECIFIED'
-    | 'COGNITIVE_LOAD_LOW'
-    | 'COGNITIVE_LOAD_MEDIUM'
-    | 'COGNITIVE_LOAD_HIGH'
-    | 'UNRECOGNIZED'
+    | "COGNITIVE_LOAD_UNSPECIFIED"
+    | "COGNITIVE_LOAD_LOW"
+    | "COGNITIVE_LOAD_MEDIUM"
+    | "COGNITIVE_LOAD_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 동맹 강도 */
   requiredAllianceStrengths?: (
-    | 'ALLIANCE_STRENGTH_UNSPECIFIED'
-    | 'ALLIANCE_STRENGTH_WEAK'
-    | 'ALLIANCE_STRENGTH_MEDIUM'
-    | 'ALLIANCE_STRENGTH_STRONG'
-    | 'UNRECOGNIZED'
+    | "ALLIANCE_STRENGTH_UNSPECIFIED"
+    | "ALLIANCE_STRENGTH_WEAK"
+    | "ALLIANCE_STRENGTH_MEDIUM"
+    | "ALLIANCE_STRENGTH_STRONG"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 심층 탐색 동의 필요 여부
@@ -1651,10 +1651,10 @@ export interface CounselMessage {
   reactedAt?: string;
   /** 메시지 반응 객체 */
   reaction?:
-    | 'COUNSEL_MESSAGE_REACTION_UNSPECIFIED'
-    | 'COUNSEL_MESSAGE_REACTION_LIKE'
-    | 'COUNSEL_MESSAGE_REACTION_DISLIKE'
-    | 'UNRECOGNIZED';
+    | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
+    | "COUNSEL_MESSAGE_REACTION_LIKE"
+    | "COUNSEL_MESSAGE_REACTION_DISLIKE"
+    | "UNRECOGNIZED";
   /**
    * 상담 테크닉 ID
    * @example 436534342321
@@ -1819,57 +1819,57 @@ export interface CreateCounselTechniqueTransitionRuleRequestDto {
   maxCurrentTechniqueMessageCount?: number;
   /** 필수 영향 도메인 */
   requiredImpactDomains: (
-    | 'IMPACT_DOMAIN_UNSPECIFIED'
-    | 'IMPACT_DOMAIN_WORK'
-    | 'IMPACT_DOMAIN_STUDY'
-    | 'IMPACT_DOMAIN_RELATIONSHIP'
-    | 'IMPACT_DOMAIN_FAMILY'
-    | 'IMPACT_DOMAIN_HEALTH'
-    | 'IMPACT_DOMAIN_FINANCE'
-    | 'IMPACT_DOMAIN_SELF'
-    | 'IMPACT_DOMAIN_OTHER'
-    | 'UNRECOGNIZED'
+    | "IMPACT_DOMAIN_UNSPECIFIED"
+    | "IMPACT_DOMAIN_WORK"
+    | "IMPACT_DOMAIN_STUDY"
+    | "IMPACT_DOMAIN_RELATIONSHIP"
+    | "IMPACT_DOMAIN_FAMILY"
+    | "IMPACT_DOMAIN_HEALTH"
+    | "IMPACT_DOMAIN_FINANCE"
+    | "IMPACT_DOMAIN_SELF"
+    | "IMPACT_DOMAIN_OTHER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 시간 프레임 */
   requiredTimeframes: (
-    | 'TIMEFRAME_UNSPECIFIED'
-    | 'TIMEFRAME_TODAY'
-    | 'TIMEFRAME_THIS_WEEK'
-    | 'TIMEFRAME_THIS_MONTH'
-    | 'TIMEFRAME_THIS_YEAR'
-    | 'TIMEFRAME_LONGER'
-    | 'UNRECOGNIZED'
+    | "TIMEFRAME_UNSPECIFIED"
+    | "TIMEFRAME_TODAY"
+    | "TIMEFRAME_THIS_WEEK"
+    | "TIMEFRAME_THIS_MONTH"
+    | "TIMEFRAME_THIS_YEAR"
+    | "TIMEFRAME_LONGER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 1차 감정 */
   requiredEmotionPrimaries: (
-    | 'EMOTION_PRIMARY_UNSPECIFIED'
-    | 'EMOTION_PRIMARY_ANXIETY'
-    | 'EMOTION_PRIMARY_SADNESS'
-    | 'EMOTION_PRIMARY_ANGER'
-    | 'EMOTION_PRIMARY_LONELINESS'
-    | 'EMOTION_PRIMARY_GUILT'
-    | 'EMOTION_PRIMARY_SHAME'
-    | 'EMOTION_PRIMARY_STRESS'
-    | 'EMOTION_PRIMARY_HOPE'
-    | 'EMOTION_PRIMARY_CALM'
-    | 'EMOTION_PRIMARY_OTHER'
-    | 'UNRECOGNIZED'
+    | "EMOTION_PRIMARY_UNSPECIFIED"
+    | "EMOTION_PRIMARY_ANXIETY"
+    | "EMOTION_PRIMARY_SADNESS"
+    | "EMOTION_PRIMARY_ANGER"
+    | "EMOTION_PRIMARY_LONELINESS"
+    | "EMOTION_PRIMARY_GUILT"
+    | "EMOTION_PRIMARY_SHAME"
+    | "EMOTION_PRIMARY_STRESS"
+    | "EMOTION_PRIMARY_HOPE"
+    | "EMOTION_PRIMARY_CALM"
+    | "EMOTION_PRIMARY_OTHER"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 감정 긍부정 */
   requiredValences: (
-    | 'VALENCE_UNSPECIFIED'
-    | 'VALENCE_NEGATIVE'
-    | 'VALENCE_NEUTRAL'
-    | 'VALENCE_POSITIVE'
-    | 'UNRECOGNIZED'
+    | "VALENCE_UNSPECIFIED"
+    | "VALENCE_NEGATIVE"
+    | "VALENCE_NEUTRAL"
+    | "VALENCE_POSITIVE"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 감정 각성 수준 */
   requiredArousalLevels: (
-    | 'AROUSAL_LEVEL_UNSPECIFIED'
-    | 'AROUSAL_LEVEL_LOW'
-    | 'AROUSAL_LEVEL_MEDIUM'
-    | 'AROUSAL_LEVEL_HIGH'
-    | 'UNRECOGNIZED'
+    | "AROUSAL_LEVEL_UNSPECIFIED"
+    | "AROUSAL_LEVEL_LOW"
+    | "AROUSAL_LEVEL_MEDIUM"
+    | "AROUSAL_LEVEL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 감정 강도
@@ -1885,21 +1885,21 @@ export interface CreateCounselTechniqueTransitionRuleRequestDto {
   maxEmotionIntensity?: number;
   /** 필수 인지된 통제 수준 */
   requiredPerceivedControls: (
-    | 'PERCEIVED_CONTROL_UNSPECIFIED'
-    | 'PERCEIVED_CONTROL_LOW'
-    | 'PERCEIVED_CONTROL_MEDIUM'
-    | 'PERCEIVED_CONTROL_HIGH'
-    | 'UNRECOGNIZED'
+    | "PERCEIVED_CONTROL_UNSPECIFIED"
+    | "PERCEIVED_CONTROL_LOW"
+    | "PERCEIVED_CONTROL_MEDIUM"
+    | "PERCEIVED_CONTROL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 동기 단계 */
   requiredMotivationStages: (
-    | 'MOTIVATION_STAGE_UNSPECIFIED'
-    | 'MOTIVATION_STAGE_PRECONTEMPLATION'
-    | 'MOTIVATION_STAGE_CONTEMPLATION'
-    | 'MOTIVATION_STAGE_PREPARATION'
-    | 'MOTIVATION_STAGE_ACTION'
-    | 'MOTIVATION_STAGE_MAINTENANCE'
-    | 'UNRECOGNIZED'
+    | "MOTIVATION_STAGE_UNSPECIFIED"
+    | "MOTIVATION_STAGE_PRECONTEMPLATION"
+    | "MOTIVATION_STAGE_CONTEMPLATION"
+    | "MOTIVATION_STAGE_PREPARATION"
+    | "MOTIVATION_STAGE_ACTION"
+    | "MOTIVATION_STAGE_MAINTENANCE"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 자기 효능감
@@ -1915,21 +1915,21 @@ export interface CreateCounselTechniqueTransitionRuleRequestDto {
   maxSelfEfficacy?: number;
   /** 필수 사회적 지지 수준 */
   requiredSocialSupportLevels: (
-    | 'SOCIAL_SUPPORT_LEVEL_UNSPECIFIED'
-    | 'SOCIAL_SUPPORT_LEVEL_NONE'
-    | 'SOCIAL_SUPPORT_LEVEL_LOW'
-    | 'SOCIAL_SUPPORT_LEVEL_MEDIUM'
-    | 'SOCIAL_SUPPORT_LEVEL_HIGH'
-    | 'UNRECOGNIZED'
+    | "SOCIAL_SUPPORT_LEVEL_UNSPECIFIED"
+    | "SOCIAL_SUPPORT_LEVEL_NONE"
+    | "SOCIAL_SUPPORT_LEVEL_LOW"
+    | "SOCIAL_SUPPORT_LEVEL_MEDIUM"
+    | "SOCIAL_SUPPORT_LEVEL_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 위험 종류 */
   requiredRiskKinds: (
-    | 'RISK_KIND_UNSPECIFIED'
-    | 'RISK_KIND_NONE'
-    | 'RISK_KIND_SELF_HARM'
-    | 'RISK_KIND_HARM_TO_OTHERS'
-    | 'RISK_KIND_ABUSE'
-    | 'UNRECOGNIZED'
+    | "RISK_KIND_UNSPECIFIED"
+    | "RISK_KIND_NONE"
+    | "RISK_KIND_SELF_HARM"
+    | "RISK_KIND_HARM_TO_OTHERS"
+    | "RISK_KIND_ABUSE"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 최소 위험 심각도
@@ -1945,11 +1945,11 @@ export interface CreateCounselTechniqueTransitionRuleRequestDto {
   maxRiskSeverity?: number;
   /** 필수 수면의 질 */
   requiredSleepQualities: (
-    | 'SLEEP_QUALITY_UNSPECIFIED'
-    | 'SLEEP_QUALITY_POOR'
-    | 'SLEEP_QUALITY_FAIR'
-    | 'SLEEP_QUALITY_GOOD'
-    | 'UNRECOGNIZED'
+    | "SLEEP_QUALITY_UNSPECIFIED"
+    | "SLEEP_QUALITY_POOR"
+    | "SLEEP_QUALITY_FAIR"
+    | "SLEEP_QUALITY_GOOD"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 신체 증상 존재 여부 필요 조건
@@ -1958,19 +1958,19 @@ export interface CreateCounselTechniqueTransitionRuleRequestDto {
   requiredPhysicalSymptomsPresent?: boolean;
   /** 필수 인지 부하 수준 */
   requiredCognitiveLoads: (
-    | 'COGNITIVE_LOAD_UNSPECIFIED'
-    | 'COGNITIVE_LOAD_LOW'
-    | 'COGNITIVE_LOAD_MEDIUM'
-    | 'COGNITIVE_LOAD_HIGH'
-    | 'UNRECOGNIZED'
+    | "COGNITIVE_LOAD_UNSPECIFIED"
+    | "COGNITIVE_LOAD_LOW"
+    | "COGNITIVE_LOAD_MEDIUM"
+    | "COGNITIVE_LOAD_HIGH"
+    | "UNRECOGNIZED"
   )[];
   /** 필수 동맹 강도 */
   requiredAllianceStrengths: (
-    | 'ALLIANCE_STRENGTH_UNSPECIFIED'
-    | 'ALLIANCE_STRENGTH_WEAK'
-    | 'ALLIANCE_STRENGTH_MEDIUM'
-    | 'ALLIANCE_STRENGTH_STRONG'
-    | 'UNRECOGNIZED'
+    | "ALLIANCE_STRENGTH_UNSPECIFIED"
+    | "ALLIANCE_STRENGTH_WEAK"
+    | "ALLIANCE_STRENGTH_MEDIUM"
+    | "ALLIANCE_STRENGTH_STRONG"
+    | "UNRECOGNIZED"
   )[];
   /**
    * 심층 탐색 동의 필요 여부
@@ -2044,27 +2044,31 @@ export interface UserProfile {
   /** 프로필 이미지 URL */
   profileImage?: string;
   /** 성별 */
-  gender?: 'GENDER_UNSPECIFIED' | 'GENDER_MALE' | 'GENDER_FEMALE' | 'UNRECOGNIZED';
+  gender?:
+    | "GENDER_UNSPECIFIED"
+    | "GENDER_MALE"
+    | "GENDER_FEMALE"
+    | "UNRECOGNIZED";
   /** MBTI */
   mbti?:
-    | 'MBTI_UNSPECIFIED'
-    | 'MBTI_ENTP'
-    | 'MBTI_ENFP'
-    | 'MBTI_ENTJ'
-    | 'MBTI_ENFJ'
-    | 'MBTI_ESTP'
-    | 'MBTI_ESTJ'
-    | 'MBTI_ESFP'
-    | 'MBTI_ESFJ'
-    | 'MBTI_INTJ'
-    | 'MBTI_INFJ'
-    | 'MBTI_INTP'
-    | 'MBTI_INFP'
-    | 'MBTI_ISTP'
-    | 'MBTI_ISTJ'
-    | 'MBTI_ISFP'
-    | 'MBTI_ISFJ'
-    | 'UNRECOGNIZED';
+    | "MBTI_UNSPECIFIED"
+    | "MBTI_ENTP"
+    | "MBTI_ENFP"
+    | "MBTI_ENTJ"
+    | "MBTI_ENFJ"
+    | "MBTI_ESTP"
+    | "MBTI_ESTJ"
+    | "MBTI_ESFP"
+    | "MBTI_ESFJ"
+    | "MBTI_INTJ"
+    | "MBTI_INFJ"
+    | "MBTI_INTP"
+    | "MBTI_INFP"
+    | "MBTI_ISTP"
+    | "MBTI_ISTJ"
+    | "MBTI_ISFP"
+    | "MBTI_ISFJ"
+    | "UNRECOGNIZED";
   /**
    * 생년
    * @format int32
