@@ -5,7 +5,7 @@ import { Modal } from '~/components/Modal';
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 
-import { useCreateCounselTechnique, useSaveCounselTechniqueSequence } from '~/hooks/mutations';
+import { useCreateCounselTechnique } from '~/hooks/mutations';
 import { usePromptStore } from '~/store/usePromptStore';
 import { CreateCounselTechniqueRequestDto } from '~/__generated__/data-contracts';
 import { queries } from '~/queries';
@@ -21,86 +21,33 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
     toneId: '',
     context: '',
     instruction: '',
-    messageThreshold: 3,
+    isStartTechnique: false,
     temperature: 0.5,
   });
 
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
-  const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
   const toneId = selectedCounselor?.toneId;
+  const promptVersionId = temporaryVersion?.id;
 
   const queryClient = useQueryClient();
 
   const { mutate: createCounselTechnique } = useCreateCounselTechnique({
     onSuccess: (response) => {
       const newTechnique = response.data?.data?.counselTechnique;
-      if (!newTechnique || !toneId || !temporaryVersion) {
+      if (!newTechnique || !toneId || !promptVersionId) {
         return;
       }
 
-      // 현재 임시버전의 상담기법 firstId 찾기
-      const toneScopedPrompts = temporaryVersion.toneScopedPrompts ?? [];
-      const firstCounselTechniqueId = toneScopedPrompts.find((p) => p.toneId === toneId)?.firstCounselTechniqueId;
-
-      if (!firstCounselTechniqueId) {
-        // 첫 번째 상담기법이 없는 경우, 새로 생성된 상담기법을 firstId로 설정
-        const counselTechniqueIds = [newTechnique.id!];
-
-        const newToneScopedPrompts = toneScopedPrompts.map((prompt) =>
-          prompt.toneId === toneId ? { ...prompt, firstCounselTechniqueId: newTechnique.id } : prompt
-        );
-
-        setTemporaryVersion({
-          ...temporaryVersion,
-          toneScopedPrompts: newToneScopedPrompts,
-        });
-
-        saveCounselTechniqueSequence({
-          toneId,
-          counselTechniqueIds,
-        });
-        return;
-      }
-
-      const currentTechniques =
-        (queryClient.getQueryData(
-          queries.v1.getOrderedCounselTechniques({ 'first-counsel-technique-id': firstCounselTechniqueId }).queryKey
-        ) as unknown as Array<{ id?: string }>) || [];
-
-      const updatedTechniques = [...currentTechniques, newTechnique];
-      const counselTechniqueIds = updatedTechniques.map((t) => t.id).filter(Boolean) as string[];
-
-      saveCounselTechniqueSequence({
-        toneId,
-        counselTechniqueIds,
-      });
-    },
-    onError: (error) => {
-      console.error('상담기법 생성 실패:', error);
-    },
-  });
-
-  const { mutate: saveCounselTechniqueSequence } = useSaveCounselTechniqueSequence({
-    onSuccess: (response) => {
-      const newTechniques = response.data?.data?.counselTechniques ?? [];
-      if (!newTechniques.length || !temporaryVersion || !toneId) {
-        return;
-      }
-
-      const newToneScopedPrompts = (temporaryVersion.toneScopedPrompts ?? []).map((prompt) =>
-        prompt.toneId === toneId ? { ...prompt, firstCounselTechniqueId: newTechniques[0].id } : prompt
-      );
-
-      setTemporaryVersion({
-        ...temporaryVersion,
-        toneScopedPrompts: newToneScopedPrompts,
+      // Refresh the techniques query to show the new technique
+      queryClient.invalidateQueries({
+        queryKey: queries.v1.getCounselTechniques({ promptVersionId, toneId }).queryKey,
       });
 
       setIsOpen(false);
     },
     onError: (error) => {
-      console.error('상담기법 시퀀스 저장 실패:', error);
+      console.error('상담기법 생성 실패:', error);
     },
   });
 
@@ -115,7 +62,7 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
     });
   };
 
-  const handleInputChange = (field: keyof CreateCounselTechniqueRequestDto, value: string | number) => {
+  const handleInputChange = (field: keyof CreateCounselTechniqueRequestDto, value: string | number | boolean) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -164,18 +111,18 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
       </div>
 
       <div>
-        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="messageThreshold">
-          메시지 임계값 (초과 시 다음 테크닉으로 넘어갈 지 평가 시작)
+        <label className="mb-1 block font-semibold text-[#4F4F4F]" htmlFor="isStartTechnique">
+          시작 기법 여부
         </label>
-        <input
-          id="messageThreshold"
-          type="number"
-          min="1"
-          max="20"
-          value={formData.messageThreshold}
-          onChange={(e) => handleInputChange('messageThreshold', parseInt(e.target.value) || 5)}
+        <select
+          id="isStartTechnique"
+          value={formData.isStartTechnique ? 'true' : 'false'}
+          onChange={(e) => handleInputChange('isStartTechnique', e.target.value === 'true' ? true : false)}
           className="w-full rounded border p-2"
-        />
+        >
+          <option value="true">예</option>
+          <option value="false">아니오</option>
+        </select>
       </div>
 
       <div>

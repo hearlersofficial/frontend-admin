@@ -7,7 +7,6 @@ import Sidebar from './Sidebar';
 
 import { usePromptStore } from '~/store/usePromptStore';
 import { queries } from '~/queries';
-import MobilePreview from '~/components/playground/MobilePreview';
 
 const Playground = () => {
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
@@ -24,17 +23,13 @@ const Playground = () => {
   }, [temporaryVersionData, setTemporaryVersion]);
 
   return (
-    <div className="flex pr-6">
+    <div className="relative flex h-full w-full overflow-hidden">
       <Sidebar />
-
-      <div className="flex flex-1 rounded-xl rounded-tl-none bg-white px-8 py-6">
-        <div className="flex flex-1 flex-col gap-6">
+      <div className="flex w-full flex-1 flex-col overflow-hidden rounded-xl rounded-tl-none bg-white px-8 py-6">
+        <div className="flex w-full flex-1 flex-col gap-6 overflow-hidden">
           <Technique key={`technique-${temporaryVersion?.id}`} />
           <Prompt key={`prompt-${temporaryVersion?.id}`} />
         </div>
-      </div>
-      <div className="ml-6 flex items-center">
-        <MobilePreview />
       </div>
     </div>
   );

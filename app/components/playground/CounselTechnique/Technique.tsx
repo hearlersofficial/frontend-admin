@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '~/components/ui/button';
-import TechniqueContainer from './TechniqueContainer';
+import GraphLayout from './graphs/GraphLayout';
 import AddTechniqueModal from './modals/AddTechniqueModal';
 import EditTechniqueModal from './modals/EditTechniqueModal';
 
@@ -27,7 +27,7 @@ const Technique = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="scrollbar-hide h-full w-full overflow-auto">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-semibold text-[#68676A]">상담기법</h3>
         <div className="space-x-2">
@@ -52,14 +52,13 @@ const Technique = () => {
 
       <div className="mb-4 mt-2 h-[1px] bg-[#ECE9F1]" />
 
-      <TechniqueContainer
+      <GraphLayout
         mode={mode}
         techniques={techniques}
         setTechniques={setTechniques}
         onEditName={handleEditName}
         onAddTechnique={handleAddTechnique}
       />
-
       <AddTechniqueModal isOpen={isAddOpen} setIsOpen={setIsAddOpen} />
       <EditTechniqueModal
         isOpen={isEditOpen}

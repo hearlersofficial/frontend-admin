@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient, useQueries } from '@tanstack/react-query';
 
 import { queries } from '~/queries';
@@ -91,6 +91,8 @@ export const useMobileChat = () => {
     },
   });
 
+  const isSendingRef = useRef(false);
+
   const createMessageMutation = useMutation<
     CreateMessageData,
     unknown,
@@ -103,6 +105,7 @@ export const useMobileChat = () => {
     },
     onMutate: async (payload) => {
       if (!activeCounselId) return undefined;
+      isSendingRef.current = true;
       const key = queries.v1.getCounselMessages(counselorId, activeCounselId).queryKey as readonly unknown[];
       await queryClient.cancelQueries({ queryKey: key });
       const previous = queryClient.getQueryData<CounselMessage[] | undefined>(key) ?? [];
@@ -142,6 +145,7 @@ export const useMobileChat = () => {
       if (previous) queryClient.setQueryData<CounselMessage[] | undefined>(key, previous);
     },
     onSettled: async () => {
+      isSendingRef.current = false;
       if (!activeCounselId) return;
       await queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselMessages(counselorId, activeCounselId).queryKey,
@@ -164,7 +168,7 @@ export const useMobileChat = () => {
   };
 
   const handleSendMessage = () => {
-    if (!inputValue.trim() || !activeCounselId || createMessageMutation.isPending) return;
+    if (!inputValue.trim() || !activeCounselId || createMessageMutation.isPending || isSendingRef.current) return;
     const text = inputValue.trim();
     setInputValue('');
     createMessageMutation.mutate({ counselId: activeCounselId, message: text });

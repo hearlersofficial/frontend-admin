@@ -18,8 +18,6 @@ export const usePromptEditor = () => {
   const { updatePersonaPrompt, updateTonePrompt, updateCounselTechnique } = usePromptMutations();
 
   useEffect(() => {
-    if (!personaData?.body || !selectedCounselTechnique || !toneData?.body) return;
-
     setPromptValues({
       Persona: personaData?.body ?? '',
       Context: selectedCounselTechnique?.context ?? '',

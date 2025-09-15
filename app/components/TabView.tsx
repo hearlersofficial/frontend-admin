@@ -4,11 +4,11 @@ import Playground from './playground/Playground';
 
 const TabView = () => {
   return (
-    <main className="p-6">
-      <TabsContent value="playground">
+    <main className="mx-auto h-full max-w-4xl items-center justify-start xl:max-w-6xl">
+      <TabsContent value="playground" className="h-full w-full">
         <Playground />
       </TabsContent>
-      <TabsContent value="character">
+      <TabsContent value="character" className="h-full w-full">
         <Character />
       </TabsContent>
     </main>

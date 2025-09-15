@@ -11,8 +11,6 @@ body {
   }
 }
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -69,13 +67,29 @@ body {
   }
 }
 
-
-
 @layer base {
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbars cross-browser while preserving scroll behavior */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-none *::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none * {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

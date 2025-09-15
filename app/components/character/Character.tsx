@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useCounselors } from "~/hooks/queries";
+import { useCounselors } from '~/hooks/queries';
 import Sidebar from './Sidebar';
 import CounselorTabs from './CounselorTabs';
 import { LoadingState, ErrorState } from './LoadingStates';
@@ -13,12 +13,12 @@ const CharacterPage = () => {
   if (error) return <ErrorState />;
 
   return (
-    <div className="min-h-screen bg-[#F2F2F7]">
-      <div className="flex gap-8 max-w-7xl mx-auto">
+    <div className="h-full overflow-hidden bg-[#F2F2F7]">
+      <div className="mx-auto flex h-full gap-8">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        
-        <main className="flex-grow">
-          <div className="bg-white rounded-xl shadow-md p-6 h-full">
+
+        <main className="flex-grow overflow-hidden">
+          <div className="h-full overflow-hidden rounded-xl bg-white p-6 shadow-md">
             {activeTab === 'cutscene' && <CounselorTabs counselors={counselors} />}
             {activeTab === 'opening' && (
               <div>
@@ -32,4 +32,4 @@ const CharacterPage = () => {
   );
 };
 
-export default CharacterPage; 
+export default CharacterPage;

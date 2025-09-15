@@ -27,75 +27,75 @@ export interface Error {
    * @example "BAD_REQUEST"
    */
   status?:
-    | "100 CONTINUE"
-    | "101 SWITCHING_PROTOCOLS"
-    | "102 PROCESSING"
-    | "103 EARLY_HINTS"
-    | "103 CHECKPOINT"
-    | "200 OK"
-    | "201 CREATED"
-    | "202 ACCEPTED"
-    | "203 NON_AUTHORITATIVE_INFORMATION"
-    | "204 NO_CONTENT"
-    | "205 RESET_CONTENT"
-    | "206 PARTIAL_CONTENT"
-    | "207 MULTI_STATUS"
-    | "208 ALREADY_REPORTED"
-    | "226 IM_USED"
-    | "300 MULTIPLE_CHOICES"
-    | "301 MOVED_PERMANENTLY"
-    | "302 FOUND"
-    | "302 MOVED_TEMPORARILY"
-    | "303 SEE_OTHER"
-    | "304 NOT_MODIFIED"
-    | "305 USE_PROXY"
-    | "307 TEMPORARY_REDIRECT"
-    | "308 PERMANENT_REDIRECT"
-    | "400 BAD_REQUEST"
-    | "401 UNAUTHORIZED"
-    | "402 PAYMENT_REQUIRED"
-    | "403 FORBIDDEN"
-    | "404 NOT_FOUND"
-    | "405 METHOD_NOT_ALLOWED"
-    | "406 NOT_ACCEPTABLE"
-    | "407 PROXY_AUTHENTICATION_REQUIRED"
-    | "408 REQUEST_TIMEOUT"
-    | "409 CONFLICT"
-    | "410 GONE"
-    | "411 LENGTH_REQUIRED"
-    | "412 PRECONDITION_FAILED"
-    | "413 PAYLOAD_TOO_LARGE"
-    | "413 REQUEST_ENTITY_TOO_LARGE"
-    | "414 URI_TOO_LONG"
-    | "414 REQUEST_URI_TOO_LONG"
-    | "415 UNSUPPORTED_MEDIA_TYPE"
-    | "416 REQUESTED_RANGE_NOT_SATISFIABLE"
-    | "417 EXPECTATION_FAILED"
-    | "418 I_AM_A_TEAPOT"
-    | "419 INSUFFICIENT_SPACE_ON_RESOURCE"
-    | "420 METHOD_FAILURE"
-    | "421 DESTINATION_LOCKED"
-    | "422 UNPROCESSABLE_ENTITY"
-    | "423 LOCKED"
-    | "424 FAILED_DEPENDENCY"
-    | "425 TOO_EARLY"
-    | "426 UPGRADE_REQUIRED"
-    | "428 PRECONDITION_REQUIRED"
-    | "429 TOO_MANY_REQUESTS"
-    | "431 REQUEST_HEADER_FIELDS_TOO_LARGE"
-    | "451 UNAVAILABLE_FOR_LEGAL_REASONS"
-    | "500 INTERNAL_SERVER_ERROR"
-    | "501 NOT_IMPLEMENTED"
-    | "502 BAD_GATEWAY"
-    | "503 SERVICE_UNAVAILABLE"
-    | "504 GATEWAY_TIMEOUT"
-    | "505 HTTP_VERSION_NOT_SUPPORTED"
-    | "506 VARIANT_ALSO_NEGOTIATES"
-    | "507 INSUFFICIENT_STORAGE"
-    | "508 LOOP_DETECTED"
-    | "509 BANDWIDTH_LIMIT_EXCEEDED"
-    | "510 NOT_EXTENDED"
-    | "511 NETWORK_AUTHENTICATION_REQUIRED";
+    | '100 CONTINUE'
+    | '101 SWITCHING_PROTOCOLS'
+    | '102 PROCESSING'
+    | '103 EARLY_HINTS'
+    | '103 CHECKPOINT'
+    | '200 OK'
+    | '201 CREATED'
+    | '202 ACCEPTED'
+    | '203 NON_AUTHORITATIVE_INFORMATION'
+    | '204 NO_CONTENT'
+    | '205 RESET_CONTENT'
+    | '206 PARTIAL_CONTENT'
+    | '207 MULTI_STATUS'
+    | '208 ALREADY_REPORTED'
+    | '226 IM_USED'
+    | '300 MULTIPLE_CHOICES'
+    | '301 MOVED_PERMANENTLY'
+    | '302 FOUND'
+    | '302 MOVED_TEMPORARILY'
+    | '303 SEE_OTHER'
+    | '304 NOT_MODIFIED'
+    | '305 USE_PROXY'
+    | '307 TEMPORARY_REDIRECT'
+    | '308 PERMANENT_REDIRECT'
+    | '400 BAD_REQUEST'
+    | '401 UNAUTHORIZED'
+    | '402 PAYMENT_REQUIRED'
+    | '403 FORBIDDEN'
+    | '404 NOT_FOUND'
+    | '405 METHOD_NOT_ALLOWED'
+    | '406 NOT_ACCEPTABLE'
+    | '407 PROXY_AUTHENTICATION_REQUIRED'
+    | '408 REQUEST_TIMEOUT'
+    | '409 CONFLICT'
+    | '410 GONE'
+    | '411 LENGTH_REQUIRED'
+    | '412 PRECONDITION_FAILED'
+    | '413 PAYLOAD_TOO_LARGE'
+    | '413 REQUEST_ENTITY_TOO_LARGE'
+    | '414 URI_TOO_LONG'
+    | '414 REQUEST_URI_TOO_LONG'
+    | '415 UNSUPPORTED_MEDIA_TYPE'
+    | '416 REQUESTED_RANGE_NOT_SATISFIABLE'
+    | '417 EXPECTATION_FAILED'
+    | '418 I_AM_A_TEAPOT'
+    | '419 INSUFFICIENT_SPACE_ON_RESOURCE'
+    | '420 METHOD_FAILURE'
+    | '421 DESTINATION_LOCKED'
+    | '422 UNPROCESSABLE_ENTITY'
+    | '423 LOCKED'
+    | '424 FAILED_DEPENDENCY'
+    | '425 TOO_EARLY'
+    | '426 UPGRADE_REQUIRED'
+    | '428 PRECONDITION_REQUIRED'
+    | '429 TOO_MANY_REQUESTS'
+    | '431 REQUEST_HEADER_FIELDS_TOO_LARGE'
+    | '451 UNAVAILABLE_FOR_LEGAL_REASONS'
+    | '500 INTERNAL_SERVER_ERROR'
+    | '501 NOT_IMPLEMENTED'
+    | '502 BAD_GATEWAY'
+    | '503 SERVICE_UNAVAILABLE'
+    | '504 GATEWAY_TIMEOUT'
+    | '505 HTTP_VERSION_NOT_SUPPORTED'
+    | '506 VARIANT_ALSO_NEGOTIATES'
+    | '507 INSUFFICIENT_STORAGE'
+    | '508 LOOP_DETECTED'
+    | '509 BANDWIDTH_LIMIT_EXCEEDED'
+    | '510 NOT_EXTENDED'
+    | '511 NETWORK_AUTHENTICATION_REQUIRED';
   /**
    * 에러 코드
    * @example "E40001"
@@ -643,11 +643,11 @@ export interface Counselor {
   profileImage?: string;
   /** 상담사 성별 */
   gender?:
-    | "COUNSELOR_GENDER_UNSPECIFIED"
-    | "COUNSELOR_GENDER_MALE"
-    | "COUNSELOR_GENDER_FEMALE"
-    | "COUNSELOR_GENDER_NONE"
-    | "UNRECOGNIZED";
+    | 'COUNSELOR_GENDER_UNSPECIFIED'
+    | 'COUNSELOR_GENDER_MALE'
+    | 'COUNSELOR_GENDER_FEMALE'
+    | 'COUNSELOR_GENDER_NONE'
+    | 'UNRECOGNIZED';
   /** 상담사 생성 시간 */
   createdAt?: string;
   /** 상담사 수정 시간 */
@@ -683,11 +683,7 @@ export interface SaveEpisodeCutSceneRequest {
   /** 컷신 ID (수정 시 필요) */
   id?: string;
   /** 컷신 발화자 */
-  speaker:
-    | "SPEAKER_UNSPECIFIED"
-    | "SPEAKER_COUNSELOR"
-    | "SPEAKER_USER"
-    | "UNRECOGNIZED";
+  speaker: 'SPEAKER_UNSPECIFIED' | 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'UNRECOGNIZED';
   /** 컷신 내용 */
   content: string;
   /**
@@ -746,11 +742,7 @@ export interface EpisodeCutScene {
   /** 에피소드 ID */
   episodeId?: string;
   /** 컷신 발화자 */
-  speaker?:
-    | "SPEAKER_UNSPECIFIED"
-    | "SPEAKER_COUNSELOR"
-    | "SPEAKER_USER"
-    | "UNRECOGNIZED";
+  speaker?: 'SPEAKER_UNSPECIFIED' | 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'UNRECOGNIZED';
   /** 컷신 내용 */
   content?: string;
   /**
@@ -942,7 +934,7 @@ export interface UpdateCounselTechniqueTransitionRuleRequestDto {
     | "MOTIVATION_STAGE_PREPARATION"
     | "MOTIVATION_STAGE_ACTION"
     | "MOTIVATION_STAGE_MAINTENANCE"
-    | "UNRECOGNIZED"
+    | "UNRECOGNIZED
   )[];
   /**
    * 최소 자기 효능감
@@ -1416,11 +1408,11 @@ export interface CreateCounselorRequest {
   profileImage: string;
   /** 상담사 성별 */
   gender:
-    | "COUNSELOR_GENDER_UNSPECIFIED"
-    | "COUNSELOR_GENDER_MALE"
-    | "COUNSELOR_GENDER_FEMALE"
-    | "COUNSELOR_GENDER_NONE"
-    | "UNRECOGNIZED";
+    | 'COUNSELOR_GENDER_UNSPECIFIED'
+    | 'COUNSELOR_GENDER_MALE'
+    | 'COUNSELOR_GENDER_FEMALE'
+    | 'COUNSELOR_GENDER_NONE'
+    | 'UNRECOGNIZED';
 }
 
 /** 상담사 생성 응답 */
@@ -1449,12 +1441,12 @@ export interface SuccessCreateCounselorResponse {
 export interface GenerateCounselorImageUrlRequest {
   /** 이미지 확장자 */
   extension:
-    | "EXTENSION_UNSPECIFIED"
-    | "EXTENSION_JPG"
-    | "EXTENSION_PNG"
-    | "EXTENSION_GIF"
-    | "EXTENSION_WEBP"
-    | "UNRECOGNIZED";
+    | 'EXTENSION_UNSPECIFIED'
+    | 'EXTENSION_JPG'
+    | 'EXTENSION_PNG'
+    | 'EXTENSION_GIF'
+    | 'EXTENSION_WEBP'
+    | 'UNRECOGNIZED';
 }
 
 /** 상담사 이미지 URL 생성 응답 */
@@ -1516,11 +1508,7 @@ export interface CreateEpisodeRequest {
 /** 에피소드 컷신 저장 요청 */
 export interface SaveNewEpisodeCutSceneRequest {
   /** 컷신 발화자 */
-  speaker:
-    | "SPEAKER_UNSPECIFIED"
-    | "SPEAKER_COUNSELOR"
-    | "SPEAKER_USER"
-    | "UNRECOGNIZED";
+  speaker: 'SPEAKER_UNSPECIFIED' | 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'UNRECOGNIZED';
   /** 컷신 내용 */
   content: string;
   /**
@@ -1558,12 +1546,12 @@ export interface SuccessCreateEpisodeResponse {
 export interface GenerateCutSceneImageUrlRequest {
   /** 이미지 확장자 */
   extension:
-    | "EXTENSION_UNSPECIFIED"
-    | "EXTENSION_JPG"
-    | "EXTENSION_PNG"
-    | "EXTENSION_GIF"
-    | "EXTENSION_WEBP"
-    | "UNRECOGNIZED";
+    | 'EXTENSION_UNSPECIFIED'
+    | 'EXTENSION_JPG'
+    | 'EXTENSION_PNG'
+    | 'EXTENSION_GIF'
+    | 'EXTENSION_WEBP'
+    | 'UNRECOGNIZED';
 }
 
 /** 컷신 이미지 URL 생성 응답 */
@@ -1739,10 +1727,10 @@ export interface SuccessCreateMessageResponse {
 export interface ReactMessageRequest {
   /** 메시지 반응 */
   reaction:
-    | "COUNSEL_MESSAGE_REACTION_UNSPECIFIED"
-    | "COUNSEL_MESSAGE_REACTION_LIKE"
-    | "COUNSEL_MESSAGE_REACTION_DISLIKE"
-    | "UNRECOGNIZED";
+    | 'COUNSEL_MESSAGE_REACTION_UNSPECIFIED'
+    | 'COUNSEL_MESSAGE_REACTION_LIKE'
+    | 'COUNSEL_MESSAGE_REACTION_DISLIKE'
+    | 'UNRECOGNIZED';
 }
 
 /** 메시지 반응 응답 */
@@ -2740,8 +2728,7 @@ export type UpdatePersonaPromptData = SuccessUpdatePersonaPromptResponseDto;
 
 export type UpdatePersonaPromptError = Error;
 
-export type UpdateCounselTechniqueData =
-  SuccessUpdateCounselTechniqueResponseDto;
+export type UpdateCounselTechniqueData = SuccessUpdateCounselTechniqueResponseDto;
 
 export type UpdateCounselTechniqueError = Error;
 
@@ -2769,18 +2756,15 @@ export type UpdateBubbleData = SuccessUpdateBubbleResponse;
 
 export type UpdateBubbleError = Error;
 
-export type GetCounselTechniqueTransitionRuleByIdData =
-  SuccessFindCounselTechniqueTransitionRuleByIdResponseDto;
+export type GetCounselTechniqueTransitionRuleByIdData = SuccessFindCounselTechniqueTransitionRuleByIdResponseDto;
 
 export type GetCounselTechniqueTransitionRuleByIdError = Error;
 
-export type UpdateCounselTechniqueTransitionRuleData =
-  SuccessUpdateCounselTechniqueTransitionRuleResponseDto;
+export type UpdateCounselTechniqueTransitionRuleData = SuccessUpdateCounselTechniqueTransitionRuleResponseDto;
 
 export type UpdateCounselTechniqueTransitionRuleError = Error;
 
-export type DeleteCounselTechniqueTransitionRuleData =
-  SuccessDeleteCounselTechniqueTransitionRuleResponseDto;
+export type DeleteCounselTechniqueTransitionRuleData = SuccessDeleteCounselTechniqueTransitionRuleResponseDto;
 
 export type DeleteCounselTechniqueTransitionRuleError = Error;
 
@@ -2809,14 +2793,13 @@ export type ActivatePromptVersionData = SuccessActivatePromptVersionResponseDto;
 
 export type ActivatePromptVersionError = Error;
 
-export type CreateCounselTechniqueData =
-  SuccessCreateCounselTechniqueResponseDto;
+export type CreateCounselTechniqueData = SuccessCreateCounselTechniqueResponseDto;
 
 export type CreateCounselTechniqueError = Error;
 
 export interface GetCounselorsParams {
   /** 톤 ID (선택) */
-  "tone-id"?: string;
+  'tone-id'?: string;
 }
 
 export type GetCounselorsData = SuccessFindCounselorsResponse;
@@ -2827,8 +2810,7 @@ export type CreateCounselorData = SuccessCreateCounselorResponse;
 
 export type CreateCounselorError = Error;
 
-export type GenerateCounselorImageUrlData =
-  SuccessGenerateCounselorImageUrlResponse;
+export type GenerateCounselorImageUrlData = SuccessGenerateCounselorImageUrlResponse;
 
 export type GenerateCounselorImageUrlError = Error;
 
@@ -2840,8 +2822,7 @@ export type CreateEpisodeData = SuccessCreateEpisodeResponse;
 
 export type CreateEpisodeError = Error;
 
-export type GenerateCutSceneImageUrlData =
-  SuccessGenerateCutSceneImageUrlResponse;
+export type GenerateCutSceneImageUrlData = SuccessGenerateCutSceneImageUrlResponse;
 
 export type GenerateCutSceneImageUrlError = Error;
 
@@ -2891,19 +2872,17 @@ export interface GetCounselTechniqueTransitionRulesParams {
   promptVersionId: string;
 }
 
-export type GetCounselTechniqueTransitionRulesData =
-  SuccessFindCounselTechniqueTransitionRulesResponseDto;
+export type GetCounselTechniqueTransitionRulesData = SuccessFindCounselTechniqueTransitionRulesResponseDto;
 
 export type GetCounselTechniqueTransitionRulesError = Error;
 
-export type CreateCounselTechniqueTransitionRuleData =
-  SuccessCreateCounselTechniqueTransitionRuleResponseDto;
+export type CreateCounselTechniqueTransitionRuleData = SuccessCreateCounselTechniqueTransitionRuleResponseDto;
 
 export type CreateCounselTechniqueTransitionRuleError = Error;
 
 export interface KakaoParams {
   /** 로그인 후 리다이렉트할 클라이언트 URL */
-  "redirect-url": string;
+  'redirect-url': string;
 }
 
 export type KakaoError = Error;
@@ -2957,11 +2936,10 @@ export type GetActiveVersionData = SuccessFindActiveVersionResponseDto;
 export type GetActiveVersionError = Error;
 
 export interface GetPromptActivateHistoriesParams {
-  "prompt-version-id"?: string;
+  'prompt-version-id'?: string;
 }
 
-export type GetPromptActivateHistoriesData =
-  SuccessFindPromptActivateHistoriesResponseDto;
+export type GetPromptActivateHistoriesData = SuccessFindPromptActivateHistoriesResponseDto;
 
 export type GetPromptActivateHistoriesError = Error;
 
@@ -3011,7 +2989,6 @@ export type GetCounselTechniquesData = SuccessFindCounselTechniquesResponseDto;
 
 export type GetCounselTechniquesError = Error;
 
-export type GetCounselTechniqueByIdData =
-  SuccessFindCounselTechniqueByIdResponseDto;
+export type GetCounselTechniqueByIdData = SuccessFindCounselTechniqueByIdResponseDto;
 
 export type GetCounselTechniqueByIdError = Error;
