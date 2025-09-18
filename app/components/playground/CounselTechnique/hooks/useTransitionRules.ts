@@ -21,7 +21,7 @@ export const useTransitionRules = () => {
 
   const { connectedNodes, unconnectedNodes } = useMemo(() => {
     if (!transitionRules || !techniques.length) {
-      return { connectedNodes: [], unconnectedNodes: techniques };
+      return { connectedNodes: techniques, unconnectedNodes: [] };
     }
 
     const connectedNodeIds = new Set<string>();

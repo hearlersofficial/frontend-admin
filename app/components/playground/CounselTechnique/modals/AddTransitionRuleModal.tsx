@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Save } from 'lucide-react';
-import { CreateCounselTechniqueTransitionRuleRequestDto } from '~/__generated__/data-contracts';
 import { SectionKor, TRANSITION_RULE_FIELDS } from '~/components/playground/CounselTechnique/constants/transitionRule';
 import { Modal } from '~/components/Modal';
 import { useTransitionRuleManagement } from '~/components/playground/CounselTechnique/hooks/useTransitionRuleManagement';
 import TransitionRuleFormField from './fields/TransitionRuleFormField';
 import TransitionRuleArrayField from './fields/TransitionRuleArrayField';
+import { CreateCounselTechniqueTransitionRuleData } from '~/__generated__/data-contracts';
 
 interface AddTransitionRuleModalProps {
   isOpen: boolean;
@@ -84,7 +84,7 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const createData: CreateCounselTechniqueTransitionRuleRequestDto = {
+      const createData: CreateCounselTechniqueTransitionRuleData = {
         fromCounselTechniqueId: fromTechniqueId ?? '',
         toCounselTechniqueId: toTechniqueId ?? '',
         priority: formData.priority,

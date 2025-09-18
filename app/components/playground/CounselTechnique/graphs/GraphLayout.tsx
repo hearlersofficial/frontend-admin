@@ -7,9 +7,10 @@ import ConnectionArrow from './ConnectionArrow';
 import { useGraphLayout } from '../hooks/useGraphLayout';
 import { useTransitionRules } from '../hooks/useTransitionRules';
 import { usePromptStore } from '~/store/usePromptStore';
-import { CounselTechniqueResponseDto, CounselTechniqueTransitionRuleResponseDto } from '~/__generated__/data-contracts';
+
 import AddTransitionRuleModal from '~/components/playground/CounselTechnique/modals/AddTransitionRuleModal';
 import { useModal } from '~/hooks/useModal';
+import { CounselTechniqueResponseDto, CounselTechniqueTransitionRuleResponseDto } from '~/__generated__/data-contracts';
 
 interface GraphLayoutProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
@@ -40,7 +41,7 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
 
   const { transitionRules, connectedNodes, unconnectedNodes } = useTransitionRules();
 
-  const { nodes, edges, width, height } = useGraphLayout(connectedNodes, transitionRules);
+  const { nodes, edges, width, height } = useGraphLayout(connectedNodes, unconnectedNodes, transitionRules);
 
   const getTechniquesPointingTo = (techniqueId: string) => {
     return transitionRules
@@ -184,10 +185,10 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   return (
     <div className="relative h-auto w-full">
       <div
-        className="relative h-full rounded-lg border-2 border-dashed border-gray-300 bg-gray-50"
+        className="relative rounded-lg border-2 border-dashed border-gray-300 bg-gray-50"
         style={{
-          width: `${width}px`,
           minHeight: `${height}px`,
+          minWidth: `${width}px`,
         }}
       >
         <div className="absolute inset-0 flex flex-col space-y-6 p-6">
