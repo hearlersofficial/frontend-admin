@@ -160,9 +160,9 @@ export const useMobileChat = () => {
   const handleCreateCounsel = () => {
     if (!counselorId || createCounselMutation.isPending) return;
     createCounselMutation.mutate({
-      promptVersionId: selectedPromptVersionId ?? null,
-      bubbleId: null,
-      responseOptionNo: null,
+      promptVersionId: selectedPromptVersionId ?? undefined,
+      bubbleId: undefined,
+      responseOptionNo: undefined,
     });
     setIsCreateModalOpen(false);
   };
