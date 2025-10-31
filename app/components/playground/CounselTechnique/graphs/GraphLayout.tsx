@@ -6,17 +6,17 @@ import TransitionRuleDetailModal from '../modals/TransitionRuleDetailModal';
 import ConnectionArrow from './ConnectionArrow';
 import { useGraphLayout } from '../hooks/useGraphLayout';
 import { useTransitionRules } from '../hooks/useTransitionRules';
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 
 import AddTransitionRuleModal from '~/components/playground/CounselTechnique/modals/AddTransitionRuleModal';
 import { useModal } from '~/hooks/useModal';
-import { CounselTechniqueResponseDto, CounselTechniqueTransitionRuleResponseDto } from '~/__generated__/data-contracts';
+import { CounselTechnique, CounselTechniqueTransitionRule } from '~/api/v1';
 
 interface GraphLayoutProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
-  techniques: CounselTechniqueResponseDto[];
-  setTechniques: (techniques: CounselTechniqueResponseDto[]) => void;
-  onEditName?: (technique: CounselTechniqueResponseDto) => void;
+  techniques: CounselTechnique[];
+  setTechniques: (techniques: CounselTechnique[]) => void;
+  onEditName?: (technique: CounselTechnique) => void;
   onAddTechnique?: () => void;
 }
 
@@ -24,8 +24,7 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
   const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique) || techniques[0];
   const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
-  const [selectedTransitionRule, setSelectedTransitionRule] =
-    useState<CounselTechniqueTransitionRuleResponseDto | null>(null);
+
   const {
     isOpen: isAddTransitionRuleModalOpen,
     setIsOpen: setIsAddTransitionRuleModalOpen,
@@ -37,10 +36,11 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
     openModal: openTransitionRuleDetailModal,
   } = useModal(false);
   const [mutationModeSelectedTechnique, setMutationModeSelectedTechnique] =
-    useState<CounselTechniqueResponseDto | null>(null);
+      useState<CounselTechnique | null>(null);
 
   const { transitionRules, connectedNodes, unconnectedNodes } = useTransitionRules();
-
+  const [selectedTransitionRule, setSelectedTransitionRule] =
+    useState<CounselTechniqueTransitionRule | null>(transitionRules[0] || null);
   const { nodes, edges, width, height } = useGraphLayout(connectedNodes, unconnectedNodes, transitionRules);
 
   const getTechniquesPointingTo = (techniqueId: string) => {
@@ -49,12 +49,12 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
       .map((rule) => rule.fromCounselTechniqueId!);
   };
 
-  const handleTransitionRuleClick = (rule: CounselTechniqueTransitionRuleResponseDto) => {
+  const handleTransitionRuleClick = (rule: CounselTechniqueTransitionRule) => {
     setSelectedTransitionRule(rule);
     openTransitionRuleDetailModal();
   };
 
-  const handleCardClick = (technique: CounselTechniqueResponseDto) => {
+  const handleCardClick = (technique: CounselTechnique) => {
     if (mode === 'ADDANDDELETE') {
       // 생성 시
       if (mutationModeSelectedTechnique && mutationModeSelectedTechnique.id !== technique.id) {
@@ -63,7 +63,7 @@ const GraphLayout: React.FC<GraphLayoutProps> = ({ mode, techniques, setTechniqu
           fromCounselTechniqueId: mutationModeSelectedTechnique.id,
           toCounselTechniqueId: technique.id,
           priority: 0,
-        } as CounselTechniqueTransitionRuleResponseDto);
+        } as CounselTechniqueTransitionRule);
         openAddTransitionRuleModal();
         setMutationModeSelectedTechnique(null);
       } else {

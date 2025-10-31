@@ -1,15 +1,16 @@
 import { create } from 'zustand';
-import { Counselor, CounselTechniqueResponseDto, PromptVersionResponseDto } from '~/__generated__/data-contracts';
+  
+import { Counselor, CounselTechnique, PromptVersion } from '~/api/v1';
 
 interface PromptState {
-  temporaryVersion: PromptVersionResponseDto | null;
-  setTemporaryVersion: (v: PromptVersionResponseDto) => void;
+  temporaryVersion: PromptVersion | null;
+  setTemporaryVersion: (v: PromptVersion) => void;
 
   selectedCounselor: Counselor | null;
   setSelectedCounselor: (counselor: Counselor) => void;
 
-  selectedCounselTechnique: CounselTechniqueResponseDto | null;
-  setSelectedCounselTechnique: (t: CounselTechniqueResponseDto) => void;
+  selectedCounselTechnique: CounselTechnique | null;
+  setSelectedCounselTechnique: (t: CounselTechnique) => void;
 }
 
 export const usePromptStore = create<PromptState>((set) => ({

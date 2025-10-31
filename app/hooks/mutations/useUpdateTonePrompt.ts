@@ -1,23 +1,19 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
 import {
-  UpdateTonePromptData,
-  UpdateTonePromptError,
-  UpdateTonePromptRequestDto,
-} from '~/__generated__/data-contracts';
-import { api } from '~/api';
+  promptsService,
+  type UpdateTonePromptRequest,
+  type TonePrompt,
+} from '~/api/v1';
 
 type UseUpdateTonePromptProps = Omit<
-  UseMutationOptions<AxiosResponse<UpdateTonePromptData>, UpdateTonePromptError, UpdateTonePromptRequestDto, unknown>,
+  UseMutationOptions<TonePrompt, Error, UpdateTonePromptRequest, unknown>,
   'mutationFn'
 >;
 
-const useUpdateTonePrompt = ({ onSuccess, onError, ...rest }: UseUpdateTonePromptProps = {}) => {
+const useUpdateTonePrompt = ({ ...rest }: UseUpdateTonePromptProps = {}) => {
   return useMutation({
-    mutationFn: (data: UpdateTonePromptRequestDto) => api.V1.updateTonePrompt(data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: (data: UpdateTonePromptRequest) => promptsService.updateTonePrompt(data),
     ...rest,
   });
 };

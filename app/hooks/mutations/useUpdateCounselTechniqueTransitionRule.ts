@@ -1,33 +1,25 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
 import {
-  UpdateCounselTechniqueTransitionRuleData,
-  UpdateCounselTechniqueTransitionRuleError,
-  UpdateCounselTechniqueTransitionRuleRequestDto,
-} from '~/__generated__/data-contracts';
-import { api } from '~/api';
+  promptsService,
+  type UpdateCounselTechniqueTransitionRuleRequest,
+  type CounselTechniqueTransitionRule,
+} from '~/api/v1';
+
+type UpdateCounselTechniqueTransitionRuleVariables = {
+  transitionRuleId: string;
+  data: UpdateCounselTechniqueTransitionRuleRequest;
+};
 
 type UseUpdateCounselTechniqueTransitionRuleProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<UpdateCounselTechniqueTransitionRuleData>,
-    UpdateCounselTechniqueTransitionRuleError,
-    { counselTechniqueTransitionRuleId: string; data: UpdateCounselTechniqueTransitionRuleRequestDto },
-    unknown
-  >,
+  UseMutationOptions<CounselTechniqueTransitionRule, Error, UpdateCounselTechniqueTransitionRuleVariables, unknown>,
   'mutationFn'
 >;
 
-const useUpdateCounselTechniqueTransitionRule = ({
-  onSuccess,
-  onError,
-  ...rest
-}: UseUpdateCounselTechniqueTransitionRuleProps = {}) => {
+const useUpdateCounselTechniqueTransitionRule = ({ ...rest }: UseUpdateCounselTechniqueTransitionRuleProps = {}) => {
   return useMutation({
-    mutationFn: ({ counselTechniqueTransitionRuleId, data }) =>
-      api.V1.updateCounselTechniqueTransitionRule(counselTechniqueTransitionRuleId, data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: ({ transitionRuleId, data }: UpdateCounselTechniqueTransitionRuleVariables) =>
+      promptsService.updateCounselTechniqueTransitionRule(transitionRuleId, data),
     ...rest,
   });
 };

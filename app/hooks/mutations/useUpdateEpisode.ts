@@ -1,24 +1,26 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { UpdateEpisodeData, UpdateEpisodeError, UpdateEpisodeRequest } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import {
+  counselorsService,
+  type UpdateEpisodeRequest,
+  type Episode,
+} from '~/api/v1';
+
+type UpdateEpisodeVariables = {
+  counselorId: string;
+  episodeId: string;
+  data: UpdateEpisodeRequest;
+};
 
 type UseUpdateEpisodeProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<UpdateEpisodeData>,
-    UpdateEpisodeError,
-    { episodeId: string; counselorId: string; data: UpdateEpisodeRequest },
-    unknown
-  >,
+  UseMutationOptions<Episode, Error, UpdateEpisodeVariables, unknown>,
   'mutationFn'
 >;
 
-const useUpdateEpisode = ({ onSuccess, onError, ...rest }: UseUpdateEpisodeProps = {}) => {
+const useUpdateEpisode = ({ ...rest }: UseUpdateEpisodeProps = {}) => {
   return useMutation({
-    mutationFn: ({ episodeId, counselorId, data }) => api.V1.updateEpisode(episodeId, counselorId, data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: ({ counselorId, episodeId, data }: UpdateEpisodeVariables) =>
+      counselorsService.updateEpisode(counselorId, episodeId, data),
     ...rest,
   });
 };

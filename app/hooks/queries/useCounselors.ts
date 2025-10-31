@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { queries } from '~/queries';
-import { GetCounselorsParams } from '~/__generated__/data-contracts';
+import { data } from '@remix-run/react';
+import { GetCounselorsParams } from '~/api/v1/counselors/counselors.types';
 
-export const useCounselors = (params: GetCounselorsParams = {}) => {
+export const useCounselors = (params?: GetCounselorsParams) => {
   return useQuery({
     ...queries.v1.getCounselors(params),
-    select: (response) => response.data.data?.counselors || [],
+    select: data
   });
 }; 

@@ -1,19 +1,19 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { CreateToneData, CreateToneError, CreateToneRequest } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import {
+  counselorsService,
+  type CreateToneRequest,
+  type Tone,
+} from '~/api/v1';
 
 type UseCreateToneProps = Omit<
-  UseMutationOptions<AxiosResponse<CreateToneData>, CreateToneError, CreateToneRequest, unknown>,
+  UseMutationOptions<Tone, Error, CreateToneRequest, unknown>,
   'mutationFn'
 >;
 
-const useCreateTone = ({ onSuccess, onError, ...rest }: UseCreateToneProps = {}) => {
+const useCreateTone = ({ ...rest }: UseCreateToneProps = {}) => {
   return useMutation({
-    mutationFn: (data: CreateToneRequest) => api.V1.createTone(data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: (data: CreateToneRequest) => counselorsService.createTone(data),
     ...rest,
   });
 };

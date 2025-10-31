@@ -7,13 +7,14 @@ import { DialogFooter } from '~/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 import Pagination from '~/components/Pagination';
 import { usePagination } from '~/hooks/usePagination';
-import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
+
 import { useState } from 'react';
+import { PromptVersion } from '~/api/v1';
 
 interface CreateCounselModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  promptVersionList: PromptVersionResponseDto[];
+  promptVersionList: PromptVersion[];
   selectedPromptVersionId?: string;
   setSelectedPromptVersionId: (id?: string) => void;
   onCreate: () => void;

@@ -2,7 +2,6 @@ import { useMemo, useRef } from 'react';
 import { Button } from "~/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
-import type { Counselor } from "~/__generated__/data-contracts";
 import { useEpisodeDetailStore } from "~/stores/episodeDetailStore";
 import { useEpisodeImageStore } from "~/stores/episodeImageStore";
 import { useCounselor } from "~/hooks/queries/useCounselor";
@@ -48,7 +47,7 @@ const SceneContentSection = ({ counselorId }: SceneContentSectionProps) => {
       image: ''
     };
     const options = [
-      { value: counselor?.name || 'counselor', label: counselor?.name || '상담사' },
+      { value: counselor?.data?.name ?? 'counselor', label: counselor?.data?.name ?? '상담사' },
       { value: '유저', label: '유저' },
       { value: '지문', label: '지문' },
     ];
@@ -58,7 +57,7 @@ const SceneContentSection = ({ counselorId }: SceneContentSectionProps) => {
       currentScene: scene,
       speakerOptions: options
     };
-  }, [selectedImageIndex, scenes.length, scenes, counselor?.name]);
+  }, [selectedImageIndex, scenes, counselor?.data?.name]);
 
   const onSpeakerChange = (speaker: string) => {
     updateSceneData(adjustedSelectedIndex, { speaker });

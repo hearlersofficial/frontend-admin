@@ -2,18 +2,18 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+import { CounselTechnique } from '~/api/v1';
 
 interface TechniqueCardProps {
   mode: 'ADDANDDELETE' | 'EDIT' | 'SELECT';
-  technique: CounselTechniqueResponseDto;
-  selectedCounselTechnique: CounselTechniqueResponseDto;
-  setSelectedCounselTechnique: (technique: CounselTechniqueResponseDto) => void;
-  setTechniques?: (techniques: CounselTechniqueResponseDto[]) => void;
-  techniques?: CounselTechniqueResponseDto[];
-  onEditName?: (technique: CounselTechniqueResponseDto) => void;
-  onCardClick?: (technique: CounselTechniqueResponseDto) => void;
-  mutationModeSelectedTechnique?: CounselTechniqueResponseDto | null;
+  technique: CounselTechnique;
+  selectedCounselTechnique: CounselTechnique;
+  setSelectedCounselTechnique: (technique: CounselTechnique) => void;
+  setTechniques?: (techniques: CounselTechnique[]) => void;
+  techniques?: CounselTechnique[];
+  onEditName?: (technique: CounselTechnique) => void;
+  onCardClick?: (technique: CounselTechnique) => void;
+  mutationModeSelectedTechnique?: CounselTechnique | null;
   techniquesPointingTo?: string[];
 }
 

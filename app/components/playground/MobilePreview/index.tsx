@@ -6,7 +6,7 @@ import { useMobileChat } from '~/components/playground/MobilePreview/hooks/useMo
 import CreateCounselModal from '~/components/playground/MobilePreview/modals/CreateCounselModal';
 import PromptVersionInfoModal from '~/components/playground/MobilePreview/modals/PromptVersionInfoModal';
 import CounselTechniqueInfo from '~/components/playground/MobilePreview/modals/CounselTechniqueInfo';
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 
 const MobilePreview = () => {
   const {

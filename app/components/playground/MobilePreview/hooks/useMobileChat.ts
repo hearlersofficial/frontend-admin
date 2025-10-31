@@ -2,34 +2,39 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient, useQueries } from '@tanstack/react-query';
 
 import { queries } from '~/queries';
-import { api } from '~/api';
-import { usePromptStore } from '~/store/usePromptStore';
-import {
+import { counselsService, usersService, promptsService } from '~/api/v1';
+import type {
   Counsel,
   CounselMessage,
   CreateCounselRequest,
-  PromptVersionResponseDto,
-  CreateMessageData,
-  User,
-} from '~/__generated__/data-contracts';
+  CreateMessageRequest,
+  CreateMessageResponse,
+  PromptVersion
+} from '~/api/v1';
+import { usePromptStore } from '~/stores/usePromptStore';
 
 export const useMobileChat = () => {
   const queryClient = useQueryClient();
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
+  const { data: myUserData } = useQuery({
+    ...queries.v1.getMyUser,
+  });
 
-  const counselorId = selectedCounselor?.id ?? '';
+  const userId = myUserData?.id;
+  const counselorId = selectedCounselor?.id;
+  
   // Reset active counsel on counselor change
   useEffect(() => {
     setActiveCounselId(null);
   }, [counselorId]);
 
   const { data: counselList = [] } = useQuery({
-    ...queries.v1.getCounsels(counselorId),
-    enabled: Boolean(counselorId),
+    ...queries.v1.getCounsels(counselorId || '', userId || ''),
+    enabled: Boolean(counselorId && userId),
   });
 
   const { data: promptVersionList = [] } = useQuery({
-    ...queries.v1.getPromptVersions({}),
+    ...queries.v1.getPromptVersions(),
   });
 
   const [activeCounselId, setActiveCounselId] = useState<string | null>(null);
@@ -41,52 +46,51 @@ export const useMobileChat = () => {
   }, [counselList, activeCounselId]);
 
   const { data: messageList = [], isFetching: isFetchingMessages } = useQuery({
-    ...queries.v1.getCounselMessages(counselorId, activeCounselId ?? ''),
+    ...queries.v1.getCounselMessages(counselorId || '', activeCounselId || ''),
     enabled: Boolean(counselorId && activeCounselId),
   });
 
   // Active counsel details and user profile
   const { data: activeCounselData } = useQuery({
-    queryKey: ['activeCounsel', counselorId, activeCounselId],
+    queryKey: ['activeCounsel', activeCounselId],
     queryFn: async () => {
-      if (!counselorId || !activeCounselId) return undefined;
-      const res = await api.V1.getCounsel(counselorId, activeCounselId);
-      return res.data.data?.counsel as Counsel | undefined;
+      if (!activeCounselId) return undefined;
+      return await counselsService.getCounsel(activeCounselId);
     },
-    enabled: Boolean(counselorId && activeCounselId),
+    enabled: Boolean(activeCounselId),
   });
 
-  const userId = activeCounselData?.userId ?? undefined;
-  const activeCounselPromptVersionId = activeCounselData?.promptVersionId ?? undefined;
+  const activeCounselUserId = activeCounselData?.userId;
+  const activeCounselPromptVersionId = activeCounselData?.promptVersionId;
 
   const { data: userData } = useQuery({
-    queryKey: ['counselUser', userId],
+    queryKey: ['counselUser', activeCounselUserId],
     queryFn: async () => {
-      if (!userId) return undefined;
-      const res = await api.V1.getUser(userId);
-      return res.data.data?.user as User | undefined;
+      if (!activeCounselUserId) return undefined;
+      return await usersService.getUser(activeCounselUserId);
     },
-    enabled: Boolean(userId),
+    enabled: Boolean(activeCounselUserId),
   });
 
-  const { data: activePromptVersion } = useQuery<PromptVersionResponseDto | undefined>({
-    queryKey: ['activePromptVersion', activeCounselPromptVersionId],
+  const { data: activePromptVersion } = useQuery<PromptVersion | undefined>({
+    queryKey: queries.v1.getPromptVersionById(activeCounselPromptVersionId || '').queryKey,
     queryFn: async () => {
       if (!activeCounselPromptVersionId) return undefined;
-      const res = await api.V1.getPromptVersionById(activeCounselPromptVersionId);
-      return res.data.data?.promptVersion as PromptVersionResponseDto | undefined;
+      return await promptsService.getPromptVersion(activeCounselPromptVersionId);
     },
     enabled: Boolean(activeCounselPromptVersionId),
   });
 
   const createCounselMutation = useMutation({
     mutationFn: async (body: CreateCounselRequest) => {
-      if (!counselorId) throw new Error('counselorId is required');
-      const res = await api.V1.createCounsel(counselorId, body);
-      return res.data.data?.counsel as Counsel | undefined;
+      if (!counselorId || !userId) throw new Error('counselorId and userId are required');
+      const result = await counselsService.createCounsel(userId, counselorId, body);
+      return result.counsel;
     },
     onSuccess: async (created) => {
-      await queryClient.invalidateQueries({ queryKey: queries.v1.getCounsels(counselorId).queryKey });
+      if (counselorId && userId) {
+        await queryClient.invalidateQueries({ queryKey: queries.v1.getCounsels(counselorId, userId).queryKey });
+      }
       if (created?.id) setActiveCounselId(created.id);
     },
   });
@@ -94,17 +98,17 @@ export const useMobileChat = () => {
   const isSendingRef = useRef(false);
 
   const createMessageMutation = useMutation<
-    CreateMessageData,
+    CreateMessageResponse,
     unknown,
     { counselId: string; message: string },
     { previous?: CounselMessage[]; key: readonly unknown[]; tempId: string }
   >({
     mutationFn: async (payload) => {
-      const res = await api.V1.createMessage(counselorId, payload.counselId, { message: payload.message });
-      return res.data; // SuccessCreateMessageResponse
+      const request: CreateMessageRequest = { message: payload.message };
+      return await counselsService.createMessage(payload.counselId, request);
     },
     onMutate: async (payload) => {
-      if (!activeCounselId) return undefined;
+      if (!activeCounselId || !counselorId) return undefined;
       isSendingRef.current = true;
       const key = queries.v1.getCounselMessages(counselorId, activeCounselId).queryKey as readonly unknown[];
       await queryClient.cancelQueries({ queryKey: key });
@@ -117,7 +121,10 @@ export const useMobileChat = () => {
         updatedAt: new Date().toISOString(),
         deletedAt: null,
         counselId: activeCounselId,
-        userMessage: true,
+        isUserMessage: true,
+        reactedAt: null,
+        reaction: null,
+        counselTechniqueId: '',
       };
       queryClient.setQueryData<CounselMessage[]>(key, [...previous, optimistic]);
       return { previous, key, tempId };
@@ -125,8 +132,8 @@ export const useMobileChat = () => {
     onSuccess: (result, _vars, context) => {
       if (!context) return;
       const { key, tempId } = context;
-      const serverUser = result.data?.createdCounselMessage as CounselMessage | undefined;
-      const counselorResp = result.data?.counselorResponseMessage as CounselMessage | undefined;
+      const serverUser: CounselMessage = result.createdCounselMessage;
+      const counselorResp: CounselMessage = result.counselorResponseMessage;
       queryClient.setQueryData<CounselMessage[] | undefined>(key, (old) => {
         const list = old ? [...old] : [];
         const idx = list.findIndex((m) => m.id === tempId);
@@ -146,7 +153,7 @@ export const useMobileChat = () => {
     },
     onSettled: async () => {
       isSendingRef.current = false;
-      if (!activeCounselId) return;
+      if (!activeCounselId || !counselorId) return;
       await queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselMessages(counselorId, activeCounselId).queryKey,
       });
@@ -158,11 +165,11 @@ export const useMobileChat = () => {
   const [selectedPromptVersionId, setSelectedPromptVersionId] = useState<string | undefined>(undefined);
 
   const handleCreateCounsel = () => {
-    if (!counselorId || createCounselMutation.isPending) return;
+    if (!counselorId || !selectedPromptVersionId || createCounselMutation.isPending) return;
     createCounselMutation.mutate({
-      promptVersionId: selectedPromptVersionId ?? undefined,
-      bubbleId: undefined,
-      responseOptionNo: undefined,
+      promptVersionId: selectedPromptVersionId,
+      bubbleId: null,
+      responseOptionNo: null,
     });
     setIsCreateModalOpen(false);
   };
@@ -202,10 +209,9 @@ export const useMobileChat = () => {
 
   const techniqueQueries = useQueries({
     queries: techniqueIds.map((id) => ({
-      queryKey: ['counselTechnique', id],
+      queryKey: queries.v1.getCounselTechniqueById(id).queryKey,
       queryFn: async () => {
-        const res = await api.V1.getCounselTechniqueById(id);
-        return res.data.data?.counselTechnique;
+        return await promptsService.getCounselTechnique(id);
       },
       enabled: Boolean(id),
     })),
@@ -233,10 +239,9 @@ export const useMobileChat = () => {
 
   const promptVersionQueries = useQueries({
     queries: promptVersionIds.map((id) => ({
-      queryKey: ['promptVersion', id],
+      queryKey: queries.v1.getPromptVersionById(id).queryKey,
       queryFn: async () => {
-        const res = await api.V1.getPromptVersionById(id);
-        return res.data.data?.promptVersion as PromptVersionResponseDto | undefined;
+        return await promptsService.getPromptVersion(id);
       },
       enabled: Boolean(id),
     })),
@@ -259,8 +264,8 @@ export const useMobileChat = () => {
   return {
     // data
     counselList,
-    promptVersionList: promptVersionList as PromptVersionResponseDto[],
-    messageList: messageList as CounselMessage[],
+    promptVersionList: promptVersionList,
+    messageList: messageList,
 
     // selection & input
     activeCounselId,

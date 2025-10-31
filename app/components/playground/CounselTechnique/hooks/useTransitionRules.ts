@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
-import { CounselTechniqueResponseDto, CounselTechniqueTransitionRuleResponseDto } from '~/__generated__/data-contracts';
 import { useTechniqueManagement } from './useTechniqueManagement';
+import { CounselTechnique, CounselTechniqueTransitionRule } from '~/api/v1';
 
 export const useTransitionRules = () => {
   const temporaryVersion = usePromptStore((s) => s.temporaryVersion);
@@ -16,6 +16,8 @@ export const useTransitionRules = () => {
     enabled: !!promptVersionId,
     ...queries.v1.getCounselTechniqueTransitionRules({
       promptVersionId: promptVersionId!,
+      fromCounselTechniqueId: null,
+      toCounselTechniqueId: null,
     }),
   });
 
@@ -35,8 +37,8 @@ export const useTransitionRules = () => {
       }
     });
 
-    const connected: CounselTechniqueResponseDto[] = [];
-    const unconnected: CounselTechniqueResponseDto[] = [];
+    const connected: CounselTechnique[] = [];
+    const unconnected: CounselTechnique[] = [];
 
     techniques.forEach((technique) => {
       if (connectedNodeIds.has(technique.id!)) {
@@ -61,7 +63,7 @@ export const useTransitionRules = () => {
       from: string;
       to: string;
       priority: number;
-      rule: CounselTechniqueTransitionRuleResponseDto;
+      rule: CounselTechniqueTransitionRule;
     }> = [];
 
     if (transitionRules) {

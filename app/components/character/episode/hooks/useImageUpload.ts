@@ -9,9 +9,9 @@ export const useImageUpload = (
   const [isUploading, setIsUploading] = useState(false);
 
   const { mutate: generateImageUrl } = useGenerateCutSceneImageUrl({
-    onSuccess: async (response) => {
-      const presignedUrl = response.data?.data?.presignedUrl?.uploadUrl;
-      const publicUrl = response.data?.data?.presignedUrl?.publicUrl;
+    onSuccess: async (presignedUrlResponse) => {
+      const presignedUrl = presignedUrlResponse.uploadUrl;
+      const publicUrl = presignedUrlResponse.publicUrl;
       
       if (presignedUrl && publicUrl && currentFile) {
         try {
@@ -71,7 +71,7 @@ export const useImageUpload = (
 
     // 파일 확장자 확인
     const extension = file.type.split('/')[1].toUpperCase();
-    const extensionMap: Record<string, string> = {
+    const extensionMap: Record<string, 'EXTENSION_JPG' | 'EXTENSION_PNG' | 'EXTENSION_GIF' | 'EXTENSION_WEBP'> = {
       'JPEG': 'EXTENSION_JPG',
       'JPG': 'EXTENSION_JPG', 
       'PNG': 'EXTENSION_PNG',
@@ -83,10 +83,9 @@ export const useImageUpload = (
 
     // 1. Presigned URL 생성 요청
     generateImageUrl({
-      episodeId,
       counselorId,
       data: {
-        extension: apiExtension as any,
+        extension: apiExtension,
       },
     });
   };

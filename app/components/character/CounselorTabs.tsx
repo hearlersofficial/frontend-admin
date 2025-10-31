@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import CharacterTabs from "./CharacterTabs";
-import { Counselor } from './types';
+import { Counselor } from "~/api/v1";
+
 
 interface CounselorTabsProps {
   counselors: Counselor[];
@@ -27,7 +28,7 @@ const CounselorTabs = ({ counselors }: CounselorTabsProps) => {
             characterName={counselor.name!} 
             counselorId={counselor.id!}
             tag="#상담사"
-            profileImage={counselor.profileImage}
+            profileImage={counselor.profileImage ?? ''}
           />
         </TabsContent>
       ))}

@@ -7,7 +7,7 @@ import EditTechniqueModal from './modals/EditTechniqueModal';
 
 import { useModal } from '~/hooks/useModal';
 import { useTechniqueManagement } from './hooks/useTechniqueManagement';
-import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+import { CounselTechnique } from '~/api/v1';
 
 const Technique = () => {
   const { techniques, mode, setTechniques, handleEditTechnique, handleAddAndDeleteTechnique, handleSaveTechnique } =
@@ -15,13 +15,13 @@ const Technique = () => {
 
   const { isOpen: isAddOpen, setIsOpen: setIsAddOpen, openModal: openAddModal } = useModal(false);
   const { isOpen: isEditOpen, setIsOpen: setIsEditOpen, openModal: openEditModal } = useModal(false);
-  const [editingTechnique, setEditingTechnique] = useState<CounselTechniqueResponseDto | null>(null);
+  const [editingTechnique, setEditingTechnique] = useState<CounselTechnique | null>(null);
 
   const handleAddTechnique = () => {
     openAddModal();
   };
 
-  const handleEditName = (technique: CounselTechniqueResponseDto) => {
+    const handleEditName = (technique: CounselTechnique) => {
     setEditingTechnique(technique);
     openEditModal();
   };

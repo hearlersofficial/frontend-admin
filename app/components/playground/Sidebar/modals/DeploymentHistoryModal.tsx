@@ -10,7 +10,7 @@ import PromptModal from '../../Prompt/modals/PromptModal';
 
 import { queries } from '~/queries';
 import { usePagination } from '~/hooks/usePagination';
-import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
+import { PromptVersion } from '~/api/v1';
 
 interface DeploymentHistoryModalProps {
   isOpen: boolean;
@@ -18,7 +18,7 @@ interface DeploymentHistoryModalProps {
 }
 
 const DeploymentHistoryModal = ({ isOpen, setIsOpen }: DeploymentHistoryModalProps) => {
-  const { data: activateHistories = [] } = useQuery({ ...queries.v1.getPromptActivateHistories({}), enabled: isOpen });
+  const { data: activateHistories = [] } = useQuery({ ...queries.v1.getPromptActivateHistories(), enabled: isOpen });
 
   const promptVersionResults = useQueries({
     queries: activateHistories.map((history) => {
@@ -28,12 +28,12 @@ const DeploymentHistoryModal = ({ isOpen, setIsOpen }: DeploymentHistoryModalPro
       };
     }),
   });
-  const promptVersions = promptVersionResults.map((q) => q.data).filter(Boolean) as PromptVersionResponseDto[];
+  const promptVersions = promptVersionResults.map((q) => q.data).filter((q) => q !== undefined);
 
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersion | null>(null);
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(promptVersions, 6);
 
-  const handleDetailView = (prompt: PromptVersionResponseDto) => {
+  const handleDetailView = (prompt: PromptVersion) => {
     setSelectedPrompt(prompt);
     // setIsOpen(false);
   };

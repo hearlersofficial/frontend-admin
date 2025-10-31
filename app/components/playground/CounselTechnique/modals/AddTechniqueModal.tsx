@@ -6,9 +6,10 @@ import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 
 import { useCreateCounselTechnique } from '~/hooks/mutations';
-import { usePromptStore } from '~/store/usePromptStore';
-import { CreateCounselTechniqueRequestDto } from '~/__generated__/data-contracts';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
+import { CreateCounselTechniqueRequest } from '~/api/v1';
+
 
 interface AddTechniqueModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ interface AddTechniqueModalProps {
 }
 
 const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
-  const [formData, setFormData] = useState<CreateCounselTechniqueRequestDto>({
+  const [formData, setFormData] = useState<CreateCounselTechniqueRequest>({
     name: '',
     toneId: '',
     context: '',
@@ -34,7 +35,7 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
 
   const { mutate: createCounselTechnique } = useCreateCounselTechnique({
     onSuccess: (response) => {
-      const newTechnique = response.data?.data?.counselTechnique;
+      const newTechnique = response;
       if (!newTechnique || !toneId || !promptVersionId) {
         return;
       }
@@ -57,12 +58,16 @@ const AddTechniqueModal = ({ isOpen, setIsOpen }: AddTechniqueModalProps) => {
     }
 
     createCounselTechnique({
-      ...formData,
-      toneId,
+      name: formData.name,
+      toneId: formData.toneId,
+      context: formData.context,
+      instruction: formData.instruction,
+      temperature: formData.temperature,
+      isStartTechnique: formData.isStartTechnique,
     });
   };
 
-  const handleInputChange = (field: keyof CreateCounselTechniqueRequestDto, value: string | number | boolean) => {
+  const handleInputChange = (field: keyof CreateCounselTechniqueRequest, value: string | number | boolean) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,

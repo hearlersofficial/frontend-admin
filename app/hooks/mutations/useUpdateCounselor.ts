@@ -1,24 +1,25 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { UpdateCounselorData, UpdateCounselorError, UpdateCounselorRequest } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import {
+  counselorsService,
+  type UpdateCounselorRequest,
+  type Counselor,
+} from '~/api/v1';
+
+type UpdateCounselorVariables = {
+  counselorId: string;
+  data: UpdateCounselorRequest;
+};
 
 type UseUpdateCounselorProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<UpdateCounselorData>,
-    UpdateCounselorError,
-    { counselorId: string; data: UpdateCounselorRequest },
-    unknown
-  >,
+  UseMutationOptions<Counselor, Error, UpdateCounselorVariables, unknown>,
   'mutationFn'
 >;
 
-const useUpdateCounselor = ({ onSuccess, onError, ...rest }: UseUpdateCounselorProps = {}) => {
+const useUpdateCounselor = ({ ...rest }: UseUpdateCounselorProps = {}) => {
   return useMutation({
-    mutationFn: ({ counselorId, data }) => api.V1.updateCounselor(counselorId, data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: ({ counselorId, data }: UpdateCounselorVariables) =>
+      counselorsService.updateCounselor(counselorId, data),
     ...rest,
   });
 };

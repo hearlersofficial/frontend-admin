@@ -7,7 +7,8 @@ import { TabId } from './types';
 
 const CharacterPage = () => {
   const [activeTab, setActiveTab] = useState<TabId>('cutscene');
-  const { data: counselors = [], isLoading, error } = useCounselors();
+  const { data: counselorsData, isLoading, error } = useCounselors();
+  const counselors = counselorsData?.data ?? [];
 
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState />;

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
+import { promptsService } from '~/api/v1';
 import { Modal } from '~/components/Modal';
-import { api } from '~/api';
 
 interface CounselTechniqueInfoProps {
   counselTechniqueId?: string;
@@ -13,8 +13,7 @@ const CounselTechniqueInfo = ({ counselTechniqueId, isOpen, setIsOpen }: Counsel
     queryKey: ['counselTechniqueInfo', counselTechniqueId],
     queryFn: async () => {
       if (!counselTechniqueId) return undefined;
-      const res = await api.V1.getCounselTechniqueById(counselTechniqueId);
-      return res.data.data?.counselTechnique;
+      return await promptsService.getCounselTechnique(counselTechniqueId);
     },
     enabled: Boolean(counselTechniqueId && isOpen),
   });
@@ -31,8 +30,6 @@ const CounselTechniqueInfo = ({ counselTechniqueId, isOpen, setIsOpen }: Counsel
               <span className="font-semibold text-slate-700">{data.name}</span>
               <span className="px-2 text-slate-300">|</span>
               <span>ID: {data.id}</span>
-              <span className="px-2 text-slate-300">|</span>
-              <span>Threshold: {data.messageThreshold}</span>
               <span className="px-2 text-slate-300">|</span>
               <span>Temperature: {data.temperature}</span>
             </div>

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Info } from 'lucide-react';
-import { Counsel } from '~/__generated__/data-contracts';
+import { Counsel } from '~/api/v1';
 
 interface RoomListProps {
   counselList: Counsel[];

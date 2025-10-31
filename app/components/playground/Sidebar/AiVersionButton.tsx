@@ -6,13 +6,14 @@ import { queries } from '~/queries';
 
 import AiVersionModal from './modals/AiVersionModal';
 import { convertUnderscoreToSpace } from '~/lib/utils';
+import { aiModelSchema } from '~/api/v1';
 
 const AiVersionButton = () => {
   const { isOpen, setIsOpen, openModal } = useModal(false);
   const { data, isLoading } = useQuery({ ...queries.v1.getTemporaryVersion });
 
-  const aiModel = data?.data?.data?.promptVersion?.aiModel;
-  const buttonLabel = isLoading ? 'GPT' : (aiModel ?? 'AI_MODEL_UNSPECIFIED');
+  const aiModel = data?.aiModel;
+  const buttonLabel = isLoading ? 'GPT' : (aiModel ?? aiModelSchema.options[0]);
 
   return (
     <>

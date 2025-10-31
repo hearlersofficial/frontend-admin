@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 // User Profile
 export const userProfileSchema = z.object({
-  profileImage: z.string().optional().nullable(),
-  gender: z.enum(['GENDER_UNSPECIFIED', 'GENDER_MALE', 'GENDER_FEMALE', 'UNRECOGNIZED']).optional(),
+  profileImage: z.string().nullable(),
+  gender: z.enum(['GENDER_UNSPECIFIED', 'GENDER_MALE', 'GENDER_FEMALE', 'UNRECOGNIZED']).nullable(),
   mbti: z
     .enum([
       'MBTI_UNSPECIFIED',
@@ -25,8 +25,8 @@ export const userProfileSchema = z.object({
       'MBTI_ISFJ',
       'UNRECOGNIZED',
     ])
-    .optional(),
-  birthday: z.string().optional().nullable(),
+    .nullable(),
+  birthday: z.string().nullable(),
 });
 
 export type UserProfile = z.infer<typeof userProfileSchema>;
@@ -38,7 +38,7 @@ export const userSchema = z.object({
   userProfile: userProfileSchema,
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type User = z.infer<typeof userSchema>;
@@ -48,7 +48,7 @@ export const userTrackingSchema = z.object({
   hasSeenIntroCutscene: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type UserTracking = z.infer<typeof userTrackingSchema>;

@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
+import { CounselTechnique } from '~/api/v1';
 
 import { Modal } from '~/components/Modal';
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 
-import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
 
 interface EditTechniqueModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  technique: CounselTechniqueResponseDto | null;
+  technique: CounselTechnique | null;
   onSave: (techniqueId: string, newName: string, newIsStartTechnique: boolean, newTemperature: number) => void;
 }
 

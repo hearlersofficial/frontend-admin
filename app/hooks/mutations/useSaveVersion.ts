@@ -1,12 +1,10 @@
 import { type UseMutationOptions, useMutation, useQueryClient } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
 
-import { SaveTemporaryVersionRequestDto, SaveVersionData, SaveVersionError } from '~/__generated__/data-contracts';
-import { api } from '~/api';
 import { queries } from '~/queries';
+import { promptsService, PromptVersion, SaveVersionRequest } from '~/api/v1';
 
 type UseSaveVersionProps = Omit<
-  UseMutationOptions<AxiosResponse<SaveVersionData>, SaveVersionError, SaveTemporaryVersionRequestDto, unknown>,
+  UseMutationOptions<PromptVersion, Error, SaveVersionRequest, unknown>,
   'mutationFn'
 >;
 
@@ -14,9 +12,9 @@ const useSaveVersion = ({ onSuccess, onError, ...rest }: UseSaveVersionProps = {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: SaveTemporaryVersionRequestDto) => api.V1.saveVersion(data),
+    mutationFn: (data: SaveVersionRequest) => promptsService.saveVersion(data),
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({ queryKey: queries.v1.getPromptVersions({}).queryKey });
+      queryClient.invalidateQueries({ queryKey: queries.v1.getPromptVersions().queryKey });
       onSuccess?.(...args);
     },
     onError: (...args) => onError?.(...args),

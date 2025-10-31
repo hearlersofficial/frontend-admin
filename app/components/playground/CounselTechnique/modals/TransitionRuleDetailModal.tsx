@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  CounselTechniqueTransitionRuleResponseDto,
-  UpdateCounselTechniqueTransitionRuleRequestDto,
-} from '~/__generated__/data-contracts';
+
 import {
   TRANSITION_RULE_FIELDS,
   KOREAN_LABELS,
@@ -14,11 +11,12 @@ import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import TransitionRuleArrayField from '~/components/playground/CounselTechnique/modals/fields/TransitionRuleArrayField';
 import TransitionRuleFormField from '~/components/playground/CounselTechnique/modals/fields/TransitionRuleFormField';
+import { CounselTechniqueTransitionRule, UpdateCounselTechniqueTransitionRuleRequest } from '~/api/v1';
 
 interface TransitionRuleDetailModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  transitionRule: CounselTechniqueTransitionRuleResponseDto | null;
+  transitionRule: CounselTechniqueTransitionRule | null;
   fromTechniqueName?: string;
   toTechniqueName?: string;
   onSuccess?: () => void;
@@ -33,34 +31,33 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
   onSuccess,
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const { handleUpdateTransitionRule, handleDeleteTransitionRule } = useTransitionRuleManagement();
 
   // 폼 상태
   const [formData, setFormData] = useState({
-    priority: transitionRule?.priority || 1,
-    minCurrentTechniqueMessageCount: transitionRule?.minCurrentTechniqueMessageCount,
-    maxCurrentTechniqueMessageCount: transitionRule?.maxCurrentTechniqueMessageCount,
-    requiredEmotionPrimaries: transitionRule?.requiredEmotionPrimaries || [],
-    requiredValences: transitionRule?.requiredValences || [],
-    requiredArousalLevels: transitionRule?.requiredArousalLevels || [],
-    minEmotionIntensity: transitionRule?.minEmotionIntensity,
-    maxEmotionIntensity: transitionRule?.maxEmotionIntensity,
-    requiredImpactDomains: transitionRule?.requiredImpactDomains || [],
-    requiredTimeframes: transitionRule?.requiredTimeframes || [],
-    requiredPerceivedControls: transitionRule?.requiredPerceivedControls || [],
-    requiredMotivationStages: transitionRule?.requiredMotivationStages || [],
-    requiredSocialSupportLevels: transitionRule?.requiredSocialSupportLevels || [],
-    requiredRiskKinds: transitionRule?.requiredRiskKinds || [],
-    requiredSleepQualities: transitionRule?.requiredSleepQualities || [],
-    requiredCognitiveLoads: transitionRule?.requiredCognitiveLoads || [],
-    requiredAllianceStrengths: transitionRule?.requiredAllianceStrengths || [],
-    minSelfEfficacy: transitionRule?.minSelfEfficacy,
-    maxSelfEfficacy: transitionRule?.maxSelfEfficacy,
-    minRiskSeverity: transitionRule?.minRiskSeverity,
-    maxRiskSeverity: transitionRule?.maxRiskSeverity,
-    requiredConsentToDepth: transitionRule?.requiredConsentToDepth,
-    requiredPhysicalSymptomsPresent: transitionRule?.requiredPhysicalSymptomsPresent,
+    priority: transitionRule?.priority ?? 1,
+    minCurrentTechniqueMessageCount: transitionRule?.minCurrentTechniqueMessageCount ?? null,
+    maxCurrentTechniqueMessageCount: transitionRule?.maxCurrentTechniqueMessageCount ?? null,
+    requiredEmotionPrimaries: transitionRule?.requiredEmotionPrimaries ?? [],
+    requiredValences: transitionRule?.requiredValences ?? [],
+    requiredArousalLevels: transitionRule?.requiredArousalLevels ?? [],
+    minEmotionIntensity: transitionRule?.minEmotionIntensity ?? null,
+    maxEmotionIntensity: transitionRule?.maxEmotionIntensity ?? null,
+    requiredImpactDomains: transitionRule?.requiredImpactDomains ?? [],
+    requiredTimeframes: transitionRule?.requiredTimeframes ?? [],
+    requiredPerceivedControls: transitionRule?.requiredPerceivedControls ?? [],
+    requiredMotivationStages: transitionRule?.requiredMotivationStages ?? [],
+    requiredSocialSupportLevels: transitionRule?.requiredSocialSupportLevels ?? [],
+    requiredRiskKinds: transitionRule?.requiredRiskKinds ?? [],
+    requiredSleepQualities: transitionRule?.requiredSleepQualities ?? [],
+    requiredCognitiveLoads: transitionRule?.requiredCognitiveLoads ?? [],
+    requiredAllianceStrengths: transitionRule?.requiredAllianceStrengths ?? [],
+    minSelfEfficacy: transitionRule?.minSelfEfficacy ?? null,
+    maxSelfEfficacy: transitionRule?.maxSelfEfficacy ?? null,
+    minRiskSeverity: transitionRule?.minRiskSeverity ?? null,
+    maxRiskSeverity: transitionRule?.maxRiskSeverity ?? null,
+    requiredConsentToDepth: transitionRule?.requiredConsentToDepth ?? null,
+    requiredPhysicalSymptomsPresent: transitionRule?.requiredPhysicalSymptomsPresent ?? null,
   });
 
   // transitionRule이 변경될 때 formData 업데이트
@@ -122,22 +119,20 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
   const handleDelete = async () => {
     if (!transitionRule?.id) return;
 
-    setIsLoading(true);
     try {
       await handleDeleteTransitionRule(transitionRule.id);
+      onSuccess?.();
+      setIsOpen(false);
     } catch (error) {
       console.error('Error deleting transition rule:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const handleUpdate = async () => {
     if (!transitionRule?.id) return;
 
-    setIsLoading(true);
     try {
-      const updateData: UpdateCounselTechniqueTransitionRuleRequestDto = {
+      const updateData: UpdateCounselTechniqueTransitionRuleRequest = {
         priority: formData.priority,
         minCurrentTechniqueMessageCount: formData.minCurrentTechniqueMessageCount,
         maxCurrentTechniqueMessageCount: formData.maxCurrentTechniqueMessageCount,
@@ -168,8 +163,6 @@ const TransitionRuleDetailModal: React.FC<TransitionRuleDetailModalProps> = ({
       setIsEditMode(false);
     } catch (error) {
       console.error('Error updating transition rule:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 

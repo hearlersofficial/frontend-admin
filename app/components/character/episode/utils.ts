@@ -1,4 +1,4 @@
-import { Episode as APIEpisode } from "~/__generated__/data-contracts";
+import { Episode as APIEpisode } from "~/api/v1";
 import { Episode } from "../types";
 
 // API Episode를 UI Episode로 변환

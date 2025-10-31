@@ -1,6 +1,6 @@
 import RoomHeader from './RoomHeader';
 import RoomList from './RoomList';
-import { Counsel } from '~/__generated__/data-contracts';
+import { Counsel } from '~/api/v1';
 
 interface RoomProps {
   canCreate: boolean;

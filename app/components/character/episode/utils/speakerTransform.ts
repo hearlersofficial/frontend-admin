@@ -1,6 +1,6 @@
 // Speaker 변환 관련 유틸리티
 
-import type { Counselor } from '~/__generated__/data-contracts';
+import type { Counselor } from '~/api/v1/counselors/counselors.types';
 
 // API speaker enum type
 export type APISpeaker = 'SPEAKER_COUNSELOR' | 'SPEAKER_USER' | 'SPEAKER_UNSPECIFIED';
@@ -66,6 +66,7 @@ export const transformSceneToCutScene = (
   counselor?: Counselor | null,
   fallbackCounselorName?: string
 ) => ({
+  id: scene.id,
   speaker: uiSpeakerToAPI(scene.speaker, counselor, fallbackCounselorName),
   content: scene.dialogue,
   orderIndex: index + 1, // 서버는 1부터 시작

@@ -5,16 +5,14 @@ import { useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
-import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
 import { useLoadPromptVersion } from '~/hooks/mutations';
-import { api } from '~/api';
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
-import { AIModel } from '~/types/aiModel';
-import { AI_MODEL_OPTIONS } from '~/constants/aiModel';
+import { aiModelSchema, type AIModel } from '~/api/v1/prompts/prompts.types';
+import { PromptVersion, promptsService } from '~/api/v1';
 
 interface PromptModalProps {
-  prompt: PromptVersionResponseDto;
+  prompt: PromptVersion;
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
@@ -23,8 +21,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
   const queryClient = useQueryClient();
 
   const { mutate: loadPromptVersion } = useLoadPromptVersion({
-    onSuccess: (res) => {
-      const newVersion = res.data.data?.promptVersion;
+    onSuccess: (newVersion) => {
       if (newVersion) {
         usePromptStore.getState().setTemporaryVersion(newVersion);
       }
@@ -35,18 +32,17 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
 
       setIsOpen(false);
     },
-    onError: () => {},
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editName, setEditName] = useState<string>(prompt.name ?? '');
-  const [editDescription, setEditDescription] = useState<string>(prompt.description ?? '');
-  const [isBookmarked, setIsBookmarked] = useState<boolean>(Boolean(prompt.isBookmarked));
-  const [editAiModel, setEditAiModel] = useState<AIModel | 'UNRECOGNIZED'>(
-    (prompt.aiModel as AIModel | 'UNRECOGNIZED' | undefined) ?? 'AI_MODEL_UNSPECIFIED'
+  const [editName, setEditName] = useState<string>(prompt.name);
+  const [editDescription, setEditDescription] = useState<string>(prompt.description);
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(prompt.isBookmarked);
+  const [editAiModel, setEditAiModel] = useState<AIModel>(
+    prompt.aiModel ?? aiModelSchema.options[0]
   );
 
-  const AI_MODELS: AIModel[] = AI_MODEL_OPTIONS as unknown as AIModel[];
+  const AI_MODELS: AIModel[] = aiModelSchema.options;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -60,10 +56,10 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
   const deletePromptVersion = useMutation({
     mutationFn: async () => {
       if (!prompt.id) return;
-      await api.V1.deletePromptVersion(prompt.id);
+      await promptsService.deletePromptVersion(prompt.id);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: queries.v1.getPromptVersions({}).queryKey });
+      await queryClient.invalidateQueries({ queryKey: queries.v1.getPromptVersions().queryKey });
       setIsOpen(false);
     },
   });
@@ -71,7 +67,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
   const updatePromptVersion = useMutation({
     mutationFn: async () => {
       if (!prompt.id) return;
-      await api.V1.updatePromptVersion(prompt.id, {
+      await promptsService.updatePromptVersion(prompt.id, {
         name: editName,
         description: editDescription,
         isBookmarked: isBookmarked,
@@ -89,7 +85,7 @@ const PromptModal = ({ prompt, isOpen, setIsOpen }: PromptModalProps) => {
           aiModel: editAiModel,
         });
       }
-      await queryClient.invalidateQueries({ queryKey: queries.v1.getPromptVersions({}).queryKey });
+      await queryClient.invalidateQueries({ queryKey: queries.v1.getPromptVersions().queryKey });
       await queryClient.invalidateQueries({ queryKey: queries.v1.getTemporaryVersion.queryKey });
       setIsEditing(false);
       setIsOpen(false);

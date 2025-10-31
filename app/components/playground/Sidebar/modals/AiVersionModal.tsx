@@ -5,22 +5,22 @@ import { Button } from '~/components/ui/button';
 import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
 import { queries } from '~/queries';
-import { AIModel } from '~/types/aiModel';
-import { AI_MODEL_OPTIONS } from '~/constants/aiModel';
-import { api } from '~/api';
-import { usePromptStore } from '~/store/usePromptStore';
+
+import { usePromptStore } from '~/stores/usePromptStore';
+import { aiModelSchema, type AIModel } from '~/api/v1/prompts/prompts.types';
+import { promptsService } from '~/api/v1';
 
 interface AiVersionModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
-const AI_MODELS: AIModel[] = AI_MODEL_OPTIONS as unknown as AIModel[];
+const AI_MODELS: AIModel[] = aiModelSchema.options;
 
 const AiVersionModal = ({ isOpen, setIsOpen }: AiVersionModalProps) => {
   const queryClient = useQueryClient();
   const { data } = useQuery({ ...queries.v1.getTemporaryVersion });
-  const currentModel = (data?.data?.data?.promptVersion?.aiModel as AIModel | undefined) ?? 'AI_MODEL_UNSPECIFIED';
+  const currentModel = data?.aiModel ?? aiModelSchema.options[0];
   const [selectedModel, setSelectedModel] = useState<AIModel>(currentModel);
   const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
 
@@ -31,19 +31,16 @@ const AiVersionModal = ({ isOpen, setIsOpen }: AiVersionModalProps) => {
 
   const updateModelMutation = useMutation({
     mutationFn: async () => {
-      const pv = data?.data?.data?.promptVersion;
-      if (!pv?.id) return;
-      await api.V1.updatePromptVersion(pv.id, {
-        name: pv.name,
-        description: pv.description,
-        isBookmarked: pv.isBookmarked,
+      if (!data) return;
+      await promptsService.updatePromptVersion(data.id, {
+        name: data.name,
+        description: data.description,
+        isBookmarked: data.isBookmarked,
         aiModel: selectedModel,
       });
     },
     onSuccess: async () => {
-      const prev =
-        usePromptStore.getState().temporaryVersion ??
-        (data?.data?.data?.promptVersion as { aiModel?: AIModel } | undefined);
+      const prev = usePromptStore.getState().temporaryVersion ?? data;
       if (prev) {
         setTemporaryVersion({ ...prev, aiModel: selectedModel });
       }

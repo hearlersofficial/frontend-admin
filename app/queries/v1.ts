@@ -1,108 +1,121 @@
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 
-import { api } from '~/api';
 import {
+  counselorsService,
+  promptsService,
+  counselsService,
+  authService,
+  usersService,
+} from '~/api/v1';
+import type {
   GetTonesParams,
   GetCounselorsParams,
-  KakaoParams,
-  KakaoCallbackParams,
+  KakaoLoginRequest,
+  KakaoCallbackRequest,
   GetPromptVersionsParams,
   GetPromptActivateHistoriesParams,
   GetPersonaPromptsParams,
   GetTonePromptsParams,
   GetCounselTechniqueTransitionRulesParams,
-} from '~/__generated__/data-contracts';
+  GetCounselTechniquesParams,
+} from '~/api/v1';
 
 const v1QueryKeys = createQueryKeys('v1', {
   getTone: (toneId: string) => ({
     queryKey: [toneId],
-    queryFn: () => api.V1.getTone(toneId),
+    queryFn: () => counselorsService.getTone(toneId),
   }),
   getTemporaryVersion: {
     queryKey: null,
-    queryFn: () => api.V1.getTemporaryVersion(),
+    queryFn: () => promptsService.getTemporaryVersion(),
   },
   getCounselor: (counselorId: string) => ({
     queryKey: [counselorId],
-    queryFn: () => api.V1.getCounselor(counselorId),
+    queryFn: () => counselorsService.getCounselor(counselorId),
   }),
-  getTones: (query: GetTonesParams) => ({
+  getTones: (query?: GetTonesParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getTones(query),
+    queryFn: () => counselorsService.getTones(query),
   }),
-  getCounselors: (query: GetCounselorsParams) => ({
+  getCounselors: (query?: GetCounselorsParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getCounselors(query),
+    queryFn: () => counselorsService.getCounselors(query),
   }),
-  kakao: (query: KakaoParams) => ({
+  kakao: (query: KakaoLoginRequest) => ({
     queryKey: [query],
-    queryFn: () => api.V1.kakao(query),
+    queryFn: () => {
+      // kakaoLogin은 URL을 반환하므로 Promise로 감싸서 반환
+      return Promise.resolve(authService.kakaoLogin(query));
+    },
   }),
-  kakaoCallback: (query: KakaoCallbackParams) => ({
+  kakaoCallback: (query: KakaoCallbackRequest) => ({
     queryKey: [query],
-    queryFn: () => api.V1.kakaoCallback(query),
+    queryFn: () => authService.kakaoCallback(query),
   }),
   getTonePromptById: (tonePromptId: string) => ({
     queryKey: [tonePromptId],
-    queryFn: () => api.V1.getTonePromptById(tonePromptId).then((res) => res.data.data?.tonePrompt),
+    queryFn: () => promptsService.getTonePrompt(tonePromptId),
   }),
   getTonePrompts: (query: GetTonePromptsParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getTonePrompts(query).then((res) => res.data.data?.tonePrompts),
+    queryFn: () => promptsService.getTonePrompts(query),
   }),
-  getPromptVersions: (query: GetPromptVersionsParams) => ({
+  getPromptVersions: (query?: GetPromptVersionsParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getPromptVersions(query).then((res) => res.data.data?.promptVersions),
+    queryFn: () => promptsService.getPromptVersions(query),
   }),
   getPromptVersionById: (promptVersionId: string) => ({
     queryKey: [promptVersionId],
-    queryFn: () => api.V1.getPromptVersionById(promptVersionId).then((res) => res.data.data?.promptVersion),
+    queryFn: () => promptsService.getPromptVersion(promptVersionId),
   }),
   getActiveVersion: {
     queryKey: null,
-    queryFn: () => api.V1.getActiveVersion().then((res) => res.data.data),
+    queryFn: () => promptsService.getActiveVersion(),
   },
-  getPromptActivateHistories: (query: GetPromptActivateHistoriesParams) => ({
+  getPromptActivateHistories: (query?: GetPromptActivateHistoriesParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getPromptActivateHistories(query).then((res) => res.data.data?.promptActivateHistories),
+    queryFn: () => promptsService.getPromptActivateHistories(query),
   }),
   getPersonaPromptById: (personaPromptId: string) => ({
     queryKey: [personaPromptId],
-    queryFn: () => api.V1.getPersonaPromptById(personaPromptId).then((res) => res.data.data?.personaPrompt),
+    queryFn: () => promptsService.getPersonaPrompt(personaPromptId),
   }),
   getPersonaPrompts: (query: GetPersonaPromptsParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getPersonaPrompts(query).then((res) => res.data.data?.personaPrompts),
+    queryFn: () => promptsService.getPersonaPrompts(query),
   }),
   getEpisode: (episodeId: string, counselorId: string) => ({
     queryKey: [episodeId, counselorId],
-    queryFn: () => api.V1.getEpisode(episodeId, counselorId),
+    queryFn: () => counselorsService.getEpisode(counselorId, episodeId),
   }),
   getEpisodes: (counselorId: string) => ({
     queryKey: [counselorId],
-    queryFn: () => api.V1.getEpisodes(counselorId),
+    queryFn: () => counselorsService.getEpisodes(counselorId),
   }),
   getCounselTechniqueById: (counselTechniqueId: string) => ({
     queryKey: [counselTechniqueId],
-    queryFn: () => api.V1.getCounselTechniqueById(counselTechniqueId),
+    queryFn: () => promptsService.getCounselTechnique(counselTechniqueId),
   }),
-  getCounselTechniques: (query: { promptVersionId: string; toneId?: string }) => ({
+  getCounselTechniques: (query: GetCounselTechniquesParams) => ({
     queryKey: [query],
-    queryFn: () => api.V1.getCounselTechniques(query),
+    queryFn: () => promptsService.getCounselTechniques(query),
   }),
-  getCounselTechniqueTransitionRules: (query: GetCounselTechniqueTransitionRulesParams) => ({
+  getCounselTechniqueTransitionRules: (query?: GetCounselTechniqueTransitionRulesParams) => ({
     queryKey: [query],
-    queryFn: () =>
-      api.V1.getCounselTechniqueTransitionRules(query).then((res) => res.data.data?.counselTechniqueTransitionRules),
+    queryFn: () => promptsService.getCounselTechniqueTransitionRules(query),
   }),
-  getCounsels: (counselorId: string) => ({
-    queryKey: ['counsels', counselorId],
-    queryFn: () => api.V1.getCounsels(counselorId).then((res) => res.data.data?.counsels ?? []),
+  getCounsels: (counselorId: string, userId: string) => ({
+    queryKey: ['counsels', counselorId, userId],
+    queryFn: () => counselsService.getCounsels({ counselorId, userId }),
   }),
   getCounselMessages: (counselorId: string, counselId: string) => ({
     queryKey: ['counselMessages', counselorId, counselId],
-    queryFn: () => api.V1.getMessages(counselorId, counselId).then((res) => res.data.data?.counselMessages ?? []),
+    queryFn: () => counselsService.getMessages(counselId),
   }),
+  getMyUser: {
+    queryKey: null,
+    queryFn: () => usersService.getMyUser(),
+  },
 });
 
 export { v1QueryKeys };

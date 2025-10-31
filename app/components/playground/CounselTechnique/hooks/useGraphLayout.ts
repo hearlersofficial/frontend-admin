@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { CounselTechniqueResponseDto, CounselTechniqueTransitionRuleResponseDto } from '~/__generated__/data-contracts';
 
-interface GraphNode extends CounselTechniqueResponseDto {
+import { CounselTechnique, CounselTechniqueTransitionRule } from '~/api/v1';
+interface GraphNode extends CounselTechnique {
   x: number;
   y: number;
   inDegree: number;
@@ -14,7 +14,7 @@ interface GraphEdge {
   from: string;
   to: string;
   priority: number;
-  rule: CounselTechniqueTransitionRuleResponseDto;
+  rule: CounselTechniqueTransitionRule;
 }
 
 interface GraphLayout {
@@ -25,9 +25,9 @@ interface GraphLayout {
 }
 
 export const useGraphLayout = (
-  connectedNodes: CounselTechniqueResponseDto[],
-  unconnectedNodes: CounselTechniqueResponseDto[],
-  transitionRules: CounselTechniqueTransitionRuleResponseDto[]
+  connectedNodes: CounselTechnique[],
+  unconnectedNodes: CounselTechnique[],
+  transitionRules: CounselTechniqueTransitionRule[]
 ): GraphLayout => {
   return useMemo(() => {
     const nodes: GraphNode[] = connectedNodes.map((technique) => ({

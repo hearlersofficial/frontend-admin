@@ -1,20 +1,20 @@
 import { useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
 
 const CounselorList = () => {
   const { data: counselorsData } = useQuery({
-    ...queries.v1.getCounselors({}),
+    ...queries.v1.getCounselors(),
   });
 
   const { data: tonesData } = useQuery({
-    ...queries.v1.getTones({}),
+    ...queries.v1.getTones(),
   });
 
-  const counselors = useMemo(() => counselorsData?.data?.data?.counselors ?? [], [counselorsData]);
-  const toneList = useMemo(() => tonesData?.data?.data?.tones ?? [], [tonesData]);
+  const counselors = useMemo(() => counselorsData ?? [], [counselorsData]);
+  const toneList = useMemo(() => tonesData ?? [], [tonesData]);
   const toneIdToTone = useMemo(() => {
     const map: Record<string, { id?: string; name?: string }> = {};
     for (const tone of toneList) {

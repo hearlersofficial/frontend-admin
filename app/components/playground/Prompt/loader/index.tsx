@@ -7,14 +7,14 @@ import PromptModal from '../modals/PromptModal';
 
 import { useModal } from '~/hooks/useModal';
 import { queries } from '~/queries';
-import type { PromptVersionResponseDto } from '~/__generated__/data-contracts';
+import { PromptVersion } from '~/api/v1';
 
 const PromptLoader = () => {
   const { isOpen, setIsOpen, openModal } = useModal(false);
   const { isOpen: isEditOpen, setIsOpen: setIsEditOpen, openModal: openEditModal } = useModal(false);
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersion | null>(null);
 
-  const { data: promptsVersions = [] } = useQuery(queries.v1.getPromptVersions({}));
+  const { data: promptsVersions = [] } = useQuery(queries.v1.getPromptVersions());
 
   return (
     <div className="flex w-full items-center justify-center gap-2">

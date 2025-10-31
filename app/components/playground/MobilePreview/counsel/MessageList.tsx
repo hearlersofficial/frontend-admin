@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { CounselMessage } from '~/__generated__/data-contracts';
 
+import type { CounselMessage } from '~/api/v1';
 interface MessageListProps {
   messageList: CounselMessage[];
   isFetching: boolean;
@@ -31,7 +31,7 @@ const MessageList = ({
   return (
     <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-cover bg-center bg-no-repeat px-5 py-4">
       {messageList.map((m) => {
-        const isUser = Boolean(m.userMessage);
+        const isUser = Boolean(m.isUserMessage);
         const techniqueName = m.counselTechniqueId ? techniqueNameMap?.[m.counselTechniqueId] : undefined;
         return (
           <div key={m.id} className={`flex ${isUser ? 'justify-end' : ''} gap-2`}>

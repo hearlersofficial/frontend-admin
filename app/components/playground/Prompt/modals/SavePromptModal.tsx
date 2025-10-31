@@ -6,9 +6,9 @@ import { DialogFooter } from '~/components/ui/dialog';
 import { Modal } from '~/components/Modal';
 
 import { useSaveVersion } from '~/hooks/mutations';
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
-import { AIModel } from '~/types/aiModel';
+import { aiModelSchema, type AIModel } from '~/api/v1/prompts/prompts.types';
 
 interface SavePromptModalProps {
   isOpen: boolean;
@@ -19,7 +19,7 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isBookmarked, setIsBookmarked] = useState(false);
-  const [aiModel, setAiModel] = useState<AIModel>('AI_MODEL_GPT_4O_MINI');
+  const [aiModel, setAiModel] = useState<AIModel>(aiModelSchema.options[0]);
 
   const queryClient = useQueryClient();
   const setTemporaryVersion = usePromptStore((s) => s.setTemporaryVersion);
@@ -40,8 +40,8 @@ const SavePromptModal = ({ isOpen, setIsOpen }: SavePromptModalProps) => {
   });
 
   useEffect(() => {
-    if (temporaryVersionData?.data?.data?.promptVersion) {
-      setTemporaryVersion(temporaryVersionData.data.data.promptVersion);
+    if (temporaryVersionData) {
+      setTemporaryVersion(temporaryVersionData);
     }
   }, [temporaryVersionData, setTemporaryVersion]);
 

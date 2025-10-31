@@ -5,7 +5,7 @@ import { Modal } from '~/components/Modal';
 import { useTransitionRuleManagement } from '~/components/playground/CounselTechnique/hooks/useTransitionRuleManagement';
 import TransitionRuleFormField from './fields/TransitionRuleFormField';
 import TransitionRuleArrayField from './fields/TransitionRuleArrayField';
-import { CreateCounselTechniqueTransitionRuleData } from '~/__generated__/data-contracts';
+import { CreateCounselTechniqueTransitionRuleRequest } from '~/api/v1';
 
 interface AddTransitionRuleModalProps {
   isOpen: boolean;
@@ -32,13 +32,13 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
   // 폼 상태
   const [formData, setFormData] = useState({
     priority: 1,
-    minCurrentTechniqueMessageCount: undefined,
-    maxCurrentTechniqueMessageCount: undefined,
+    minCurrentTechniqueMessageCount: null,
+    maxCurrentTechniqueMessageCount: null,
     requiredEmotionPrimaries: [],
     requiredValences: [],
     requiredArousalLevels: [],
-    minEmotionIntensity: undefined,
-    maxEmotionIntensity: undefined,
+    minEmotionIntensity: null,
+    maxEmotionIntensity: null,
     requiredImpactDomains: [],
     requiredTimeframes: [],
     requiredPerceivedControls: [],
@@ -48,12 +48,12 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
     requiredSleepQualities: [],
     requiredCognitiveLoads: [],
     requiredAllianceStrengths: [],
-    minSelfEfficacy: undefined,
-    maxSelfEfficacy: undefined,
-    minRiskSeverity: undefined,
-    maxRiskSeverity: undefined,
-    requiredConsentToDepth: undefined,
-    requiredPhysicalSymptomsPresent: undefined,
+    minSelfEfficacy: null,
+    maxSelfEfficacy: null,
+    minRiskSeverity: null,
+    maxRiskSeverity: null,
+    requiredConsentToDepth: null,
+    requiredPhysicalSymptomsPresent: null,
   });
 
   const handleInputChange = (field: string, value: string | number | string[] | boolean | undefined) => {
@@ -84,7 +84,7 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      const createData: CreateCounselTechniqueTransitionRuleData = {
+      const createData: CreateCounselTechniqueTransitionRuleRequest = {
         fromCounselTechniqueId: fromTechniqueId ?? '',
         toCounselTechniqueId: toTechniqueId ?? '',
         priority: formData.priority,
@@ -119,13 +119,13 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
       // 폼 초기화
       setFormData({
         priority: 1,
-        minCurrentTechniqueMessageCount: undefined,
-        maxCurrentTechniqueMessageCount: undefined,
+        minCurrentTechniqueMessageCount: null,
+        maxCurrentTechniqueMessageCount: null,
         requiredEmotionPrimaries: [],
         requiredValences: [],
         requiredArousalLevels: [],
-        minEmotionIntensity: undefined,
-        maxEmotionIntensity: undefined,
+        minEmotionIntensity: null,
+        maxEmotionIntensity: null,
         requiredImpactDomains: [],
         requiredTimeframes: [],
         requiredPerceivedControls: [],
@@ -135,12 +135,12 @@ const AddTransitionRuleModal: React.FC<AddTransitionRuleModalProps> = ({
         requiredSleepQualities: [],
         requiredCognitiveLoads: [],
         requiredAllianceStrengths: [],
-        minSelfEfficacy: undefined,
-        maxSelfEfficacy: undefined,
-        minRiskSeverity: undefined,
-        maxRiskSeverity: undefined,
-        requiredConsentToDepth: undefined,
-        requiredPhysicalSymptomsPresent: undefined,
+        minSelfEfficacy: null,
+        maxSelfEfficacy: null,
+        minRiskSeverity: null,
+        maxRiskSeverity: null,
+        requiredConsentToDepth: null,
+        requiredPhysicalSymptomsPresent: null,
       });
     } catch (error) {
       console.error('Error creating transition rule:', error);

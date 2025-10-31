@@ -4,10 +4,10 @@ import { z } from 'zod';
 export const toneSchema = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().optional().nullable(),
+  description: z.string().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type Tone = z.infer<typeof toneSchema>;
@@ -23,15 +23,15 @@ export type CreateToneRequest = z.infer<typeof createToneRequestSchema>;
 // Update Tone Request
 export const updateToneRequestSchema = z.object({
   toneId: z.string(),
-  name: z.string().optional(),
-  description: z.string().optional(),
+  name: z.string().nullable(),
+  description: z.string().nullable(),
 });
 
 export type UpdateToneRequest = z.infer<typeof updateToneRequestSchema>;
 
 // Get Tones Params
 export const getTonesParamsSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().nullable(),
 });
 
 export type GetTonesParams = z.infer<typeof getTonesParamsSchema>;
@@ -41,8 +41,8 @@ export const counselorSchema = z.object({
   id: z.string(),
   toneId: z.string(),
   name: z.string(),
-  description: z.string().optional().nullable(),
-  profileImage: z.string().optional().nullable(),
+  description: z.string().nullable(),
+  profileImage: z.string().nullable(),
   gender: z.enum([
     'COUNSELOR_GENDER_UNSPECIFIED',
     'COUNSELOR_GENDER_MALE',
@@ -52,7 +52,7 @@ export const counselorSchema = z.object({
   ]),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type Counselor = z.infer<typeof counselorSchema>;
@@ -76,10 +76,10 @@ export type CreateCounselorRequest = z.infer<typeof createCounselorRequestSchema
 
 // Update Counselor Request
 export const updateCounselorRequestSchema = z.object({
-  toneId: z.string().optional(),
-  name: z.string().optional(),
-  description: z.string().optional(),
-  profileImage: z.string().optional(),
+  toneId: z.string().nullable(),
+  name: z.string().nullable(),
+  description: z.string().nullable(),
+  profileImage: z.string().nullable(),
   gender: z
     .enum([
       'COUNSELOR_GENDER_UNSPECIFIED',
@@ -88,14 +88,14 @@ export const updateCounselorRequestSchema = z.object({
       'COUNSELOR_GENDER_NONE',
       'UNRECOGNIZED',
     ])
-    .optional(),
+    .nullable(),
 });
 
 export type UpdateCounselorRequest = z.infer<typeof updateCounselorRequestSchema>;
 
 // Get Counselors Params
 export const getCounselorsParamsSchema = z.object({
-  'tone-id': z.string().optional(),
+  'tone-id': z.string().nullable(),
 });
 
 export type GetCounselorsParams = z.infer<typeof getCounselorsParamsSchema>;
@@ -110,7 +110,7 @@ export const episodeCutSceneSchema = z.object({
   image: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type EpisodeCutScene = z.infer<typeof episodeCutSceneSchema>;
@@ -125,14 +125,14 @@ export const episodeSchema = z.object({
   cutScenes: z.array(episodeCutSceneSchema),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type Episode = z.infer<typeof episodeSchema>;
 
 // Save Episode Cut Scene Request
 export const saveEpisodeCutSceneRequestSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().nullable(),
   speaker: z.enum(['SPEAKER_UNSPECIFIED', 'SPEAKER_COUNSELOR', 'SPEAKER_USER', 'UNRECOGNIZED']),
   content: z.string(),
   orderIndex: z.number(),
@@ -163,10 +163,10 @@ export type CreateEpisodeRequest = z.infer<typeof createEpisodeRequestSchema>;
 
 // Update Episode Request
 export const updateEpisodeRequestSchema = z.object({
-  title: z.string().optional(),
-  requiredRapportThreshold: z.number().optional(),
-  isTemporary: z.boolean().optional(),
-  cutScenes: z.array(saveEpisodeCutSceneRequestSchema).optional(),
+  title: z.string().nullable(),
+  requiredRapportThreshold: z.number().nullable(),
+  isTemporary: z.boolean().nullable(),
+  cutScenes: z.array(saveEpisodeCutSceneRequestSchema).nullable(),
 });
 
 export type UpdateEpisodeRequest = z.infer<typeof updateEpisodeRequestSchema>;
@@ -202,7 +202,7 @@ export const bubbleSchema = z.object({
   responseOption2: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type Bubble = z.infer<typeof bubbleSchema>;
@@ -218,9 +218,9 @@ export type CreateBubbleRequest = z.infer<typeof createBubbleRequestSchema>;
 
 // Update Bubble Request
 export const updateBubbleRequestSchema = z.object({
-  question: z.string().optional(),
-  responseOption1: z.string().optional(),
-  responseOption2: z.string().optional(),
+  question: z.string().nullable(),
+  responseOption1: z.string().nullable(),
+  responseOption2: z.string().nullable(),
 });
 
 export type UpdateBubbleRequest = z.infer<typeof updateBubbleRequestSchema>;

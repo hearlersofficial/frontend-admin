@@ -1,6 +1,5 @@
 import { useEpisodeDetail as useEpisodeDetailAPI } from "~/hooks/queries/useEpisodeDetail";
 import { useCounselor } from "~/hooks/queries/useCounselor";
-import { transformCutSceneToScene } from "../utils";
 
 export const useEpisodeAPIData = (
   episodeId: string,
@@ -20,16 +19,8 @@ export const useEpisodeAPIData = (
 
   // API 데이터를 UI 형태로 변환하는 헬퍼 함수 (공통 유틸리티 사용)
   const transformAPIDataToScenes = (apiData: typeof apiEpisodeDetail) => {
-    if (!apiData?.cutScenes) return [];
+    if (!apiData) return [];
 
-    // API의 cutScenes를 orderIndex 순서로 정렬 후 scenes로 변환
-    const sortedCutScenes = apiData.cutScenes.sort((a, b) => 
-      (a.orderIndex || 0) - (b.orderIndex || 0)
-    );
-    
-    return sortedCutScenes.map(cutScene => 
-      transformCutSceneToScene(cutScene, counselor)
-    );
   };
 
   // API 데이터를 editData 형태로 변환
@@ -38,7 +29,7 @@ export const useEpisodeAPIData = (
 
     return {
       scenes: transformAPIDataToScenes(apiData),
-      tempStatus: apiData.isTemporary ? '임시' : '배포',
+      tempStatus: apiData.data.isTemporary ? '임시' : '배포',
     };
   };
 

@@ -1,5 +1,22 @@
 import { z } from 'zod';
 
+
+export const aiModelSchema = z.enum([
+  'AI_MODEL_UNSPECIFIED',
+  'AI_MODEL_GPT_3_5_TURBO',
+  'AI_MODEL_GPT_4',
+  'AI_MODEL_GPT_4O',
+  'AI_MODEL_GPT_4O_MINI',
+  'AI_MODEL_GPT_5_MINI',
+  'AI_MODEL_GPT_5',
+  'AI_MODEL_GPT_5_CHAT',
+  'AI_MODEL_GEMINI_2_5_FLASH',
+  'AI_MODEL_GEMINI_2_5_PRO',
+  'UNRECOGNIZED',
+]);
+
+export type AIModel = z.infer<typeof aiModelSchema>;
+
 // Prompt Version
 export const promptVersionSchema = z.object({
   id: z.string(),
@@ -8,29 +25,17 @@ export const promptVersionSchema = z.object({
   isActive: z.boolean(),
   isTemporary: z.boolean(),
   isBookmarked: z.boolean(),
-  aiModel: z.enum([
-    'AI_MODEL_UNSPECIFIED',
-    'AI_MODEL_GPT_3_5_TURBO',
-    'AI_MODEL_GPT_4',
-    'AI_MODEL_GPT_4O',
-    'AI_MODEL_GPT_4O_MINI',
-    'AI_MODEL_GPT_5_MINI',
-    'AI_MODEL_GPT_5',
-    'AI_MODEL_GPT_5_CHAT',
-    'AI_MODEL_GEMINI_2_5_FLASH',
-    'AI_MODEL_GEMINI_2_5_PRO',
-    'UNRECOGNIZED',
-  ]),
+  aiModel: aiModelSchema,
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type PromptVersion = z.infer<typeof promptVersionSchema>;
 
 // Create/Update Prompt Version Request
 export const promptVersionRequestSchema = z.object({
-  name: z.string(),
+  name: z.string(), 
   description: z.string(),
   isBookmarked: z.boolean(),
   aiModel: z.enum([
@@ -52,7 +57,7 @@ export type PromptVersionRequest = z.infer<typeof promptVersionRequestSchema>;
 
 // Get Prompt Versions Params
 export const getPromptVersionsParamsSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().nullable(),
 });
 
 export type GetPromptVersionsParams = z.infer<typeof getPromptVersionsParamsSchema>;
@@ -65,7 +70,7 @@ export const tonePromptSchema = z.object({
   toneId: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type TonePrompt = z.infer<typeof tonePromptSchema>;
@@ -94,7 +99,7 @@ export const personaPromptSchema = z.object({
   counselorId: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type PersonaPrompt = z.infer<typeof personaPromptSchema>;
@@ -127,7 +132,7 @@ export const counselTechniqueSchema = z.object({
   temperature: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type CounselTechnique = z.infer<typeof counselTechniqueSchema>;
@@ -158,7 +163,7 @@ export type UpdateCounselTechniqueRequest = z.infer<typeof updateCounselTechniqu
 // Get Counsel Techniques Params
 export const getCounselTechniquesParamsSchema = z.object({
   promptVersionId: z.string(),
-  toneId: z.string().optional(),
+  toneId: z.string().nullable(),
 });
 
 export type GetCounselTechniquesParams = z.infer<typeof getCounselTechniquesParamsSchema>;
@@ -170,8 +175,8 @@ export const counselTechniqueTransitionRuleSchema = z.object({
   fromCounselTechniqueId: z.string(),
   toCounselTechniqueId: z.string(),
   priority: z.number(),
-  minCurrentTechniqueMessageCount: z.number().optional().nullable(),
-  maxCurrentTechniqueMessageCount: z.number().optional().nullable(),
+  minCurrentTechniqueMessageCount: z.number().nullable(),
+  maxCurrentTechniqueMessageCount: z.number().nullable(),
   requiredImpactDomains: z
     .enum([
       'IMPACT_DOMAIN_UNSPECIFIED',
@@ -219,8 +224,8 @@ export const counselTechniqueTransitionRuleSchema = z.object({
   requiredArousalLevels: z
     .enum(['AROUSAL_LEVEL_UNSPECIFIED', 'AROUSAL_LEVEL_LOW', 'AROUSAL_LEVEL_MEDIUM', 'AROUSAL_LEVEL_HIGH', 'UNRECOGNIZED'])
     .array(),
-  minEmotionIntensity: z.number().optional().nullable(),
-  maxEmotionIntensity: z.number().optional().nullable(),
+  minEmotionIntensity: z.number().nullable(),
+  maxEmotionIntensity: z.number().nullable(),
   requiredPerceivedControls: z
     .enum([
       'PERCEIVED_CONTROL_UNSPECIFIED',
@@ -241,8 +246,8 @@ export const counselTechniqueTransitionRuleSchema = z.object({
       'UNRECOGNIZED',
     ])
     .array(),
-  minSelfEfficacy: z.number().optional().nullable(),
-  maxSelfEfficacy: z.number().optional().nullable(),
+  minSelfEfficacy: z.number().nullable(),
+  maxSelfEfficacy: z.number().nullable(),
   requiredSocialSupportLevels: z
     .enum([
       'SOCIAL_SUPPORT_LEVEL_UNSPECIFIED',
@@ -263,12 +268,12 @@ export const counselTechniqueTransitionRuleSchema = z.object({
       'UNRECOGNIZED',
     ])
     .array(),
-  minRiskSeverity: z.number().optional().nullable(),
-  maxRiskSeverity: z.number().optional().nullable(),
+  minRiskSeverity: z.number().nullable(),
+  maxRiskSeverity: z.number().nullable(),
   requiredSleepQualities: z
     .enum(['SLEEP_QUALITY_UNSPECIFIED', 'SLEEP_QUALITY_POOR', 'SLEEP_QUALITY_FAIR', 'SLEEP_QUALITY_GOOD', 'UNRECOGNIZED'])
     .array(),
-  requiredPhysicalSymptomsPresent: z.boolean().optional().nullable(),
+  requiredPhysicalSymptomsPresent: z.boolean().nullable(),
   requiredCognitiveLoads: z
     .enum(['COGNITIVE_LOAD_UNSPECIFIED', 'COGNITIVE_LOAD_LOW', 'COGNITIVE_LOAD_MEDIUM', 'COGNITIVE_LOAD_HIGH', 'UNRECOGNIZED'])
     .array(),
@@ -281,10 +286,10 @@ export const counselTechniqueTransitionRuleSchema = z.object({
       'UNRECOGNIZED',
     ])
     .array(),
-  requiredConsentToDepth: z.boolean().optional().nullable(),
+  requiredConsentToDepth: z.boolean().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type CounselTechniqueTransitionRule = z.infer<typeof counselTechniqueTransitionRuleSchema>;
@@ -294,8 +299,8 @@ export const createCounselTechniqueTransitionRuleRequestSchema = z.object({
   fromCounselTechniqueId: z.string(),
   toCounselTechniqueId: z.string(),
   priority: z.number(),
-  minCurrentTechniqueMessageCount: z.number().optional(),
-  maxCurrentTechniqueMessageCount: z.number().optional(),
+  minCurrentTechniqueMessageCount: z.number().nullable(),
+  maxCurrentTechniqueMessageCount: z.number().nullable(),
   requiredImpactDomains: z
     .enum([
       'IMPACT_DOMAIN_UNSPECIFIED',
@@ -343,8 +348,8 @@ export const createCounselTechniqueTransitionRuleRequestSchema = z.object({
   requiredArousalLevels: z
     .enum(['AROUSAL_LEVEL_UNSPECIFIED', 'AROUSAL_LEVEL_LOW', 'AROUSAL_LEVEL_MEDIUM', 'AROUSAL_LEVEL_HIGH', 'UNRECOGNIZED'])
     .array(),
-  minEmotionIntensity: z.number().optional(),
-  maxEmotionIntensity: z.number().optional(),
+  minEmotionIntensity: z.number().nullable(),
+  maxEmotionIntensity: z.number().nullable(),
   requiredPerceivedControls: z
     .enum([
       'PERCEIVED_CONTROL_UNSPECIFIED',
@@ -365,8 +370,8 @@ export const createCounselTechniqueTransitionRuleRequestSchema = z.object({
       'UNRECOGNIZED',
     ])
     .array(),
-  minSelfEfficacy: z.number().optional(),
-  maxSelfEfficacy: z.number().optional(),
+  minSelfEfficacy: z.number().nullable(),
+  maxSelfEfficacy: z.number().nullable(),
   requiredSocialSupportLevels: z
     .enum([
       'SOCIAL_SUPPORT_LEVEL_UNSPECIFIED',
@@ -387,12 +392,12 @@ export const createCounselTechniqueTransitionRuleRequestSchema = z.object({
       'UNRECOGNIZED',
     ])
     .array(),
-  minRiskSeverity: z.number().optional(),
-  maxRiskSeverity: z.number().optional(),
+  minRiskSeverity: z.number().nullable(),
+  maxRiskSeverity: z.number().nullable(),
   requiredSleepQualities: z
     .enum(['SLEEP_QUALITY_UNSPECIFIED', 'SLEEP_QUALITY_POOR', 'SLEEP_QUALITY_FAIR', 'SLEEP_QUALITY_GOOD', 'UNRECOGNIZED'])
     .array(),
-  requiredPhysicalSymptomsPresent: z.boolean().optional(),
+  requiredPhysicalSymptomsPresent: z.boolean().nullable(),
   requiredCognitiveLoads: z
     .enum(['COGNITIVE_LOAD_UNSPECIFIED', 'COGNITIVE_LOAD_LOW', 'COGNITIVE_LOAD_MEDIUM', 'COGNITIVE_LOAD_HIGH', 'UNRECOGNIZED'])
     .array(),
@@ -405,7 +410,7 @@ export const createCounselTechniqueTransitionRuleRequestSchema = z.object({
       'UNRECOGNIZED',
     ])
     .array(),
-  requiredConsentToDepth: z.boolean().optional(),
+  requiredConsentToDepth: z.boolean().nullable(),
 });
 
 export type CreateCounselTechniqueTransitionRuleRequest = z.infer<
@@ -424,9 +429,9 @@ export type UpdateCounselTechniqueTransitionRuleRequest = z.infer<
 
 // Get Counsel Technique Transition Rules Params
 export const getCounselTechniqueTransitionRulesParamsSchema = z.object({
-  fromCounselTechniqueId: z.string().optional(),
-  toCounselTechniqueId: z.string().optional(),
-  promptVersionId: z.string().optional(),
+  fromCounselTechniqueId: z.string().nullable(),
+  toCounselTechniqueId: z.string().nullable(),
+  promptVersionId: z.string().nullable(),
 });
 
 export type GetCounselTechniqueTransitionRulesParams = z.infer<
@@ -440,14 +445,14 @@ export const promptActivateHistorySchema = z.object({
   activatedAt: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  deletedAt: z.string().optional().nullable(),
+  deletedAt: z.string().nullable(),
 });
 
 export type PromptActivateHistory = z.infer<typeof promptActivateHistorySchema>;
 
 // Get Prompt Activate Histories Params
 export const getPromptActivateHistoriesParamsSchema = z.object({
-  'prompt-version-id': z.string().optional(),
+  'prompt-version-id': z.string().nullable(),
 });
 
 export type GetPromptActivateHistoriesParams = z.infer<typeof getPromptActivateHistoriesParamsSchema>;
@@ -462,7 +467,7 @@ export const saveSequenceRequestSchema = z.object({
   sequence: z
     .object({
       id: z.string(),
-      nextTechniqueId: z.string().optional().nullable(),
+      nextTechniqueId: z.string().nullable(),
     })
     .array(),
 });

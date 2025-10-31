@@ -1,7 +1,7 @@
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import CouncelHeader from './CouncelHeader';
-import { CounselMessage } from '~/__generated__/data-contracts';
+import type { CounselMessage } from '~/api/v1';
 
 interface CounselProps {
   promptVersionName?: string;

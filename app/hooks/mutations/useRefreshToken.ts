@@ -1,23 +1,18 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { RefreshTokenData, RefreshTokenError } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import {
+  authService,
+  type TokenResponse,
+} from '~/api/v1';
 
 type UseRefreshTokenProps = Omit<
-  UseMutationOptions<AxiosResponse<RefreshTokenData>, RefreshTokenError, void, unknown>,
+  UseMutationOptions<TokenResponse, Error, void, unknown>,
   'mutationFn'
 >;
 
-const useRefreshToken = ({ onSuccess, onError, ...rest }: UseRefreshTokenProps = {}) => {
+const useRefreshToken = ({ ...rest }: UseRefreshTokenProps = {}) => {
   return useMutation({
-    mutationFn: () => api.V1.refreshToken(),
-    onSuccess: (...props) => {
-      onSuccess?.(...props);
-    },
-    onError: (...props) => {
-      onError?.(...props);
-    },
+    mutationFn: () => authService.refreshToken(),
     ...rest,
   });
 };

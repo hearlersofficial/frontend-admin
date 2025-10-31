@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
 
 export const usePromptData = () => {
@@ -8,37 +8,46 @@ export const usePromptData = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
   const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique);
 
+  const promptVersionId = temporaryVersion?.id;
+  const counselorId = selectedCounselor?.id;
+  const toneId = selectedCounselor?.toneId;
+
+  const canFetchPersona = Boolean(promptVersionId && counselorId);
+  const canFetchTone = Boolean(promptVersionId && toneId);
+
   // persona
   const { data: personaPrompts, isLoading: isPersonaLoading } = useQuery({
-    enabled: !!selectedCounselor?.id,
     ...queries.v1.getPersonaPrompts({
-      promptVersionId: temporaryVersion?.id ?? '',
-      counselorId: selectedCounselor?.id,
+      promptVersionId: promptVersionId || '',
+      counselorId: counselorId || '',
     }),
+    enabled: canFetchPersona,
   });
 
-  const personaData = personaPrompts?.find((persona) => persona.counselorId === selectedCounselor?.id);
+  const personaData =
+    canFetchPersona && personaPrompts && counselorId
+      ? personaPrompts.find((persona) => persona.counselorId === counselorId) || null
+      : null;
 
   // tone
-  const toneId = selectedCounselor?.toneId;
   const { data: tonePrompts, isLoading: isToneLoading } = useQuery({
-    enabled: !!selectedCounselor?.toneId,
     ...queries.v1.getTonePrompts({
-      promptVersionId: temporaryVersion?.id ?? '',
-      toneId,
+      promptVersionId: promptVersionId || '',
+      toneId: toneId || '',
     }),
+    enabled: canFetchTone,
   });
 
-  const toneData = tonePrompts?.find((tone) => tone.toneId === selectedCounselor?.toneId);
+  const toneData =
+    canFetchTone && tonePrompts && toneId ? tonePrompts.find((tone) => tone.toneId === toneId) || null : null;
+
   const isLoading = isPersonaLoading || isToneLoading;
 
-  const data = {
+  return {
     personaData,
     toneData,
     selectedCounselTechnique,
     selectedCounselor,
     isLoading,
   };
-
-  return data;
 };

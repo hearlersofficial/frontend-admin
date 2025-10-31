@@ -1,19 +1,15 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { LoadPromptVersionData, LoadPromptVersionError } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import { promptsService, type PromptVersion } from '~/api/v1';
 
 type UseLoadPromptVersionProps = Omit<
-  UseMutationOptions<AxiosResponse<LoadPromptVersionData>, LoadPromptVersionError, string, unknown>,
+  UseMutationOptions<PromptVersion, Error, string, unknown>,
   'mutationFn'
 >;
 
-const useLoadPromptVersion = ({ onSuccess, onError, ...rest }: UseLoadPromptVersionProps = {}) => {
+const useLoadPromptVersion = ({ ...rest }: UseLoadPromptVersionProps = {}) => {
   return useMutation({
-    mutationFn: (promptVersionId: string) => api.V1.loadPromptVersion(promptVersionId),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: (promptVersionId: string) => promptsService.loadPromptVersion(promptVersionId),
     ...rest,
   });
 };

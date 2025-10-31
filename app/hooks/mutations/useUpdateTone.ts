@@ -1,24 +1,24 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { UpdateToneData, UpdateToneError, UpdateToneRequest } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import {
+  counselorsService,
+  type UpdateToneRequest,
+  type Tone,
+} from '~/api/v1';
+
+type UpdateToneVariables = {
+  toneId: string;
+  data: UpdateToneRequest;
+};
 
 type UseUpdateToneProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<UpdateToneData>,
-    UpdateToneError,
-    { toneId: string; data: UpdateToneRequest },
-    unknown
-  >,
+  UseMutationOptions<Tone, Error, UpdateToneVariables, unknown>,
   'mutationFn'
 >;
 
-const useUpdateTone = ({ onSuccess, onError, ...rest }: UseUpdateToneProps = {}) => {
+const useUpdateTone = ({ ...rest }: UseUpdateToneProps = {}) => {
   return useMutation({
-    mutationFn: ({ toneId, data }) => api.V1.updateTone(toneId, data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: ({ toneId, data }: UpdateToneVariables) => counselorsService.updateTone(toneId, data),
     ...rest,
   });
 };

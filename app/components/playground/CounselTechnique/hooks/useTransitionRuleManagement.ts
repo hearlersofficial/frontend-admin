@@ -1,12 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCreateCounselTechniqueTransitionRule, useUpdateCounselTechniqueTransitionRule } from '~/hooks/mutations';
-import {
-  CreateCounselTechniqueTransitionRuleRequestDto,
-  UpdateCounselTechniqueTransitionRuleRequestDto,
-} from '~/__generated__/data-contracts';
+
+import { CreateCounselTechniqueTransitionRuleRequest, type UpdateCounselTechniqueTransitionRuleRequest } from '~/api/v1';
 import { queries } from '~/queries';
 import { useDeleteCounselTechniqueTransitionRule } from '~/hooks/mutations/useDeleteCounselTechniqueTransitionRule';
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 
 export const useTransitionRuleManagement = () => {
   const temporaryVersionId = usePromptStore((s) => s.temporaryVersion?.id);
@@ -18,6 +16,8 @@ export const useTransitionRuleManagement = () => {
       queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselTechniqueTransitionRules({
           promptVersionId: temporaryVersionId!,
+          fromCounselTechniqueId: null,
+          toCounselTechniqueId: null,
         }).queryKey,
       });
     },
@@ -28,7 +28,9 @@ export const useTransitionRuleManagement = () => {
       // 성공 시 쿼리 무효화
       queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselTechniqueTransitionRules({
-          promptVersionId: res.data?.data?.counselTechniqueTransitionRule?.promptVersionId ?? '',
+          promptVersionId: res.promptVersionId ?? '',
+          fromCounselTechniqueId: null,
+          toCounselTechniqueId: null,
         }).queryKey,
       });
     },
@@ -39,20 +41,22 @@ export const useTransitionRuleManagement = () => {
       queryClient.invalidateQueries({
         queryKey: queries.v1.getCounselTechniqueTransitionRules({
           promptVersionId: temporaryVersionId!,
+          fromCounselTechniqueId: null,
+          toCounselTechniqueId: null,
         }).queryKey,
       });
     },
   });
 
-  const handleCreateTransitionRule = (data: CreateCounselTechniqueTransitionRuleRequestDto) => {
+  const handleCreateTransitionRule = (data: CreateCounselTechniqueTransitionRuleRequest) => {
     createTransitionRule(data);
   };
 
   const handleUpdateTransitionRule = (
     transitionRuleId: string,
-    data: UpdateCounselTechniqueTransitionRuleRequestDto
+    data: UpdateCounselTechniqueTransitionRuleRequest
   ) => {
-    updateTransitionRule({ counselTechniqueTransitionRuleId: transitionRuleId, data });
+    updateTransitionRule({ transitionRuleId, data });
   };
 
   const handleDeleteTransitionRule = (transitionRuleId: string) => {

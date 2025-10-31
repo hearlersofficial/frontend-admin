@@ -1,19 +1,19 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
-import { CreateCounselorData, CreateCounselorError, CreateCounselorRequest } from '~/__generated__/data-contracts';
-import { api } from '~/api';
+import {
+  counselorsService,
+  type CreateCounselorRequest,
+  type Counselor,
+} from '~/api/v1';
 
 type UseCreateCounselorProps = Omit<
-  UseMutationOptions<AxiosResponse<CreateCounselorData>, CreateCounselorError, CreateCounselorRequest, unknown>,
+  UseMutationOptions<Counselor, Error, CreateCounselorRequest, unknown>,
   'mutationFn'
 >;
 
-const useCreateCounselor = ({ onSuccess, onError, ...rest }: UseCreateCounselorProps = {}) => {
+const useCreateCounselor = ({ ...rest }: UseCreateCounselorProps = {}) => {
   return useMutation({
-    mutationFn: (data: CreateCounselorRequest) => api.V1.createCounselor(data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: (data: CreateCounselorRequest) => counselorsService.createCounselor(data),
     ...rest,
   });
 };

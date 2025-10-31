@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useUpdateCounselTechnique, useUpdatePersonaPrompt, useUpdateTonePrompt } from '~/hooks/mutations';
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
 
 export const usePromptMutations = () => {
@@ -38,7 +38,7 @@ export const usePromptMutations = () => {
 
   const { mutate: updateCounselTechnique } = useUpdateCounselTechnique({
     onSuccess: (res) => {
-      const newTechniques = res.data?.data?.counselTechnique;
+      const newTechniques = res;
       if (newTechniques) {
         if (selectedCounselTechnique?.id && Array.isArray(newTechniques)) {
           const sameTechnique = newTechniques.find((tech: { id?: string }) => tech.id === selectedCounselTechnique.id);

@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { usePromptStore } from '~/store/usePromptStore';
+import { usePromptStore } from '~/stores/usePromptStore';
 import { queries } from '~/queries';
 import { useUpdateCounselTechnique } from '~/hooks/mutations';
-import { CounselTechniqueResponseDto } from '~/__generated__/data-contracts';
+import { CounselTechnique } from '~/api/v1';
 
 export const useTechniqueManagement = () => {
   const selectedCounselor = usePromptStore((s) => s.selectedCounselor);
@@ -12,21 +12,21 @@ export const useTechniqueManagement = () => {
   const selectedCounselTechnique = usePromptStore((s) => s.selectedCounselTechnique);
   const setSelectedCounselTechnique = usePromptStore((s) => s.setSelectedCounselTechnique);
 
-  const toneId = selectedCounselor?.toneId;
+  const toneId = selectedCounselor?.toneId ?? null;
   const promptVersionId = temporaryVersion?.id;
 
-  const { data: counselTechniquesResponse } = useQuery({
+  const { data: counselTechniquesData } = useQuery({
     enabled: !!promptVersionId && !!toneId,
-    ...queries.v1.getCounselTechniques({ promptVersionId: promptVersionId!, toneId }),
+    ...queries.v1.getCounselTechniques({ promptVersionId: promptVersionId!, toneId: toneId }),
   });
 
   const counselTechniques = useMemo(
-    () => counselTechniquesResponse?.data?.data?.counselTechniques ?? [],
-    [counselTechniquesResponse]
+    () => counselTechniquesData ?? [],
+    [counselTechniquesData]
   );
 
   const [mode, setMode] = useState<'ADDANDDELETE' | 'EDIT' | 'SELECT'>('SELECT');
-  const [techniques, setTechniques] = useState<CounselTechniqueResponseDto[]>([]);
+  const [techniques, setTechniques] = useState<CounselTechnique[]>([]);
 
   const queryClient = useQueryClient();
 
@@ -49,7 +49,7 @@ export const useTechniqueManagement = () => {
 
   const { mutate: updateCounselTechnique } = useUpdateCounselTechnique({
     onSuccess: (res) => {
-      const updatedTechniques = res.data?.data?.counselTechnique;
+      const updatedTechniques = res;
       if (!updatedTechniques || !Array.isArray(updatedTechniques) || updatedTechniques.length === 0) return;
 
       setTechniques(updatedTechniques);
@@ -85,19 +85,23 @@ export const useTechniqueManagement = () => {
     newIsStartTechnique: boolean,
     newTemperature: number
   ) => {
-    const updatedTechniques = techniques.map((tech) =>
-      tech.id === techniqueId
-        ? { ...tech, name: newName, temperature: newTemperature, isStartTechnique: newIsStartTechnique }
-        : tech
-    );
-    setTechniques(updatedTechniques);
+    const updatedTechnique = techniques.find((tech) => tech.id === techniqueId);
+    if (!updatedTechnique) return;
+
+    updatedTechnique.name = newName;
+    updatedTechnique.isStartTechnique = newIsStartTechnique;
+    updatedTechnique.temperature = newTemperature;
+
+    setTechniques([...techniques]);
 
     updateCounselTechnique({
       counselTechniqueId: techniqueId,
       data: {
-        name: newName,
-        temperature: newTemperature,
-        isStartTechnique: newIsStartTechnique,
+        name: updatedTechnique.name,
+        context: updatedTechnique.context,
+        instruction: updatedTechnique.instruction,
+        temperature: updatedTechnique.temperature,
+        isStartTechnique: updatedTechnique.isStartTechnique,
       },
     });
   };

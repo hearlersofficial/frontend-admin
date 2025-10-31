@@ -1,30 +1,25 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
 import {
-  GenerateCutSceneImageUrlData,
-  GenerateCutSceneImageUrlError,
-  GenerateCutSceneImageUrlRequest,
-} from '~/__generated__/data-contracts';
-import { api } from '~/api';
+  counselorsService,
+  type GenerateImageUrlRequest,
+  type PresignedUrlResponse,
+} from '~/api/v1';
+
+type GenerateCutSceneImageUrlVariables = {
+  counselorId: string;
+  data: GenerateImageUrlRequest;
+};
 
 type UseGenerateCutSceneImageUrlProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<GenerateCutSceneImageUrlData>,
-    GenerateCutSceneImageUrlError,
-    { episodeId: string; counselorId: string; data: GenerateCutSceneImageUrlRequest },
-    unknown
-  >,
+  UseMutationOptions<PresignedUrlResponse, Error, GenerateCutSceneImageUrlVariables, unknown>,
   'mutationFn'
 >;
 
-const useGenerateCutSceneImageUrl = ({ onSuccess, onError, ...rest }: UseGenerateCutSceneImageUrlProps = {}) => {
+export const useGenerateCutSceneImageUrl = ({ ...rest }: UseGenerateCutSceneImageUrlProps = {}) => {
   return useMutation({
-    mutationFn: ({ episodeId, counselorId, data }) => api.V1.generateCutSceneImageUrl(episodeId, counselorId, data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: ({ counselorId, data }: GenerateCutSceneImageUrlVariables) =>
+      counselorsService.generateCutSceneImageUrl(counselorId, data),
     ...rest,
   });
 };
-
-export { useGenerateCutSceneImageUrl };

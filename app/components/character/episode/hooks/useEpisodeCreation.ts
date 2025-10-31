@@ -10,7 +10,7 @@ export const useEpisodeCreation = (
 ) => {
   const queryClient = useQueryClient();
 
-  const { data: counselor } = useCounselor(counselorId || '', !!counselorId);
+  const { data: counselorData } = useCounselor(counselorId || '', !!counselorId);
 
   const { mutate: createEpisode, isPending: isCreating } = useCreateEpisode({
     onSuccess: () => {
@@ -32,7 +32,7 @@ export const useEpisodeCreation = (
 
   const transformScenesToCutScenes = (scenes: Array<{ id: string; speaker: string; dialogue: string; image?: string }>) => {
     return scenes.map((scene, index) => 
-      transformSceneToCutScene(scene, index, counselor)
+      transformSceneToCutScene(scene, index, counselorData?.data)
     );
   };
 
@@ -67,6 +67,6 @@ export const useEpisodeCreation = (
   return {
     executeCreation,
     isCreating,
-    counselor,
+    counselor: counselorData?.data,
   };
 }; 

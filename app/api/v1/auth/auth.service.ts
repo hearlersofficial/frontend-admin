@@ -1,24 +1,23 @@
 import { api } from '~/api';
-import type {
-    TokenResponse, KakaoLoginRequest,
-    KakaoCallbackRequest
-} from './auth.types';
+import { extractData } from '../response.util';
+import type { TokenResponse, KakaoLoginRequest, KakaoCallbackRequest } from './auth.types';
+import { ApiSuccessResponse } from '../response.types';
 
 export const authService = {
   /**
    * 액세스 토큰 재발급
    */
   refreshToken: async (): Promise<TokenResponse> => {
-    const response = await api.axios.post('/v1/auth/refresh');
-    return response.data.data;
+    const response = await api.axios.post<ApiSuccessResponse<TokenResponse>>('/v1/auth/refresh');
+    return extractData(response);
   },
 
   /**
    * 비로그인 유저 생성
    */
   createUser: async (): Promise<TokenResponse> => {
-    const response = await api.axios.post('/v1/auth/initiate');
-    return response.data.data;
+    const response = await api.axios.post<ApiSuccessResponse<TokenResponse>>('/v1/auth/initiate');
+    return extractData(response);
   },
 
   /**

@@ -8,7 +8,7 @@ import { Modal } from '~/components/Modal';
 
 import { queries } from '~/queries';
 import { useActivatePromptVersion } from '~/hooks/mutations';
-import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
+import { PromptVersion } from '~/api/v1';
 
 interface ActivatePromptModalProps {
   isOpen: boolean;
@@ -16,9 +16,9 @@ interface ActivatePromptModalProps {
 }
 
 const ActivatePromptModal = ({ isOpen, setIsOpen }: ActivatePromptModalProps) => {
-  const [selectedVersion, setSelectedVersion] = useState<PromptVersionResponseDto | null>(null);
+  const [selectedVersion, setSelectedVersion] = useState<PromptVersion | null>(null);
 
-  const { data: promptVersions = [] } = useQuery(queries.v1.getPromptVersions({}));
+  const { data: promptVersions = [] } = useQuery(queries.v1.getPromptVersions());
   const { data: activeVersion } = useQuery(queries.v1.getActiveVersion);
 
   const { mutate: activatePromptVersion } = useActivatePromptVersion({
@@ -43,7 +43,7 @@ const ActivatePromptModal = ({ isOpen, setIsOpen }: ActivatePromptModalProps) =>
             <div className="py-8 text-center text-gray-500">사용 가능한 프롬프트 버전이 없습니다.</div>
           ) : (
             promptVersions.map((version) => {
-              const isActive = activeVersion?.promptVersion?.id === version.id;
+              const isActive = activeVersion?.id === version.id;
               const isSelected = selectedVersion?.id === version.id;
 
               return (

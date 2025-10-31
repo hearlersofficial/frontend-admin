@@ -11,7 +11,7 @@ export const useEpisodeUpdate = (
 ) => {
   const queryClient = useQueryClient();
 
-  const { data: counselor } = useCounselor(counselorId || '', !!counselorId);
+  const { data: counselorData } = useCounselor(counselorId || '', !!counselorId);
 
   const { mutate: updateEpisode, isPending: isUpdating } = useUpdateEpisode({
     onSuccess: () => {
@@ -33,7 +33,7 @@ export const useEpisodeUpdate = (
 
   const transformScenesToCutScenes = (scenes: SceneData[]) => {
     return scenes.map((scene, index) => 
-      transformSceneToCutScene(scene, index, counselor)
+      transformSceneToCutScene(scene, index, counselorData?.data)
     );
   };
 
@@ -82,6 +82,6 @@ export const useEpisodeUpdate = (
   return {
     executeUpdate,
     isUpdating,
-    counselor,
+    counselor: counselorData?.data,
   };
 }; 

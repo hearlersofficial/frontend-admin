@@ -1,32 +1,19 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
 import {
-  CreateCounselTechniqueData,
-  CreateCounselTechniqueError,
-  CreateCounselTechniqueRequestDto,
-} from '~/__generated__/data-contracts';
-import { api } from '~/api';
+  promptsService,
+  type CreateCounselTechniqueRequest,
+  type CounselTechnique,
+} from '~/api/v1';
 
 type UseCreateCounselTechniqueProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<CreateCounselTechniqueData>,
-    CreateCounselTechniqueError,
-    CreateCounselTechniqueRequestDto,
-    unknown
-  >,
+  UseMutationOptions<CounselTechnique, Error, CreateCounselTechniqueRequest, unknown>,
   'mutationFn'
 >;
 
-const useCreateCounselTechnique = ({ onSuccess, onError, ...rest }: UseCreateCounselTechniqueProps = {}) => {
+const useCreateCounselTechnique = ({ ...rest }: UseCreateCounselTechniqueProps = {}) => {
   return useMutation({
-    mutationFn: (data: CreateCounselTechniqueRequestDto) => api.V1.createCounselTechnique(data),
-    onSuccess: (...props) => {
-      onSuccess?.(...props);
-    },
-    onError: (...props) => {
-      onError?.(...props);
-    },
+    mutationFn: (data: CreateCounselTechniqueRequest) => promptsService.createCounselTechnique(data),
     ...rest,
   });
 };

@@ -9,7 +9,6 @@ export { useGenerateCounselorImageUrl } from './useGenerateCounselorImageUrl';
 export { useGenerateCutSceneImageUrl } from './useGenerateCutSceneImageUrl';
 export { useLoadPromptVersion } from './useLoadPromptVersion';
 export { useRefreshToken } from './useRefreshToken';
-export { useSaveCounselTechniqueSequence } from './useSaveCounselTechniqueSequence';
 export { useSaveVersion } from './useSaveVersion';
 export { useUpdateCounselor } from './useUpdateCounselor';
 export { useUpdateCounselTechnique } from './useUpdateCounselTechnique';

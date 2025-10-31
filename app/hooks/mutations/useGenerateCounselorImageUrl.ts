@@ -1,28 +1,25 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
 import {
-  GenerateCounselorImageUrlData,
-  GenerateCounselorImageUrlError,
-  GenerateCounselorImageUrlRequest,
-} from '~/__generated__/data-contracts';
-import { api } from '~/api';
+  counselorsService,
+  type GenerateImageUrlRequest,
+  type PresignedUrlResponse,
+} from '~/api/v1';
+
+type GenerateCounselorImageUrlVariables = {
+  counselorId: string;
+  data: GenerateImageUrlRequest;
+};
 
 type UseGenerateCounselorImageUrlProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<GenerateCounselorImageUrlData>,
-    GenerateCounselorImageUrlError,
-    { counselorId: string; data: GenerateCounselorImageUrlRequest },
-    unknown
-  >,
+  UseMutationOptions<PresignedUrlResponse, Error, GenerateCounselorImageUrlVariables, unknown>,
   'mutationFn'
 >;
 
-const useGenerateCounselorImageUrl = ({ onSuccess, onError, ...rest }: UseGenerateCounselorImageUrlProps = {}) => {
+const useGenerateCounselorImageUrl = ({ ...rest }: UseGenerateCounselorImageUrlProps = {}) => {
   return useMutation({
-    mutationFn: ({ counselorId, data }) => api.V1.generateCounselorImageUrl(counselorId, data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: ({ counselorId, data }: GenerateCounselorImageUrlVariables) =>
+      counselorsService.generateCounselorImageUrl(counselorId, data),
     ...rest,
   });
 };

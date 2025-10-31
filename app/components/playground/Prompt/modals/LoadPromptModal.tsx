@@ -10,23 +10,23 @@ import PromptModal from './PromptModal';
 import { Star } from 'lucide-react';
 
 import { usePagination } from '~/hooks/usePagination';
-import { PromptVersionResponseDto } from '~/__generated__/data-contracts';
+import { PromptVersion } from '~/api/v1';
 
 interface LoadPromptModalProps {
-  prompts: PromptVersionResponseDto[];
+  prompts: PromptVersion[];
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 
 const LoadPromptModal = ({ prompts, isOpen, setIsOpen }: LoadPromptModalProps) => {
-  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersionResponseDto | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<PromptVersion | null>(null);
   const [isDeleteMode, setIsDeleteMode] = useState(false);
   const [showFavsOnly, setShowFavsOnly] = useState(false);
 
   const filteredPrompts = showFavsOnly ? prompts.filter((p) => p.isBookmarked) : prompts;
   const { currentPage, totalPages, displayedItems, setCurrentPage } = usePagination(filteredPrompts, 6);
 
-  const handleDetailView = (prompt: PromptVersionResponseDto) => {
+  const handleDetailView = (prompt: PromptVersion) => {
     setSelectedPrompt(prompt);
     // setIsOpen(false);
   };

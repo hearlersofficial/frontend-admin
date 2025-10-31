@@ -1,33 +1,21 @@
-import { type UseMutationOptions, useMutation } from '@tanstack/react-query';
-import { type AxiosResponse } from 'axios';
+import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 
 import {
-  CreateCounselTechniqueTransitionRuleData,
-  CreateCounselTechniqueTransitionRuleError,
-  CreateCounselTechniqueTransitionRuleRequestDto,
-} from '~/__generated__/data-contracts';
-import { api } from '~/api';
+  promptsService,
+  type CreateCounselTechniqueTransitionRuleRequest,
+  type CounselTechniqueTransitionRule
+} from '~/api/v1';
+
 
 type UseCreateCounselTechniqueTransitionRuleProps = Omit<
-  UseMutationOptions<
-    AxiosResponse<CreateCounselTechniqueTransitionRuleData>,
-    CreateCounselTechniqueTransitionRuleError,
-    CreateCounselTechniqueTransitionRuleRequestDto,
-    unknown
-  >,
+  UseMutationOptions<CounselTechniqueTransitionRule, Error, CreateCounselTechniqueTransitionRuleRequest, unknown>,
   'mutationFn'
 >;
 
-const useCreateCounselTechniqueTransitionRule = ({
-  onSuccess,
-  onError,
-  ...rest
-}: UseCreateCounselTechniqueTransitionRuleProps = {}) => {
+const useCreateCounselTechniqueTransitionRule = ({ ...rest }: UseCreateCounselTechniqueTransitionRuleProps = {}) => {
   return useMutation({
-    mutationFn: (data: CreateCounselTechniqueTransitionRuleRequestDto) =>
-      api.V1.createCounselTechniqueTransitionRule(data),
-    onSuccess: (...args) => onSuccess?.(...args),
-    onError: (...args) => onError?.(...args),
+    mutationFn: (data: CreateCounselTechniqueTransitionRuleRequest) =>
+      promptsService.createCounselTechniqueTransitionRule(data),
     ...rest,
   });
 };
